@@ -1,10 +1,10 @@
-import Sidebar from "../components/Sidebar/Sidebar";
 
-export default function Home() {
+const Home = () => {
   return(
-    <div className="container">
-      <Sidebar />
-      <h1>ini adalah konten utama</h1>
-    </div>
+    <>
+          <h1>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nobis nostrum illo rem cum? Culpa molestiae recusandae dignissimos quis ad pariatur distinctio corporis vitae omnis. Aperiam incidunt reiciendis mollitia autem molestias.</h1>
+    </>
   );
 }
+
+export default Home
