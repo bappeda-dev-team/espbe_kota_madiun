@@ -1,10 +1,10 @@
 const ProsesBisnis = () => {
     return(
         <>
-            <div className="flex">
-                <div className="overflow-x-auto">
-                    <div className="inline-block min-w-full py-5 align-middle">
-                        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
+            <div className="flex flex-col aligns-center">
+                <div className="mx-5 sm:-mx-6 lg:-mx-1 overflow-x-auto">
+                    <div className="inline-block min-w-full py-5 align-middle md:px-6 lg:px-8">
+                        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md: rounded-lg">
                             <table className="min-w-full divide-y divide-gray-300">
                                 <thead>
                                     <tr>

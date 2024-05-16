@@ -1,7 +1,8 @@
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar/Sidebar";
+import Sidebar from "@/components/global/Sidebar/Sidebar";
+import Header from "@/components/global/Header/Header";
 
 export const metadata: Metadata = {
   title: "E-SPBE",
@@ -20,7 +21,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} flex justify-start`}>
         <Sidebar />
-        <main>{children}</main>
+        <div className="block w-screen">
+          <Header />
+          <main className="p-2">{children}</main>
+        </div>
       </body>
     </html>
   );
