@@ -13,7 +13,7 @@ function Sidebar(){
     }
 
     return(
-      <div className="w-[270px] min-h-screen border-r">
+      <div className="min-w-[270px] min-h-screen border-r">
         <div className="p-5 overflow-y-auto border-b border-stone-300">
             <div className="flex items-center pb-2">
                 <div className="flex justify-center items-center bg-white rounded-full">
