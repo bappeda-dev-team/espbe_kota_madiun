@@ -13,8 +13,8 @@ function Sidebar(){
     }
 
     return(
-      <div className="min-w-[270px] min-h-screen border-r">
-        <div className="p-5 overflow-y-auto border-b border-stone-300">
+      <div className="fixed min-w-[270px] border-r">
+        <div className="p-5 border-b border-stone-300">
             <div className="flex items-center pb-2">
                 <div className="flex justify-center items-center bg-white rounded-full">
                   <img src="/avatar.png" alt="sidebar avatar" className="w-7 h-7 rounded-full" />

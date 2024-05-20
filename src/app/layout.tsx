@@ -19,13 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex justify-start`}>
-        <Sidebar />
-        <div className="block w-screen">
-          <Header />
-          <main className="p-2">{children}</main>
-        </div>
-      </body>
+        <body className={`${inter.className} flex`}>
+          <Sidebar />
+          <div className="pl-[17rem] w-full">
+            <Header />
+            <main className="p-5">{children}</main>
+          </div>
+        </body>
     </html>
   );
 }
