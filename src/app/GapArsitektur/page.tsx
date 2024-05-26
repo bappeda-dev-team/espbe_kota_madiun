@@ -1,7 +1,9 @@
+import Perbaikan from "@/components/maintenance/perbaikan"
+
 const GapArsitektur = () => {
     return(
         <>
-            <h1>ini halaman GapArsitektur</h1>
+            <Perbaikan />
         </>
     )
 }

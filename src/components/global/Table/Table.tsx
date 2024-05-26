@@ -1,6 +1,57 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import Loading from "../Loading/Loading";
+
+interface typeProsesBisnis {
+  id : number;
+  nama_proses_bisnis : string;
+  sasaran_kota : string;
+  bidang_urusan : string;
+  rad_level_1 : string;
+  rad_level_2 : string;
+  rad_level_3 : string;
+  rad_level_4 : string;
+  rad_level_5 : string;
+  rad_level_6 : string;
+}
+
 function Table() {
+
+  const [dataProsesBisnis, setDataProsesBisnis] = useState<typeProsesBisnis[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>();
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
+
+  useEffect(() => {
+    const fetchingData = async () => {
+      try{
+        const response = await fetch(`${API_URL}/prosesBisnis`)
+        if (!response.ok){
+          throw new Error("cant fetching data")
+        }
+        const data = await response.json();
+        setDataProsesBisnis(data);
+      } catch(err){
+        setError("Gagal memuat data, silakan cek koneksi internet atau database server")
+      } finally{
+        setLoading(false);
+      }
+    }
+
+    fetchingData();
+  }, []);
+
+  if (loading) {
+    return(
+      <Loading />
+    );
+  } else if (error) {
+    return(
+      <h1>{error}</h1>
+    );
+  }
+
   return (
     <>
       <div className="overflow-auto">
@@ -20,31 +71,20 @@ function Table() {
             </tr>
           </thead>
           <tbody>
-            <tr className="border rounded-b-lg">
-              <td className="px-6 py-4">1</td>
-              <td className="px-6 py-4">Penyusunan Pohon Kinerja</td>
-              <td className="px-6 py-4">Meningkatnya Akuntabilitas Kinerja</td>
-              <td className="px-6 py-4">
-                5 - UNSUR PENUNJANG URUSAN PEMERINTAHAN
-              </td>
-              <td className="px-6 py-4">RAB.09 PEMERINTAHAN UMUM</td>
-              <td className="px-6 py-4">
-                RAB.09.05 PERENCANAAN PEMBANGUNAN NASIONAL
-              </td>
-              <td className="px-6 py-4">
-                RAB.09.05.06 PENGAWASAN, PEMANTAUAN, DAN PENGENDALIAN
-                PEMBANGUNAN NASIONAL
-              </td>
-              <td className="px-6 py-4">
-                Meningkatnya Kualitas Perencanaan Tematik Pembangunan
-              </td>
-              <td className="px-6 py-4">
-                Peningkatan Kualitas Pohon kinerja perangkat daerah
-              </td>
-              <td className="px-6 py-4">
-                penyusunan pohon kinerja Kota Madiun
-              </td>
+          {dataProsesBisnis.map ((data, index) => (
+            <tr key={data.id} className="border rounded-b-lg">
+              <td className="px-6 py-4">{index + 1}</td>
+              <td className="px-6 py-4">{data.nama_proses_bisnis}</td>
+              <td className="px-6 py-4">{data.sasaran_kota}</td>
+              <td className="px-6 py-4">{data.bidang_urusan}</td>
+              <td className="px-6 py-4">{data.rad_level_1}</td>
+              <td className="px-6 py-4">{data.rad_level_2}</td>
+              <td className="px-6 py-4">{data.rad_level_3}</td>
+              <td className="px-6 py-4">{data.rad_level_4}</td>
+              <td className="px-6 py-4">{data.rad_level_5}</td>
+              <td className="px-6 py-4">{data.rad_level_6}</td>
             </tr>
+          ))}
           </tbody>
         </table>
       </div>
