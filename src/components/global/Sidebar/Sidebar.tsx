@@ -15,9 +15,20 @@ function Sidebar(){
     const [DataMasterActive, setDataMasterActive] = useState<boolean>(false);
     const [ProsesBisnisActive, setProsesBisnisActive] = useState<boolean>(false);
     const [LayananActive, setLayananActive] = useState<boolean>(false);
+    const [standartPelayananActive, setStandartPelayananActive] = useState<boolean>(false);
+    const [formLayananActive, setFormLayananActive] = useState<boolean>(false);
     const [DataInformasiActive, setDataInformasiActive] = useState<boolean>(false);
     const [AplikasiActive, setAplikasiActive] = useState<boolean>(false);
     const [GapArsiterturActive, setGapArsitekturActive] = useState<boolean>(false);
+    const [petaRencanaActive, setPetaRencanaActive] = useState<boolean>(false);
+
+    const breakLayanan = () => {
+      if(LayananActive === false){
+        setLayananActive(true);
+      } else {
+        setLayananActive(false)
+      }
+    }
 
     useEffect(() => {
       if(url === "/"){
@@ -26,81 +37,132 @@ function Sidebar(){
         setDataMasterActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false)
+        setPetaRencanaActive(false)
       } else if (url === "/User") {
         setDahsboardActive(false),
         setUserActive(true),
         setDataMasterActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false)
+        setPetaRencanaActive(false)
       } else if (url === "/DataMaster") {
         setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(true),
         setProsesBisnisActive(false),
         setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false)
+        setPetaRencanaActive(false)
       } else if (url === "/ProsesBisnis" || url === "/ProsesBisnis/TambahData") {
         setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
         setProsesBisnisActive(true),
         setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false)
-      } else if (url === "/Layanan") {
+        setPetaRencanaActive(false)
+      } else if (url === "/Layanan/FormPelayanan") {
         setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
         setProsesBisnisActive(false),
         setLayananActive(true),
+        setStandartPelayananActive(false),
+        setFormLayananActive(true),
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false)
+        setPetaRencanaActive(false)
+      } else if (url === "/Layanan/StandartPelayanan"){
+        setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(false),
+        setProsesBisnisActive(false),
+        setLayananActive(true),
+        setStandartPelayananActive(true),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false)
+        setPetaRencanaActive(false)
       } else if (url === "/DataInformasi") {
         setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
         setDataInformasiActive(true),
         setAplikasiActive(false),
         setGapArsitekturActive(false)
+        setPetaRencanaActive(false)
       } else if (url === "/Aplikasi") {
         setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
         setDataInformasiActive(false),
         setAplikasiActive(true),
         setGapArsitekturActive(false)
+        setPetaRencanaActive(false)
       } else if (url === "/GapArsitektur") {
         setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(true)
+        setPetaRencanaActive(false)
+      } else if (url ==="/PetaRencana"){
+        setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(false),
+        setProsesBisnisActive(false),
+        setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false)
+        setPetaRencanaActive(true)
       } else {
         setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false)
+        setPetaRencanaActive(false)
       }
     },[url]);
     
@@ -222,17 +284,8 @@ function Sidebar(){
                       Proses Bisnis
                     </li>
                   </Link>
-                  <Link className={LayananActive ? "text-white" : ""} href="/Layanan">
-                    <li className={LayananActive ? "bg-emerald-300 flex py-1 pl-2 rounded-lg" : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"}>
-                      {LayananActive ? 
-                        <Image className="pr-2"
-                          src="/iconLight/ListDashes.svg" 
-                          alt="ListDashes"
-                          layout="fixed"
-                          width={30}
-                          height={30}
-                        />
-                      : 
+
+                    <li onClick={breakLayanan} className={LayananActive ? "flex py-1 pl-2 cursor-pointer rounded-lg bg-gray-200" : "flex py-1 pl-2 cursor-pointer rounded-lg hover:bg-gray-200"}>
                         <Image className="pr-2"
                           src="/iconDark/ListDashes.svg" 
                           alt="ListDashes"
@@ -240,10 +293,60 @@ function Sidebar(){
                           width={30}
                           height={30}
                         />
-                      }
                       Layanan
                     </li>
-                  </Link>
+
+                    {LayananActive ? 
+                      <div className="py-1 pl-3 bg-slate-50">
+                        <Link href="/Layanan/StandartPelayanan">
+                          <li className={standartPelayananActive ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg" : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"}>
+                            {standartPelayananActive ? 
+                            <Image className="pr-2"
+                              src="/iconLight/Dot2.svg" 
+                              alt="ListDashes"
+                              layout="fixed"
+                              width={30}
+                              height={30}
+                            />
+                            : 
+                            <Image className="pr-2"
+                              src="/iconDark/Dot2.svg" 
+                              alt="ListDashes"
+                              layout="fixed"
+                              width={30}
+                              height={30}
+                            />
+                            }
+                            Standart Pelayanan
+                          </li>
+                        </Link>
+                        <Link href="/Layanan/FormPelayanan">
+                          <li className={formLayananActive ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg" : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"}>
+                          {formLayananActive ? 
+                            <Image className="pr-2"
+                              src="/iconLight/Dot2.svg" 
+                              alt="ListDashes"
+                              layout="fixed"
+                              width={30}
+                              height={30}
+                            />
+                            : 
+                            <Image className="pr-2"
+                              src="/iconDark/Dot2.svg" 
+                              alt="ListDashes"
+                              layout="fixed"
+                              width={30}
+                              height={30}
+                            />
+                            }
+                            Form Layanan SPBE
+                          </li>
+                        </Link>
+                      </div>
+                    : 
+                      <></>
+                    }
+
                   <Link className={DataInformasiActive ? "text-white" : ""} href="/DataInformasi">
                     <li className={DataInformasiActive ? "bg-emerald-300 flex py-1 pl-2 rounded-lg" : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"}>
                       {DataInformasiActive ? 
@@ -308,6 +411,28 @@ function Sidebar(){
                         />
                       }
                       Gap Arsitektur
+                    </li>
+                  </Link>
+                  <Link className={petaRencanaActive ? "text-white" : ""} href="/PetaRencana">
+                    <li className={petaRencanaActive ? "bg-emerald-300 flex py-1 pl-2 rounded-lg" : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"}>
+                     {petaRencanaActive ? 
+                        <Image className="pr-2"
+                          src="/iconLight/Calendar.svg" 
+                          alt="Calendar"
+                          layout="fixed"
+                          width={30}
+                          height={30}
+                        />
+                      : 
+                        <Image className="pr-2"
+                          src="/iconDark/Calendar.svg" 
+                          alt="Calendar"
+                          layout="fixed"
+                          width={30}
+                          height={30}
+                        />
+                      }
+                      Peta Rencana
                     </li>
                   </Link>
                 </ul>

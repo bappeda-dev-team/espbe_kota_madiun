@@ -1,10 +1,8 @@
 "use client";
 
-function FormTambahData() {
+import Button from "@/components/common/Button/Button";
 
-    type Placeholder = {
-        default : string;
-    }
+function FormTambahData() {
     return(
         <>
         <div className="border p-5">
@@ -26,8 +24,8 @@ function FormTambahData() {
                     <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="RAD Level 1">RAD Level 1</label>
                     <select className="border px-4 py-2" name="RAD Level 1" id="RAD Level 1" defaultValue={1}>
                         <option hidden value="1">Pilih RAD Level 1</option>
-                        <option value="option 1">option 1</option>
-                        <option value="option 2">option 2</option>
+                        <option value="option 1">RAD.01 name</option>
+                        <option value="option 2">RAD.02 name</option>
                         <option value="option 3">option 3</option>
                         <option value="option 4">option 4</option>
                     </select>
@@ -36,8 +34,8 @@ function FormTambahData() {
                     <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="RAD Level 2">RAD Level 2</label>
                     <select className="border px-4 py-2" name="RAD Level 2" id="RAD Level 2" defaultValue={2}>
                         <option hidden value="2">Pilih RAD Level 2</option>
-                        <option value="option 1">option 1</option>
-                        <option value="option 2">option 2</option>
+                        <option value="option 1">RAD.01.01</option>
+                        <option value="option 2">RAD.02.01</option>
                         <option value="option 3">option 3</option>
                         <option value="option 4">option 4</option>
                     </select>
@@ -82,7 +80,7 @@ function FormTambahData() {
                         <option value="option 4">option 4</option>
                     </select>
                 </div>
-                <button className="my-3 py-2 bg-emerald-300 text-white">SIMPAN</button>
+                <Button halaman_url="/ProsesBisnis">Simpan</Button>
             </form>
         </div>
         </>

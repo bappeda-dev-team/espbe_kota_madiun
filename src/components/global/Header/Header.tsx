@@ -13,7 +13,7 @@ function Header() {
 
         if ( url === "/" || url === "/User" || url === "/DataMaster"){
             setTextPath('Kota');
-        } else if ( url === "/ProsesBisnis" || url === "/ProsesBisnis/TambahData" ||url === "/Layanan" || url === "/DataInformasi" || url === "/Aplikasi" || url === "/GapArsitektur") {
+        } else if ( url === "/ProsesBisnis" || url === "/ProsesBisnis/TambahData" || url === "/Layanan/StandartPelayanan" || url === "/Layanan/FormPelayanan" || url === "/DataInformasi" || url === "/Aplikasi" || url === "/GapArsitektur" || url === "/PetaRencana") {
             setTextPath('Arsitekur SPBE')
         } else {
             setTextPath('-')
