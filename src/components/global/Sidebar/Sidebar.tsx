@@ -103,7 +103,7 @@ function Sidebar(){
         setAplikasiActive(false),
         setGapArsitekturActive(false)
         setPetaRencanaActive(false)
-      } else if (url === "/DataInformasi") {
+      } else if (url === "/DataInformasi" || url === "/DataInformasi/TambahData") {
         setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),

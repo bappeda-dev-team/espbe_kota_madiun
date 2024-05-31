@@ -1,10 +1,9 @@
-import Perbaikan from "@/components/maintenance/perbaikan";
+import FormLayanan from "@/components/pages/Layanan/FormLayanan";
 
 const FormPelayanan = () => {
     return(
         <>
-            <h1>halaman form pelayanan</h1>
-            <Perbaikan />
+            <FormLayanan />
         </>
     );
 }

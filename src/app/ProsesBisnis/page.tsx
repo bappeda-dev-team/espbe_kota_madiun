@@ -8,7 +8,7 @@ const ProsesBisnis = () => {
     <>
       <div className="mb-5 flex justify-between items-center">
         <HeaderProsesBisnis />
-        <Button halaman_url="/ProsesBisnis/TambahData" typee="reset">Tambah Data</Button>
+        <Button halaman_url="/ProsesBisnis/TambahData" typee="button">Tambah Data</Button>
       </div>
       <Table />
     </>

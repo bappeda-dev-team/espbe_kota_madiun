@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Loading from "../../../global/Loading/Loading";
+import Button from "@/components/common/Button/Button";
 
 interface radLevel {
   Id: number,
@@ -80,6 +81,7 @@ function Table() {
               <th className="px-6 py-3">RAB Level 4</th>
               <th className="px-6 py-3">RAB Level 5</th>
               <th className="px-6 py-3">RAB Level 6</th>
+              <th className="px-6 py-3 text-center">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -95,6 +97,10 @@ function Table() {
               <td className="px-6 py-4">{data.rab_level_4 ? `${data.rab_level_4.kode_referensi} ${data.rab_level_4.nama_referensi}` : "N/A"}</td>
               <td className="px-6 py-4">{data.rab_level_5 ? `${data.rab_level_5.kode_referensi} ${data.rab_level_5.nama_referensi}` : "N/A"}</td>
               <td className="px-6 py-4">{data.rab_level_6 ? `${data.rab_level_6.kode_referensi} ${data.rab_level_6.nama_referensi}` : "N/A"}</td>
+              <td className="px-6 py-4 flex flex-col">
+                  <Button typee="button" className="my-1">Edit</Button>
+                  <Button typee="button" className="bg-red-500 my-1">Hapus</Button>
+              </td>
             </tr>
           ))}
           </tbody>

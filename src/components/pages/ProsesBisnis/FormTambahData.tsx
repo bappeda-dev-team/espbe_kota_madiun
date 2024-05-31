@@ -80,7 +80,9 @@ function FormTambahData() {
                         <option value="option 4">option 4</option>
                     </select>
                 </div>
-                <Button halaman_url="/ProsesBisnis">Simpan</Button>
+                <div className="pt-5">
+                    <Button className="w-full" halaman_url="/ProsesBisnis">Simpan</Button>
+                </div>
             </form>
         </div>
         </>
