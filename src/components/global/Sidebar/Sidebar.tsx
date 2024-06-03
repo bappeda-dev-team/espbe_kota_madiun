@@ -115,7 +115,7 @@ function Sidebar(){
         setAplikasiActive(false),
         setGapArsitekturActive(false)
         setPetaRencanaActive(false)
-      } else if (url === "/Aplikasi") {
+      } else if (url === "/Aplikasi" || url === "/Aplikasi/TambahData") {
         setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),

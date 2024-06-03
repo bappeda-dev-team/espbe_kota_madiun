@@ -21,6 +21,7 @@ function Header() {
             url === "/DataInformasi" ||
             url === "/DataInformasi/TambahData" ||
             url === "/Aplikasi" || 
+            url === "/Aplikasi/TambahData" || 
             url === "/GapArsitektur" || 
             url === "/PetaRencana") {
             setTextPath('Arsitekur SPBE')

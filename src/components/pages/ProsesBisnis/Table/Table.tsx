@@ -71,16 +71,16 @@ function Table() {
         <table className="w-full text-sm text-left">
           <thead className="text-xs text-gray-700 uppercase border">
             <tr>
-              <th className="px-6 py-3">No.</th>
-              <th className="px-6 py-3">Proses Bisnis</th>
-              <th className="px-6 py-3">Sasaran Kota</th>
-              <th className="px-6 py-3">Bidang Urusan</th>
-              <th className="px-6 py-3">RAB Level 1</th>
-              <th className="px-6 py-3">RAB Level 2</th>
-              <th className="px-6 py-3">RAB Level 3</th>
-              <th className="px-6 py-3">RAB Level 4</th>
-              <th className="px-6 py-3">RAB Level 5</th>
-              <th className="px-6 py-3">RAB Level 6</th>
+              <th className="px-6 py-3 max-w-[20px]">No.</th>
+              <th className="px-6 py-3 min-w-[200px]">Proses Bisnis</th>
+              <th className="px-6 py-3 min-w-[200px]">Sasaran Kota</th>
+              <th className="px-6 py-3 min-w-[200px]">Bidang Urusan</th>
+              <th className="px-6 py-3 min-w-[200px]">RAB Level 1</th>
+              <th className="px-6 py-3 min-w-[200px]">RAB Level 2</th>
+              <th className="px-6 py-3 min-w-[200px]">RAB Level 3</th>
+              <th className="px-6 py-3 min-w-[200px]">RAB Level 4</th>
+              <th className="px-6 py-3 min-w-[200px]">RAB Level 5</th>
+              <th className="px-6 py-3 min-w-[200px]">RAB Level 6</th>
               <th className="px-6 py-3 text-center">Aksi</th>
             </tr>
           </thead>

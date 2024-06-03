@@ -8,8 +8,8 @@ const Table = () => {
                 <thead className="text-xs text-gray-700 uppercase border">
                     <tr>
                         <th className="px-6 py-3 max-w-[20px]">No.</th>
-                        <th className="px-6 py-3 min-w-[200px]">Nama Data</th>
-                        <th className="px-6 py-3 min-w-[200px]">Sifat Data</th>
+                        <th className="px-6 py-3 min-w-[200px]">Nama Aplikasi</th>
+                        <th className="px-6 py-3 min-w-[200px]">Fungsi Aplikasi</th>
                         <th className="px-6 py-3 min-w-[200px]">Jenis Data</th>
                         <th className="px-6 py-3 min-w-[200px]">Produsen Data</th>
                         <th className="px-6 py-3 min-w-[200px]">Penanggung Jawab Data</th>
@@ -26,8 +26,8 @@ const Table = () => {
                 <tbody>
                     <tr className="border rounded-b-lg">
                         <td className="px-6 py-4">1</td>
-                        <td className="px-6 py-4">data perencanaan kinerja dan anggaran</td>
-                        <td className="px-6 py-4">Terbatas</td>
+                        <td className="px-6 py-4">E-KAK</td>
+                        <td className="px-6 py-4">Penyusunan dokumen perencanaan dan penganggaran serta akuntabilitas kinerja dan anggaran</td>
                         <td className="px-6 py-4">Keuangan</td>
                         <td className="px-6 py-4">Produsen Data</td>
                         <td className="px-6 py-4">Badan Perencanaan, penelitian dan pengembangan daerah</td>

@@ -7,17 +7,17 @@ const Table = () => {
                 <table className="w-full text-sm text-left">
                 <thead className="text-xs text-gray-700 uppercase border">
                     <tr>
-                        <th className="px-6 py-3">No.</th>
-                        <th className="px-6 py-3">Nama Layanan</th>
-                        <th className="px-6 py-3">Tujuan Layanan</th>
-                        <th className="px-6 py-3">Target Layanan</th>
-                        <th className="px-6 py-3">Metode Layanan</th>
-                        <th className="px-6 py-3">Kementrian/Lembaga Terkait</th>
-                        <th className="px-6 py-3">RAL Level 1</th>
-                        <th className="px-6 py-3">RAL Level 2</th>
-                        <th className="px-6 py-3">RAL Level 3</th>
-                        <th className="px-6 py-3">RAL Level 4</th>
-                        <th className="px-6 py-3">RAL Level 5</th>
+                        <th className="px-6 py-3 max-w-[20px]">No.</th>
+                        <th className="px-6 py-3 min-w-[200px]">Nama Layanan</th>
+                        <th className="px-6 py-3 min-w-[200px]">Tujuan Layanan</th>
+                        <th className="px-6 py-3 min-w-[200px]">Target Layanan</th>
+                        <th className="px-6 py-3 min-w-[200px]">Metode Layanan</th>
+                        <th className="px-6 py-3 min-w-[200px]">Kementrian/Lembaga Terkait</th>
+                        <th className="px-6 py-3 min-w-[200px]">RAL Level 1</th>
+                        <th className="px-6 py-3 min-w-[200px]">RAL Level 2</th>
+                        <th className="px-6 py-3 min-w-[200px]">RAL Level 3</th>
+                        <th className="px-6 py-3 min-w-[200px]">RAL Level 4</th>
+                        <th className="px-6 py-3 min-w-[200px]">RAL Level 5</th>
                         <th className="px-6 py-3 text-center">Aksi</th>
                     </tr>
                 </thead>
