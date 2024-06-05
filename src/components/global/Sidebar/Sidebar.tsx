@@ -79,7 +79,7 @@ function Sidebar(){
         setAplikasiActive(false),
         setGapArsitekturActive(false)
         setPetaRencanaActive(false)
-      } else if (url === "/Layanan/FormPelayanan") {
+      } else if (url === "/Layanan/LayananSPBE" || url === "/Layanan/LayananSPBE/TambahData") {
         setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
@@ -320,7 +320,7 @@ function Sidebar(){
                             Standart Pelayanan
                           </li>
                         </Link>
-                        <Link href="/Layanan/FormPelayanan">
+                        <Link href="/Layanan/LayananSPBE">
                           <li className={formLayananActive ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg" : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"}>
                           {formLayananActive ? 
                             <Image className="pr-2"
@@ -339,7 +339,7 @@ function Sidebar(){
                               height={30}
                             />
                             }
-                            Form Layanan SPBE
+                            Layanan SPBE
                           </li>
                         </Link>
                       </div>

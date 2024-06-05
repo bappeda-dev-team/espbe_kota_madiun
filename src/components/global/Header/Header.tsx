@@ -17,7 +17,8 @@ function Header() {
             url === "/ProsesBisnis" || 
             url === "/ProsesBisnis/TambahData" || 
             url === "/Layanan/StandartPelayanan" || 
-            url === "/Layanan/FormPelayanan" || 
+            url === "/Layanan/LayananSPBE" ||
+            url === "/Layanan/LayananSPBE/TambahData" || 
             url === "/DataInformasi" ||
             url === "/DataInformasi/TambahData" ||
             url === "/Aplikasi" || 

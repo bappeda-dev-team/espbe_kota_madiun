@@ -1,6 +1,6 @@
 import FormLayanan from "@/components/pages/Layanan/FormLayanan";
 
-const FormPelayanan = () => {
+const TambahData = () => {
     return(
         <>
             <FormLayanan />
@@ -8,4 +8,4 @@ const FormPelayanan = () => {
     );
 }
 
-export default FormPelayanan;
+export default TambahData;
