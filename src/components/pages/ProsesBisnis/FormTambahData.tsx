@@ -2,6 +2,8 @@
 
 import Button from "@/components/common/Button/Button";
 import { useState, useEffect } from "react";
+import {useForm} from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 interface radLevel {
   Id: number,
@@ -12,26 +14,12 @@ interface radLevel {
   tahun : number
 }
 
-interface typeProsesBisnis {
-  id : number;
-  nama_proses_bisnis : string;
-  sasaran_kota : string;
-  kode_proses_bisnis: string;
-  kode_opd: string;
-  bidang_urusan : string;
-  rab_level_1? : radLevel;
-  rab_level_2? : radLevel;
-  rab_level_3? : radLevel;
-  rab_level_4? : radLevel;
-  rab_level_5? : radLevel;
-  rab_level_6? : radLevel;
-  tahun: number;
-}
-
 function FormTambahData() {
 
+    const { register, handleSubmit, reset, formState: {errors} } = useForm();
     const [dropDown, setDropDown] = useState<radLevel[]>([])
     const API_URL = process.env.NEXT_PUBLIC_API_URL
+    const router = useRouter();
 
     // fetching data untuk dropdown RAB
     useEffect(() => {
@@ -43,7 +31,6 @@ function FormTambahData() {
                 }
                 const data = await response.json();
                 setDropDown(data.data);
-                console.log(data.data)
             } catch (err){
                 console.log("database gagal / tidak terhubung")
             }
@@ -53,87 +40,204 @@ function FormTambahData() {
 
     },[]);
 
-    const RAD_Option = (level : number) => {
+    const RAB_Option = (level : number) => {
         return dropDown
         .filter(item => item.level_referensi === level)
         .map(item => (
-            <option key={item.Id} value={item.Id}>{item.kode_referensi}</option>
+            <option 
+                key={item.Id} 
+                value={item.Id}
+            >
+                {item.kode_referensi}
+            </option>
         ))
     }
+
+    const prosesBisnis = async (formData: any) => {
+        const dataProsesBisnis = {
+            id: 1,
+            kode_opd: formData.kode_opd,
+            nama_proses_bisnis: formData.nama_proses_bisnis,
+            sasaran_kota: formData.sasaran_kota,
+            kode_proses_bisnis: formData.kode_proses_bisnis,
+            bidang_urusan: formData.bidang_urusan,
+            rab_level_1_id: parseInt(formData.rab_level_1_id, 10),
+            rab_level_2_id: parseInt(formData.rab_level_2_id, 10),
+            rab_level_3_id: parseInt(formData.rab_level_3_id, 10),
+            rab_level_4_id: formData.rab_level_4_id ? parseInt(formData.rab_level_4_id, 10) : null,
+            rab_level_5_id: formData.rab_level_5_id ? parseInt(formData.rab_level_5_id, 10) : null,
+            rab_level_6_id: formData.rab_level_6_id ? parseInt(formData.rab_level_6_id, 10) : null,
+            tahun: parseInt(formData.tahun, 10)
+        }
+        try{
+            const response = await fetch(`${API_URL}/v1/createprosesbisnis`, {
+                method : 'POST',
+                headers : {
+                    'Content-Type' : 'application/json' 
+                },
+                body : JSON.stringify(dataProsesBisnis)
+            });
+            if(!response.ok) {
+                throw new Error('cant post data')
+            }
+            const result = response.json();
+            alert('berhasil menambahkan data');
+            router.push("/ProsesBisnis")
+        } catch (err) {
+            console.log("gagal menyimpan data, silakan cek koneksi internet/database server")
+        }
+    }
+    
 
     return(
         <>
         <div className="border p-5">
             <h1 className="uppercase font-bold">Form tambah data proses bisnis</h1>
-            <form className="flex flex-col mx-5 py-5">
+            <form className="flex flex-col mx-5 py-5" onSubmit={handleSubmit(prosesBisnis)}>
                 <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="1">Proses Bisnis</label>
-                    <input className="border px-4 py-2" id="1" name="1" type="text" placeholder="Masukkan Proses Bisnis" /> 
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="nama_proses_bisnis">Proses Bisnis</label>
+                    <input 
+                        className="border px-4 py-2" 
+                        id="nama_proses_bisnis" 
+                        type="text" 
+                        placeholder="Masukkan Proses Bisnis"
+                        {...register("nama_proses_bisnis", {required: true})}
+                    />
+                    {errors.nama_proses_bisnis && <><h1 className="text-red-500">proses bisnis harus terisi</h1></>}
                 </div>
                 <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="1">Sasaran Kota</label>
-                    <input className="border px-4 py-2" id="1" name="1" type="text" placeholder="Masukkan Sasaran Kota" /> 
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="sasaran_kota">Sasaran Kota</label>
+                    <input 
+                        className="border px-4 py-2" 
+                        id="sasaran_kota"
+                        type="text" 
+                        placeholder="Masukkan Sasaran Kota"
+                        {...register("sasaran_kota", {required: true})}
+                    /> 
+                    {errors.sasaran_kota && <><h1 className="text-red-500">sasaran kota harus terisi</h1></>}
                 </div>
                 <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="1">Bidang Urusan</label>
-                    <input className="border px-4 py-2" id="1" name="1" type="text" placeholder="Masukkan Bidang Urusan" /> 
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="bidang_urusan">Bidang Urusan</label>
+                    <input 
+                        className="border px-4 py-2" 
+                        id="bidang_urusan"
+                        type="text" 
+                        placeholder="Masukkan Bidang Urusan" 
+                        {...register("bidang_urusan", {required: true})}
+                    /> 
+                    {errors.bidang_urusan && <><h1 className="text-red-500">bidang urusan harus terisi</h1></>}
                 </div>
                 <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="1">Kode OPD</label>
-                    <input className="border px-4 py-2" id="1" name="1" type="number" placeholder="Masukkan Kode OPD" /> 
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="kode_opd">Kode OPD</label>
+                    <input 
+                        className="border px-4 py-2" 
+                        id="kode_opd"
+                        type="number" 
+                        placeholder="Masukkan Kode OPD" 
+                        {...register("kode_opd", {required: true})}
+                    /> 
+                    {errors.kode_opd && <><h1 className="text-red-500">kode OPD harus terisi</h1></>}
                 </div>
                 <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="1">Kode Proses Bisnis</label>
-                    <input className="border px-4 py-2" id="1" name="1" type="number" placeholder="Masukkan Kode Proses Bisnis" /> 
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="kode_proses_bisnis">Kode Proses Bisnis</label>
+                    <input 
+                        className="border px-4 py-2" 
+                        id="kode_proses_bisnis" 
+                        type="number" 
+                        placeholder="Masukkan Kode Proses Bisnis" 
+                        {...register("kode_proses_bisnis", {required: true})}
+                    /> 
+                    {errors.kode_proses_bisnis && <><h1 className="text-red-500">kode proses bisnis harus terisi</h1></>} 
                 </div>
                 <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="1">Tahun</label>
-                    <input className="border px-4 py-2" id="1" name="1" type="number" placeholder="Masukkan Tahun" /> 
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tahun</label>
+                    <input 
+                        className="border px-4 py-2" 
+                        id="tahun"
+                        type="number"
+                        placeholder="Masukkan Tahun" 
+                        {...register("tahun", {required: true})}
+                    /> 
+                    {errors.tahun && <><h1 className="text-red-500">tahun harus terisi</h1></>} 
                 </div>
                 <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="RAD Level 1">RAD Level 1</label>
-                        <select className="border px-4 py-2" name="RAD Level 1" id="RAD Level 1" defaultValue="">
-                            <option hidden value="">Pilih RAD Level 1</option>
-                            {RAD_Option(1)}
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_1_id">RAB Level 1</label>
+                        <select 
+                            className="border px-4 py-2" 
+                            id="rab_level_1_id" 
+                            defaultValue=""
+                            {...register("rab_level_1_id", {required: true})}
+                        >
+                            <option hidden value="">Pilih RAB Level 1</option>
+                            {RAB_Option(1)}
+                        </select>
+                        {errors.rab_level_1_id && <><h1 className="text-red-500">rab Level 1 Harus terisi</h1></>}
+                </div>
+                <div className="flex flex-col py-3">
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_2_id">RAB Level 2</label>
+                        <select 
+                            className="border px-4 py-2" 
+                            id="rab_level_2_id" 
+                            defaultValue=""
+                            {...register("rab_level_2_id", {required: true})}
+                        >
+                            <option hidden value="">Pilih RAB Level 2</option>
+                            {RAB_Option(2)}
+                        </select>
+                        {errors.rab_level_2_id && <><h1 className="text-red-500">rab Level 2 Harus terisi</h1></>}
+                </div>
+                <div className="flex flex-col py-3">
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_3_id">RAB Level 3</label>
+                        <select 
+                            className="border px-4 py-2" 
+                            id="rab_level_3_id" 
+                            defaultValue=""
+                            {...register("rab_level_3_id", {required: true})}
+                        >
+                            <option hidden value="">Pilih rab Level 3</option>
+                            {RAB_Option(3)}
+                        </select>
+                        {errors.rab_level_3_id && <><h1 className="text-red-500">rab Level 3 Harus terisi</h1></>}
+                </div>
+                {/* data masih blm ada rab 4-6 */}
+                <div className="flex flex-col py-3">
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_4_id">RAB Level 4</label>
+                        <select 
+                            className="border px-4 py-2" 
+                            id="rab_level_4_id" 
+                            defaultValue=""
+                            {...register("rab_level_4_id")}
+                        >
+                            <option hidden value="">Pilih rab Level 4</option>
+                            {RAB_Option(4)}
                         </select>
                 </div>
                 <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="RAD Level 2">RAD Level 2</label>
-                    <select className="border px-4 py-2" name="RAD Level 2" id="RAD Level 2" defaultValue="">
-                        <option hidden value="">Pilih RAD Level 2</option>
-                        {RAD_Option(2)}
-                    </select>
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_5_id">RAB Level 5</label>
+                        <select 
+                            className="border px-4 py-2" 
+                            id="rab_level_5_id" 
+                            defaultValue=""
+                            {...register("rab_level_5_id")}
+                        >
+                            <option hidden value="">Pilih rab Level 5</option>
+                            {RAB_Option(5)}
+                        </select>
                 </div>
                 <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="RAD Level 3">RAD Level 3</label>
-                    <select className="border px-4 py-2" name="RAD Level 3" id="RAD Level 3" defaultValue={3}>
-                        <option hidden value="3">Pilih RAD Level 3</option>
-                        {RAD_Option(3)}
-                    </select>
-                </div>
-                <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="RAD Level 4">RAD Level 4</label>
-                    <select className="border px-4 py-2" name="RAD Level 4" id="RAD Level 4" defaultValue={4}>
-                        <option hidden value="4">Pilih RAD Level 4</option>
-                        {RAD_Option(4)}
-                    </select>
-                </div>
-                <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="RAD Level 5">RAD Level 5</label>
-                    <select className="border px-4 py-2" name="RAD Level 5" id="RAD Level 5" defaultValue={5}>
-                        <option hidden value="5">Pilih RAD Level 5</option>
-                        {RAD_Option(5)}
-                    </select>
-                </div>
-                <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="RAD Level 6">RAD Level 6</label>
-                    <select className="border px-4 py-2" name="RAD Level 6" id="RAD Level 6" defaultValue={6}>
-                        <option hidden value="6">Pilih RAD Level 6</option>
-                        {RAD_Option(6)}
-                    </select>
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_6_id">RAB Level 6</label>
+                        <select 
+                            className="border px-4 py-2" 
+                            id="rab_level_6_id" 
+                            defaultValue=""
+                            {...register("rab_level_6_id")}
+                        >
+                            <option hidden value="">Pilih rab Level 6</option>
+                            {RAB_Option(6)}
+                        </select>
                 </div>
                 <div className="pt-5">
-                    <Button className="w-full" halaman_url="/ProsesBisnis">Simpan</Button>
+                    <Button className="w-full">Simpan</Button>
                 </div>
             </form>
         </div>

@@ -55,6 +55,21 @@ function Table() {
     fetchingData();
   }, []);
 
+  const hapusProsesBisnis = async (id: number) => {
+    try{
+      const response = await fetch(`${API_URL}/v1/deleteprosesbisnis/${id}`, {
+        method: 'DELETE'
+      });
+      if(!response.ok){
+        throw new Error('cant fetch data')
+      }
+      alert('berhasil menghapus data');
+      setDataProsesBisnis(dataProsesBisnis.filter(item => item.id !== id));
+    } catch (err){
+      alert('gagal menghapus data, silakan cek koneksi internet/database server');
+    }
+  }
+
   if (loading) {
     return(
       <Loading />
@@ -99,7 +114,7 @@ function Table() {
               <td className="px-6 py-4">{data.rab_level_6 ? `${data.rab_level_6.kode_referensi} ${data.rab_level_6.nama_referensi}` : "N/A"}</td>
               <td className="px-6 py-4 flex flex-col">
                   <Button typee="button" className="my-1">Edit</Button>
-                  <Button typee="button" className="bg-red-500 my-1">Hapus</Button>
+                  <Button onClick={() => hapusProsesBisnis(data.id)} typee="button" className="bg-red-500 my-1">Hapus</Button>
               </td>
             </tr>
           ))}
