@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import {useForm} from "react-hook-form";
 import { useRouter } from "next/navigation";
 
-interface radLevel {
+interface rabLevel1_3 {
   Id: number,
   kode_referensi : string,
   nama_referensi : string,
@@ -17,7 +17,7 @@ interface radLevel {
 function FormTambahData() {
 
     const { register, handleSubmit, reset, formState: {errors} } = useForm();
-    const [dropDown, setDropDown] = useState<radLevel[]>([])
+    const [dropDown, setDropDown] = useState<rabLevel1_3[]>([])
     const API_URL = process.env.NEXT_PUBLIC_API_URL
     const router = useRouter();
 
@@ -84,7 +84,7 @@ function FormTambahData() {
             alert('berhasil menambahkan data');
             router.push("/ProsesBisnis")
         } catch (err) {
-            console.log("gagal menyimpan data, silakan cek koneksi internet/database server")
+            alert("gagal menyimpan data, silakan cek koneksi internet/database server")
         }
     }
     
@@ -132,7 +132,7 @@ function FormTambahData() {
                     <input 
                         className="border px-4 py-2" 
                         id="kode_opd"
-                        type="number" 
+                        type="text" 
                         placeholder="Masukkan Kode OPD" 
                         {...register("kode_opd", {required: true})}
                     /> 

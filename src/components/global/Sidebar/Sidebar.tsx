@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useState,useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 
 
 function Sidebar(){
 
     const url = usePathname();
-    
+    const {id} = useParams();
     const [dahsboardActive, setDahsboardActive] = useState<boolean>(false);
     const [UserActive, setUserActive] = useState<boolean>(false);
     const [DataMasterActive, setDataMasterActive] = useState<boolean>(false);
@@ -68,6 +69,18 @@ function Sidebar(){
         setGapArsitekturActive(false)
         setPetaRencanaActive(false)
       } else if (url === "/ProsesBisnis" || url === "/ProsesBisnis/TambahData") {
+        setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(false),
+        setProsesBisnisActive(true),
+        setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false)
+        setPetaRencanaActive(false)
+      } else if (url === "/ProsesBisnis" || url === `/ProsesBisnis/EditData/${id}`) {
         setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),

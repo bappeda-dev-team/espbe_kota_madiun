@@ -4,13 +4,23 @@ import { useState, useEffect } from "react";
 import Loading from "../../../global/Loading/Loading";
 import Button from "@/components/common/Button/Button";
 
-interface radLevel {
+interface rabLevel1_3 {
   Id: number,
   kode_referensi : string,
   nama_referensi : string,
   level_referensi : number,
   jenis_referensi : string,
   tahun : number;
+}
+
+interface rabLevel4_6 {
+  id : number,
+  nama_pohon : string,
+  jenis_pohon : string,
+  level_pohon : number,
+  kode_opd : string,
+  tahun : number;
+
 }
 
 interface typeProsesBisnis {
@@ -20,12 +30,12 @@ interface typeProsesBisnis {
   kode_proses_bisnis: string;
   kode_opd: string;
   bidang_urusan : string;
-  rab_level_1? : radLevel;
-  rab_level_2? : radLevel;
-  rab_level_3? : radLevel;
-  rab_level_4? : radLevel;
-  rab_level_5? : radLevel;
-  rab_level_6? : radLevel;
+  rab_level_1? : rabLevel1_3;
+  rab_level_2? : rabLevel1_3;
+  rab_level_3? : rabLevel1_3;
+  rab_level_4? : rabLevel4_6;
+  rab_level_5? : rabLevel4_6;
+  rab_level_6? : rabLevel4_6;
   tahun: number;
 }
 
@@ -109,12 +119,24 @@ function Table() {
               <td className="px-6 py-4">{data.rab_level_1 ? `${data.rab_level_1.kode_referensi} ${data.rab_level_1.nama_referensi}` : "N/A"}</td>
               <td className="px-6 py-4">{data.rab_level_2 ? `${data.rab_level_2.kode_referensi} ${data.rab_level_2.nama_referensi}` : "N/A"}</td>
               <td className="px-6 py-4">{data.rab_level_3 ? `${data.rab_level_3.kode_referensi} ${data.rab_level_3.nama_referensi}` : "N/A"}</td>
-              <td className="px-6 py-4">{data.rab_level_4 ? `${data.rab_level_4.kode_referensi} ${data.rab_level_4.nama_referensi}` : "N/A"}</td>
-              <td className="px-6 py-4">{data.rab_level_5 ? `${data.rab_level_5.kode_referensi} ${data.rab_level_5.nama_referensi}` : "N/A"}</td>
-              <td className="px-6 py-4">{data.rab_level_6 ? `${data.rab_level_6.kode_referensi} ${data.rab_level_6.nama_referensi}` : "N/A"}</td>
+              <td className="px-6 py-4">{data.rab_level_4 ? `${data.rab_level_4.jenis_pohon} - ${data.rab_level_4.nama_pohon}` : "N/A"}</td>
+              <td className="px-6 py-4">{data.rab_level_5 ? `${data.rab_level_5.jenis_pohon} - ${data.rab_level_5.nama_pohon}` : "N/A"}</td>
+              <td className="px-6 py-4">{data.rab_level_6 ? `${data.rab_level_6.jenis_pohon} - ${data.rab_level_6.nama_pohon}` : "N/A"}</td>
               <td className="px-6 py-4 flex flex-col">
-                  <Button typee="button" className="my-1">Edit</Button>
-                  <Button onClick={() => hapusProsesBisnis(data.id)} typee="button" className="bg-red-500 my-1">Hapus</Button>
+                  <Button 
+                    typee="button" 
+                    className="my-1"
+                    halaman_url={`/ProsesBisnis/EditData/${data.id}`}
+                  >
+                    Edit
+                  </Button>
+                  <Button 
+                    onClick={() => hapusProsesBisnis(data.id)} 
+                    typee="button" 
+                    className="bg-red-500 my-1"
+                  >
+                    Hapus
+                  </Button>
               </td>
             </tr>
           ))}

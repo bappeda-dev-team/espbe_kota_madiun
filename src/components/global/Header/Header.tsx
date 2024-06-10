@@ -2,9 +2,11 @@
 
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
 function Header() {
 
+    const {id} = useParams();
     const pathName = usePathname();
     const [textPath, setTextPath] = useState<string>()
     const url = usePathname();
@@ -16,6 +18,7 @@ function Header() {
         } else if ( 
             url === "/ProsesBisnis" || 
             url === "/ProsesBisnis/TambahData" || 
+            url === `/ProsesBisnis/EditData/${id}` || 
             url === "/Layanan/StandartPelayanan" || 
             url === "/Layanan/LayananSPBE" ||
             url === "/Layanan/LayananSPBE/TambahData" || 
