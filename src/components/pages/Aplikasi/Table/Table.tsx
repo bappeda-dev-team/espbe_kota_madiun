@@ -7,7 +7,7 @@ const Table = () => {
                 <table className="w-full text-sm text-left">
                 <thead className="text-xs text-gray-700 uppercase border">
                     <tr>
-                        <th className="px-6 py-3 max-w-[20px]">No.</th>
+                        <th className="px-6 py-3 max-w-[20px] sticky bg-white left-[-2px]">No.</th>
                         <th className="px-6 py-3 min-w-[200px]">Nama Aplikasi</th>
                         <th className="px-6 py-3 min-w-[200px]">Fungsi Aplikasi</th>
                         <th className="px-6 py-3 min-w-[200px]">Jenis Data</th>
@@ -24,8 +24,8 @@ const Table = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr className="border rounded-b-lg">
-                        <td className="px-6 py-4">1</td>
+                    <tr className="border rounded-b-lg hover:bg-slate-50">
+                        <td className="px-6 py-4 sticky bg-white left-[-2px]">1</td>
                         <td className="px-6 py-4">E-KAK</td>
                         <td className="px-6 py-4">Penyusunan dokumen perencanaan dan penganggaran serta akuntabilitas kinerja dan anggaran</td>
                         <td className="px-6 py-4">Keuangan</td>

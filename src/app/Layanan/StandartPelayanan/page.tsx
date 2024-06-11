@@ -1,8 +1,9 @@
-import Perbaikan from "@/components/maintenance/perbaikan"
+import FormStandartPelayanan from "@/components/pages/StandartPelayanan/FormStandartPelayanan"
+
 const Layanan = () => {
     return(
         <>
-            <Perbaikan />        
+            <FormStandartPelayanan />        
         </>
     )
 } 

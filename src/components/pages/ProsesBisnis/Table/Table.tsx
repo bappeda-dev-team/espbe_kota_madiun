@@ -23,10 +23,18 @@ interface rabLevel4_6 {
 
 }
 
+interface sasaran_kota{
+  ID : number,
+  Sasaran :string,
+  TujuanKota  : string,
+  StrategiKota : string,
+  Tahun : number;
+}
+
 interface typeProsesBisnis {
   id : number;
   nama_proses_bisnis : string;
-  sasaran_kota : string;
+  sasaran_kota?: sasaran_kota;
   kode_proses_bisnis: string;
   kode_opd: string;
   bidang_urusan : string;
@@ -36,7 +44,7 @@ interface typeProsesBisnis {
   rab_level_4? : rabLevel4_6;
   rab_level_5? : rabLevel4_6;
   rab_level_6? : rabLevel4_6;
-  tahun: number;
+  tahun: number,
 }
 
 function Table() {
@@ -96,7 +104,7 @@ function Table() {
         <table className="w-full text-sm text-left">
           <thead className="text-xs text-gray-700 uppercase border">
             <tr>
-              <th className="px-6 py-3 max-w-[20px]">No.</th>
+              <th className="px-6 py-3 max-w-[20px] sticky bg-white left-[-2px]">No.</th>
               <th className="px-6 py-3 min-w-[200px]">Proses Bisnis</th>
               <th className="px-6 py-3 min-w-[200px]">Sasaran Kota</th>
               <th className="px-6 py-3 min-w-[200px]">Bidang Urusan</th>
@@ -111,10 +119,10 @@ function Table() {
           </thead>
           <tbody>
           {dataProsesBisnis.map ((data, index) => (
-            <tr key={data.id} className="border rounded-b-lg">
-              <td className="px-6 py-4">{index + 1}</td>
+            <tr key={data.id} className="border rounded-b-lg hover:bg-slate-50">
+              <td className="px-6 py-4 sticky bg-white left-[-2px]">{index + 1}</td>
               <td className="px-6 py-4">{data.nama_proses_bisnis}</td>
-              <td className="px-6 py-4">{data.sasaran_kota}</td>
+              <td className="px-6 py-4">{data.sasaran_kota? `${data.sasaran_kota.Sasaran}` : "N/A"}</td>
               <td className="px-6 py-4">{data.bidang_urusan}</td>
               <td className="px-6 py-4">{data.rab_level_1 ? `${data.rab_level_1.kode_referensi} ${data.rab_level_1.nama_referensi}` : "N/A"}</td>
               <td className="px-6 py-4">{data.rab_level_2 ? `${data.rab_level_2.kode_referensi} ${data.rab_level_2.nama_referensi}` : "N/A"}</td>
