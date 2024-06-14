@@ -135,7 +135,23 @@ function FormTambahData() {
             rab_level_6_id: formData.rab_level_6_id ? parseInt(formData.rab_level_6_id, 10) : null,
             tahun: parseInt(formData.tahun, 10)
         }
-        console.log(formData)
+        try{
+            const response = await fetch(`${API_URL}/v1/createprosesbisnis`, {
+                method : 'POST',
+                headers : {
+                    'Content-Type' : 'application/json' 
+                },
+                body : JSON.stringify(dataProsesBisnis)
+            });
+            if(!response.ok) {
+                throw new Error('cant post data')
+            }
+            const result = response.json();
+            alert('berhasil menambahkan data');
+            router.push("/ProsesBisnis")
+        } catch (err) {
+            alert("gagal menyimpan data, silakan cek koneksi internet/database server")
+        }
     }
     
 

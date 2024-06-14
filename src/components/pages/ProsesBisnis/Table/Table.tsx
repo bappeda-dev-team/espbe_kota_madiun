@@ -36,7 +36,7 @@ interface typeProsesBisnis {
   sasaran_kota?: sasaran_kota;
   kode_proses_bisnis: string;
   kode_opd: string;
-  bidang_urusan: string;
+  bidang_urusan_id: number;
   rab_level_1?: rabLevel1_3;
   rab_level_2?: rabLevel1_3;
   rab_level_3?: rabLevel1_3;
@@ -51,9 +51,11 @@ function Table() {
     [],
   );
   const [loading, setLoading] = useState<boolean>(true);
+  const [dataNull, setDataNull] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+  //fetch data proses bisnis
   useEffect(() => {
     const fetchingData = async () => {
       try {
@@ -64,8 +66,10 @@ function Table() {
         const data = await response.json();
         if (data.data === null) {
           setDataProsesBisnis([]);
+          setDataNull(true);
         } else {
           setDataProsesBisnis(data.data);
+          setDataNull(false);
         }
       } catch (err) {
         setError(
@@ -79,6 +83,7 @@ function Table() {
     fetchingData();
   }, []);
 
+  //hapus data
   const hapusProsesBisnis = async (id: number) => {
     try {
       const response = await fetch(`${API_URL}/v1/deleteprosesbisnis/${id}`, {
@@ -112,8 +117,10 @@ function Table() {
                 No.
               </th>
               <th className="px-6 py-3 min-w-[200px]">Proses Bisnis</th>
-              <th className="px-6 py-3 min-w-[200px]">Sasaran Kota</th>
+              <th className="px-6 py-3 min-w-[200px]">Kode Proses Bisnis</th>
+              <th className="px-6 py-3 min-w-[200px]">Kode OPD</th>
               <th className="px-6 py-3 min-w-[200px]">Bidang Urusan</th>
+              <th className="px-6 py-3 min-w-[200px]">Sasaran Kota</th>
               <th className="px-6 py-3 min-w-[200px]">RAB Level 1</th>
               <th className="px-6 py-3 min-w-[200px]">RAB Level 2</th>
               <th className="px-6 py-3 min-w-[200px]">RAB Level 3</th>
@@ -124,67 +131,75 @@ function Table() {
             </tr>
           </thead>
           <tbody>
-            {dataProsesBisnis.map((data, index) => (
-              <tr
-                key={data.id}
-                className="border rounded-b-lg hover:bg-slate-50"
-              >
-                <td className="px-6 py-4 sticky bg-white left-[-2px]">
-                  {index + 1}
-                </td>
-                <td className="px-6 py-4">{data.nama_proses_bisnis}</td>
-                <td className="px-6 py-4">
-                  {data.sasaran_kota ? `${data.sasaran_kota.Sasaran}` : "N/A"}
-                </td>
-                <td className="px-6 py-4">{data.bidang_urusan}</td>
-                <td className="px-6 py-4">
-                  {data.rab_level_1
-                    ? `${data.rab_level_1.kode_referensi} ${data.rab_level_1.nama_referensi}`
-                    : "N/A"}
-                </td>
-                <td className="px-6 py-4">
-                  {data.rab_level_2
-                    ? `${data.rab_level_2.kode_referensi} ${data.rab_level_2.nama_referensi}`
-                    : "N/A"}
-                </td>
-                <td className="px-6 py-4">
-                  {data.rab_level_3
-                    ? `${data.rab_level_3.kode_referensi} ${data.rab_level_3.nama_referensi}`
-                    : "N/A"}
-                </td>
-                <td className="px-6 py-4">
-                  {data.rab_level_4
-                    ? `${data.rab_level_4.jenis_pohon} - ${data.rab_level_4.nama_pohon}`
-                    : "N/A"}
-                </td>
-                <td className="px-6 py-4">
-                  {data.rab_level_5
-                    ? `${data.rab_level_5.jenis_pohon} - ${data.rab_level_5.nama_pohon}`
-                    : "N/A"}
-                </td>
-                <td className="px-6 py-4">
-                  {data.rab_level_6
-                    ? `${data.rab_level_6.jenis_pohon} - ${data.rab_level_6.nama_pohon}`
-                    : "N/A"}
-                </td>
-                <td className="px-6 py-4 flex flex-col">
-                  <Button
-                    typee="button"
-                    className="my-1"
-                    halaman_url={`/ProsesBisnis/EditData/${data.id}`}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    onClick={() => hapusProsesBisnis(data.id)}
-                    typee="button"
-                    className="bg-red-500 my-1"
-                  >
-                    Hapus
-                  </Button>
-                </td>
+            {dataNull? (
+               <tr>
+                <td className="px-6 py-3" colSpan={13}>Data Kosong / Belum Ditambahkan</td>
               </tr>
-            ))}
+            ) : (
+              dataProsesBisnis.map((data, index) => (
+                <tr
+                  key={data.id}
+                  className="border rounded-b-lg hover:bg-slate-50"
+                >
+                  <td className="px-6 py-4 sticky bg-white left-[-2px]">
+                    {index + 1}
+                  </td>
+                  <td className="px-6 py-4">{data.nama_proses_bisnis}</td>
+                  <td className="px-6 py-4">{data.kode_proses_bisnis}</td>
+                  <td className="px-6 py-4">{data.kode_opd}</td>
+                  <td className="px-6 py-4">{data.bidang_urusan_id ? `${data.bidang_urusan_id}` : "N/A"}</td>
+                  <td className="px-6 py-4">
+                    {data.sasaran_kota ? `${data.sasaran_kota.Sasaran}` : "N/A"}
+                  </td>
+                  <td className="px-6 py-4">
+                    {data.rab_level_1
+                      ? `${data.rab_level_1.kode_referensi} ${data.rab_level_1.nama_referensi}`
+                      : "N/A"}
+                  </td>
+                  <td className="px-6 py-4">
+                    {data.rab_level_2
+                      ? `${data.rab_level_2.kode_referensi} ${data.rab_level_2.nama_referensi}`
+                      : "N/A"}
+                  </td>
+                  <td className="px-6 py-4">
+                    {data.rab_level_3
+                      ? `${data.rab_level_3.kode_referensi} ${data.rab_level_3.nama_referensi}`
+                      : "N/A"}
+                  </td>
+                  <td className="px-6 py-4">
+                    {data.rab_level_4
+                      ? `${data.rab_level_4.nama_pohon}`
+                      : "N/A"}
+                  </td>
+                  <td className="px-6 py-4">
+                    {data.rab_level_5
+                      ? `${data.rab_level_5.nama_pohon}`
+                      : "N/A"}
+                  </td>
+                  <td className="px-6 py-4">
+                    {data.rab_level_6
+                      ? `${data.rab_level_6.nama_pohon}`
+                      : "N/A"}
+                  </td>
+                  <td className="px-6 py-4 flex flex-col">
+                    <Button
+                      typee="button"
+                      className="my-1"
+                      halaman_url={`/ProsesBisnis/EditData/${data.id}`}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={() => hapusProsesBisnis(data.id)}
+                      typee="button"
+                      className="bg-red-500 my-1"
+                    >
+                      Hapus
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
