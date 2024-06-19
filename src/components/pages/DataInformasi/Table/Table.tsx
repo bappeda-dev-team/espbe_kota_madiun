@@ -20,6 +20,8 @@ const Table = () => {
                         <th className="px-6 py-3 min-w-[200px]">RAD Level 2</th>
                         <th className="px-6 py-3 min-w-[200px]">RAD Level 3</th>
                         <th className="px-6 py-3 min-w-[200px]">RAD Level 4</th>
+                        <th className="px-6 py-3 min-w-[200px]">RAD Level 5</th>
+                        <th className="px-6 py-3 min-w-[200px]">RAD Level 6</th>
                         <th className="px-6 py-3 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -34,6 +36,8 @@ const Table = () => {
                         <td className="px-6 py-4">informasi terkait input</td>
                         <td className="px-6 py-4">informasi terkait output</td>
                         <td className="px-6 py-4">Interoperabilitas</td>
+                        <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
+                        <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
                         <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
                         <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
                         <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
@@ -57,6 +61,8 @@ const Table = () => {
                         <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
                         <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
                         <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
+                        <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
+                        <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
                         <td className="px-6 py-4 flex flex-col">
                             <Button typee="button" className="my-1">Edit</Button>
                             <Button typee="button" className="bg-red-500 my-1">Hapus</Button>
@@ -72,6 +78,8 @@ const Table = () => {
                         <td className="px-6 py-4">informasi terkait input</td>
                         <td className="px-6 py-4">informasi terkait output</td>
                         <td className="px-6 py-4">Interoperabilitas</td>
+                        <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
+                        <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
                         <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
                         <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
                         <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>

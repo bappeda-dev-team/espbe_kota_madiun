@@ -18,6 +18,7 @@ const Table = () => {
                         <th className="px-6 py-3 min-w-[200px]">RAL Level 3</th>
                         <th className="px-6 py-3 min-w-[200px]">RAL Level 4</th>
                         <th className="px-6 py-3 min-w-[200px]">RAL Level 5</th>
+                        <th className="px-6 py-3 min-w-[200px]">RAL Level 6</th>
                         <th className="px-6 py-3 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -33,6 +34,7 @@ const Table = () => {
                         <td className="px-6 py-4">RAL.02.03 Perencanaan Pembangunan Nasional</td>
                         <td className="px-6 py-4">RAL.02.03.02 Perencanaan Pembangunan Jangka Menengah</td>
                         <td className="px-6 py-4">RAL.2.03.02.01 Perencanaan Pembangunan jangka Menengah</td>
+                        <td className="px-6 py-4">N/A</td>
                         <td className="px-6 py-4">N/A</td>
                         <td className="px-6 py-4 flex flex-col">
                             <Button typee="button" className="my-1">Edit</Button>

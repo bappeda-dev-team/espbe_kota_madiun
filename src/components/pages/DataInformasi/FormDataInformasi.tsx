@@ -93,6 +93,26 @@ const FormDataInformasi = () => {
                         <option value="option 4">option 4</option>
                     </select>
                 </div>
+                <div className="flex flex-col py-3">
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="RAD Level 5">RAD Level 5</label>
+                    <select className="border px-4 py-2" name="RAD Level 5" id="RAD Level 5" defaultValue={6}>
+                        <option hidden value="6">Pilih RAD Level 5</option>
+                        <option value="option 1">option 1</option>
+                        <option value="option 2">option 2</option>
+                        <option value="option 3">option 3</option>
+                        <option value="option 4">option 4</option>
+                    </select>
+                </div>
+                <div className="flex flex-col py-3">
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="RAD Level 6">RAD Level 6</label>
+                    <select className="border px-4 py-2" name="RAD Level 6" id="RAD Level 6" defaultValue={6}>
+                        <option hidden value="6">Pilih RAD Level 6</option>
+                        <option value="option 1">option 1</option>
+                        <option value="option 2">option 2</option>
+                        <option value="option 3">option 3</option>
+                        <option value="option 4">option 4</option>
+                    </select>
+                </div>
                 <div className="pt-5">
                     <Button className="w-full" typee="button" halaman_url="/ProsesBisnis">Simpan</Button>
                 </div>
