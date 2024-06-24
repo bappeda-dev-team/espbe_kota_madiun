@@ -25,7 +25,7 @@ interface rabLevel4_6 {
 interface typeProsesBisnis {
     id: number;
     nama_proses_bisnis: string;
-    sasaran_kota: string;
+    sasaran_kota_id: string;
     kode_proses_bisnis: string;
     kode_opd: string;
     bidang_urusan: string;
@@ -49,7 +49,7 @@ const FormEditData = () => {
         defaultValues: {
             id: 0,
             nama_proses_bisnis: '',
-            sasaran_kota: '',
+            sasaran_kota_id: '',
             kode_proses_bisnis: '',
             kode_opd: '',
             bidang_urusan: '',
@@ -102,7 +102,7 @@ const FormEditData = () => {
                     // Set form values with the fetched data
                     setValue('id', result.data.id);
                     setValue('nama_proses_bisnis', result.data.nama_proses_bisnis);
-                    setValue('sasaran_kota', result.data.sasaran_kota);
+                    setValue('sasaran_kota_id', result.data.sasaran_kota_id);
                     setValue('kode_proses_bisnis', result.data.kode_proses_bisnis);
                     setValue('kode_opd', result.data.kode_opd);
                     setValue('bidang_urusan', result.data.bidang_urusan);
@@ -127,7 +127,7 @@ const FormEditData = () => {
         const payload = {
             id: 1,
             nama_proses_bisnis: formData.nama_proses_bisnis,
-            sasaran_kota: formData.sasaran_kota,
+            sasaran_kota_id: formData.sasaran_kota_id,
             kode_proses_bisnis: formData.kode_proses_bisnis,
             kode_opd: formData.kode_opd,
             bidang_urusan: formData.bidang_urusan,
@@ -185,10 +185,10 @@ const FormEditData = () => {
                     <input 
                         className="border px-4 py-2" 
                         type="text" 
-                        {...register('sasaran_kota', {required: true})} 
+                        {...register('sasaran_kota_id', {required: true})} 
                     />
                 </div>
-                {errors.sasaran_kota && <><h1 className="text-red-500">Sasaran Kota harus terisi</h1></>}
+                {errors.sasaran_kota_id && <><h1 className="text-red-500">Sasaran Kota harus terisi</h1></>}
                 <div className="flex flex-col py-3">
                     <label className="uppercase text-xs font-bold text-gray-700 my-2">Kode Proses Bisnis</label>
                     <input 
