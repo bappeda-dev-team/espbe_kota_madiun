@@ -14,7 +14,7 @@ interface FormValues {
   nama_proses_bisnis: string;
   kode_proses_bisnis: string;
   kode_opd: string;
-  bidang_urusan_id: undefined;
+  bidang_urusan_id: OptionType | null;
   tahun: OptionType | null;
   sasaran_kota_id: OptionType | null;
   rab_level_1_id: OptionType | null;
@@ -29,6 +29,7 @@ const FormTambahData = () => {
   const [rab_level_1_3_option, set_rab_level_1_3_option] = useState<OptionType[]>([]);
   const [rab_level_4_6_option, set_rab_level_4_6_option] = useState<OptionType[]>([]);
   const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>([]);
+  const [bidang_urusan_option, set_bidang_urusan_option] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -48,7 +49,7 @@ const FormTambahData = () => {
       nama_proses_bisnis: '',
       kode_proses_bisnis: '',
       kode_opd: '',
-      bidang_urusan_id: undefined,
+      bidang_urusan_id: null,
       tahun: null,
       sasaran_kota_id: null,
       rab_level_1_id: null,
@@ -118,13 +119,30 @@ const FormTambahData = () => {
     }
   };
 
+  const fetchBidangUrusan = async() => {
+    setIsLoading(true);
+    try{
+      const response = await fetch(`${API_URL}/v1/bidangurusan`);
+      const data = await response.json();
+      const result = data.data.map((item: any) => ({
+        value: item.id,
+        label: `${item.id}. ${item.kode_bidang_urusan} - ${item.bidang_urusan}`,
+      }));
+      set_bidang_urusan_option(result);
+    } catch (err) {
+      console.log('gagal fetching data bidang urusan')
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const formData = {
       //key : value
       nama_proses_bisnis: data.nama_proses_bisnis,
       kode_proses_bisnis: data.kode_proses_bisnis,
       kode_opd: data.kode_opd,
-      bidang_urusan_id: Number(data.bidang_urusan_id),
+      bidang_urusan_id: data.bidang_urusan_id?.value,
       tahun: data.tahun?.value,
       sasaran_kota_id: data.sasaran_kota_id?.value,
       rab_level_1_id: data.rab_level_1_id?.value,
@@ -218,27 +236,35 @@ const FormTambahData = () => {
             )}
           />
         </div>
-        <div className="flex flex-col py-3">
-          <label className="uppercase text-xs font-bold text-red-700 my-2" htmlFor="bidang_urusan_id">Bidang Urusan</label>
-          <Controller
-            name="bidang_urusan_id"
-            control={control}
-            render={({field}) => (
-              <>
-                <input 
-                  className="border px-4 py-2 rounded"
-                  {...field}
-                  type="number"
-                  id="bidang_urusan_id"
-                  placeholder="masukkan Bidang Urusan"
-                />
-              </>
-            )}
-          />
-        </div>
        
         {isClient && (
           <>
+          <div className="flex flex-col py-3">
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="bidang_urusan_id">Bidang Urusan</label>
+            <Controller
+              name="bidang_urusan_id"
+              control={control}
+              rules={{required: 'Bidang Urusan harus terisi'}}
+              render={({field}) => (
+                <>
+                  <Select 
+                    {...field}
+                    options={bidang_urusan_option}
+                    isLoading={isLoading}
+                    isSearchable
+                    placeholder="Pilih Bidang Urusan"
+                    id="bidang_urusan_id"
+                    onMenuOpen={() => {
+                      if(bidang_urusan_option.length === 0 ){
+                        fetchBidangUrusan();
+                      }
+                    }}
+                  />
+                  {errors.bidang_urusan_id && <h1 className="text-red-500">{errors.bidang_urusan_id.message}</h1>}
+                </>
+              )}
+            />
+          </div>
            <div className="flex flex-col py-3">
             <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tahun</label>
             <Controller
@@ -268,6 +294,7 @@ const FormTambahData = () => {
                 <>
                   <Select 
                     {...field}
+                    placeholder="Pilih Sasaran Kota"
                     options={sasaran_kota_option}
                     isLoading={isLoading}
                     isSearchable

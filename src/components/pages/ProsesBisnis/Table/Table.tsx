@@ -25,9 +25,11 @@ interface rabLevel4_6 {
 interface sasaran_kota {
   ID: number;
   Sasaran: string;
-  TujuanKota: string;
-  StrategiKota: string;
-  Tahun: number;
+}
+
+interface bidang_urusan {
+  id: number;
+  bidang_urusan: string;
 }
 
 interface typeProsesBisnis {
@@ -36,7 +38,7 @@ interface typeProsesBisnis {
   sasaran_kota?: sasaran_kota;
   kode_proses_bisnis: string;
   kode_opd: string;
-  bidang_urusan_id: number;
+  bidang_urusan_id:bidang_urusan;
   rab_level_1?: rabLevel1_3;
   rab_level_2?: rabLevel1_3;
   rab_level_3?: rabLevel1_3;
@@ -121,6 +123,7 @@ function Table() {
               <th className="px-6 py-3 min-w-[200px]">Kode OPD</th>
               <th className="px-6 py-3 min-w-[200px]">Bidang Urusan</th>
               <th className="px-6 py-3 min-w-[200px]">Sasaran Kota</th>
+              <th className="px-6 py-3 min-w-[200px]">Tahun</th>
               <th className="px-6 py-3 min-w-[200px]">RAB Level 1</th>
               <th className="px-6 py-3 min-w-[200px]">RAB Level 2</th>
               <th className="px-6 py-3 min-w-[200px]">RAB Level 3</th>
@@ -147,10 +150,11 @@ function Table() {
                   <td className="px-6 py-4">{data.nama_proses_bisnis}</td>
                   <td className="px-6 py-4">{data.kode_proses_bisnis}</td>
                   <td className="px-6 py-4">{data.kode_opd}</td>
-                  <td className="px-6 py-4">{data.bidang_urusan_id ? `${data.bidang_urusan_id}` : "N/A"}</td>
+                  <td className="px-6 py-4">{data.bidang_urusan_id ? `${data.bidang_urusan_id.bidang_urusan}` : "N/A"}</td>
                   <td className="px-6 py-4">
                     {data.sasaran_kota ? `${data.sasaran_kota.Sasaran}` : "N/A"}
                   </td>
+                  <td className="px-6 py-4">{data.tahun}</td>
                   <td className="px-6 py-4">
                     {data.rab_level_1
                       ? `${data.rab_level_1.kode_referensi} ${data.rab_level_1.nama_referensi}`

@@ -1,9 +1,10 @@
-import Perbaikan from "@/components/maintenance/perbaikan"
+import Table from "@/components/pages/GapArsitektur/Table/Table"
 
 const GapArsitektur = () => {
     return(
         <>
-            <Perbaikan />
+            <h1 className="uppercase font-bold mb-5">Gap Arsitektur</h1>
+            <Table/>
         </>
     )
 }
