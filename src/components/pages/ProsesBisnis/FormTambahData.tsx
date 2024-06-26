@@ -479,7 +479,7 @@ const FormTambahData = () => {
           </div>
           </>
         )}
-        <Button typee="submit" halaman_url="/ProsesBisnis" className="mt-5">Simpan</Button>
+        <Button typee="submit" className="mt-5">Simpan</Button>
       </form>
     </div>
   );
