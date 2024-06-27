@@ -207,7 +207,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconLight/ChartPieSlice.svg" 
                           alt="ChartPieSlice"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -215,7 +214,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconDark/ChartPieSlice.svg" 
                           alt="ChartPieSlice"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -229,7 +227,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconLight/UsersThree.svg" 
                           alt="UsersThree"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -237,7 +234,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconDark/UsersThree.svg" 
                           alt="UsersThree"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -251,7 +247,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconLight/BookOpen.svg" 
                           alt="BookOpen"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -259,7 +254,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconDark/BookOpen.svg" 
                           alt="BookOpen"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -281,7 +275,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconLight/ListChecks.svg" 
                           alt="ListChecks"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -289,7 +282,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconDark/ListChecks.svg" 
                           alt="ListChecks"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -302,7 +294,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconDark/ListDashes.svg" 
                           alt="ListDashes"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -317,7 +308,6 @@ function Sidebar(){
                             <Image className="pr-2"
                               src="/iconLight/Dot2.svg" 
                               alt="ListDashes"
-                              layout="fixed"
                               width={30}
                               height={30}
                             />
@@ -325,7 +315,6 @@ function Sidebar(){
                             <Image className="pr-2"
                               src="/iconDark/Dot2.svg" 
                               alt="ListDashes"
-                              layout="fixed"
                               width={30}
                               height={30}
                             />
@@ -339,7 +328,6 @@ function Sidebar(){
                             <Image className="pr-2"
                               src="/iconLight/Dot2.svg" 
                               alt="ListDashes"
-                              layout="fixed"
                               width={30}
                               height={30}
                             />
@@ -347,7 +335,6 @@ function Sidebar(){
                             <Image className="pr-2"
                               src="/iconDark/Dot2.svg" 
                               alt="ListDashes"
-                              layout="fixed"
                               width={30}
                               height={30}
                             />
@@ -366,7 +353,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconLight/Notebook.svg" 
                           alt="Notebook"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -374,7 +360,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconDark/Notebook.svg" 
                           alt="Notebook"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -388,7 +373,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconLight/ChatsTeardrop.svg" 
                           alt="ChatsTeardrop"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -396,7 +380,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconDark/ChatsTeardrop.svg" 
                           alt="ChatsTeardrop"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -410,7 +393,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconLight/ChatsTearDrop.svg" 
                           alt="ChatsTearDrop"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -418,7 +400,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconDark/ChatsTearDrop.svg" 
                           alt="ChatsTearDrop"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -432,7 +413,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconLight/Calendar.svg" 
                           alt="Calendar"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />
@@ -440,7 +420,6 @@ function Sidebar(){
                         <Image className="pr-2"
                           src="/iconDark/Calendar.svg" 
                           alt="Calendar"
-                          layout="fixed"
                           width={30}
                           height={30}
                         />

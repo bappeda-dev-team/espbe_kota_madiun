@@ -1,9 +1,12 @@
 import Table from "@/components/pages/GapArsitektur/Table/Table"
+import HeaderGapArsitektur from "@/components/pages/GapArsitektur/HeaderGapArsitektur"
 
 const GapArsitektur = () => {
     return(
         <>
-            <h1 className="uppercase font-bold mb-5">Gap Arsitektur</h1>
+            <div className="mb-5 mt-2">
+                <HeaderGapArsitektur />
+            </div>
             <Table/>
         </>
     )

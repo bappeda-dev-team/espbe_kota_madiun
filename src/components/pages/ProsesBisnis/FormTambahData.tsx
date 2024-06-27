@@ -78,7 +78,7 @@ const FormTambahData = () => {
       }));
       set_rab_level_1_3_option(result);
     } catch (error) {
-      console.error('Failed to fetch data:', error);
+      console.error('gagal memuat data option RAB Level 1 - 3');
     } finally {
       setIsLoading(false);
     }
@@ -96,7 +96,7 @@ const FormTambahData = () => {
       }));
       set_rab_level_4_6_option(result);
     } catch(err) {
-      console.log('cant fetcing data pohon kinerja')
+      console.log('gagal memuat data option RAB Level 4 - 6')
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +113,7 @@ const FormTambahData = () => {
       }));
       set_sasaran_kota_option(result);
     } catch (err) {
-      console.log('Failed to fetch Sasaran Kota data:', err);
+      console.log('gagal memuat data option sasaran kota');
     } finally {
       setIsLoading(false);
     }
@@ -130,7 +130,7 @@ const FormTambahData = () => {
       }));
       set_bidang_urusan_option(result);
     } catch (err) {
-      console.log('gagal fetching data bidang urusan')
+      console.log('gagal memuat data option bidang urusan')
     } finally {
       setIsLoading(false);
     }
@@ -165,10 +165,10 @@ const FormTambahData = () => {
         alert('Data Proses Bisnis berhasil ditambahkan');
         reset();
       } else {
-        console.error('Failed to submit data');
+        alert('Data Proses Bisnis gagal ditambahkan');
       }
     } catch (error) {
-      console.error('Error submitting data:', error);
+      alert('Data Proses Bisnis gagal ditambahkan');
     }
   };
 
@@ -244,7 +244,6 @@ const FormTambahData = () => {
             <Controller
               name="bidang_urusan_id"
               control={control}
-              rules={{required: 'Bidang Urusan harus terisi'}}
               render={({field}) => (
                 <>
                   <Select 
@@ -252,6 +251,7 @@ const FormTambahData = () => {
                     options={bidang_urusan_option}
                     isLoading={isLoading}
                     isSearchable
+                    isClearable
                     placeholder="Pilih Bidang Urusan"
                     id="bidang_urusan_id"
                     onMenuOpen={() => {
@@ -260,7 +260,6 @@ const FormTambahData = () => {
                       }
                     }}
                   />
-                  {errors.bidang_urusan_id && <h1 className="text-red-500">{errors.bidang_urusan_id.message}</h1>}
                 </>
               )}
             />
@@ -277,6 +276,7 @@ const FormTambahData = () => {
                     {...field}
                     options={tahun}
                     isSearchable
+                    isClearable
                     placeholder="Pilih Tahun"
                   />
                   {errors.tahun && <h1 className="text-red-500">{errors.tahun.message}</h1>}
@@ -289,7 +289,6 @@ const FormTambahData = () => {
             <Controller
               name="sasaran_kota_id"
               control={control}
-              rules={{required: 'Sasaran Kota Harus Terisi'}}
               render={({field}) => (
                 <>
                   <Select 
@@ -297,6 +296,7 @@ const FormTambahData = () => {
                     placeholder="Pilih Sasaran Kota"
                     options={sasaran_kota_option}
                     isLoading={isLoading}
+                    isClearable
                     isSearchable
                     onMenuOpen={() => {
                       if(sasaran_kota_option.length === 0){
@@ -304,7 +304,6 @@ const FormTambahData = () => {
                       }
                     }}
                   />
-                  {errors.sasaran_kota_id && <h1 className="text-red-500">{errors.sasaran_kota_id.message}</h1>}
                 </>
               )}
             />
@@ -314,7 +313,6 @@ const FormTambahData = () => {
             <Controller
               name="rab_level_1_id"
               control={control}
-              rules={{required: 'RAB Level 1 Harus Terisi'}}
               render={({field}) => (
                 <>
                   <Select 
@@ -323,6 +321,7 @@ const FormTambahData = () => {
                     options={rab_level_1_3_option}
                     isLoading={isLoading}
                     isSearchable
+                    isClearable
                     onMenuOpen={() => {
                       if(rab_level_1_3_option.length === 0){
                         fetchRabLevel1_3(1);
@@ -332,7 +331,6 @@ const FormTambahData = () => {
                       set_rab_level_1_3_option([])
                     }}
                   />
-                  {errors.rab_level_1_id && <h1 className="text-red-500">{errors.rab_level_1_id.message}</h1>}
                 </>
               )}
             />
@@ -342,7 +340,6 @@ const FormTambahData = () => {
             <Controller
               name="rab_level_2_id"
               control={control}
-              rules={{required: 'RAB Level 2 Harus Terisi'}}
               render={({field}) => (
                 <>
                   <Select 
@@ -351,6 +348,7 @@ const FormTambahData = () => {
                     options={rab_level_1_3_option}
                     isLoading={isLoading}
                     isSearchable
+                    isClearable
                     onMenuOpen={() => {
                       if(rab_level_1_3_option.length === 0){
                         fetchRabLevel1_3(2);
@@ -360,7 +358,6 @@ const FormTambahData = () => {
                       set_rab_level_1_3_option([])
                     }}
                   />
-                  {errors.rab_level_2_id && <h1 className="text-red-500">{errors.rab_level_2_id.message}</h1>}
                 </>
               )}
             />
@@ -370,7 +367,6 @@ const FormTambahData = () => {
             <Controller
               name="rab_level_3_id"
               control={control}
-              rules={{required: 'RAB Level 3 Harus Terisi'}}
               render={({field}) => (
                 <>
                   <Select 
@@ -379,6 +375,7 @@ const FormTambahData = () => {
                     options={rab_level_1_3_option}
                     isLoading={isLoading}
                     isSearchable
+                    isClearable
                     onMenuOpen={() => {
                       if(rab_level_1_3_option.length === 0){
                         fetchRabLevel1_3(3);
@@ -388,7 +385,6 @@ const FormTambahData = () => {
                       set_rab_level_1_3_option([])
                     }}
                   />
-                  {errors.rab_level_3_id && <h1 className="text-red-500">{errors.rab_level_3_id.message}</h1>}
                 </>
               )}
             />
@@ -398,7 +394,6 @@ const FormTambahData = () => {
             <Controller
               name="rab_level_4_id"
               control={control}
-              rules={{required: 'RAB Level 4 Harus Terisi'}}
               render={({field}) => (
                 <>
                   <Select 
@@ -406,6 +401,7 @@ const FormTambahData = () => {
                     placeholder="Masukkan RAB Level 4"
                     options={rab_level_4_6_option}
                     isLoading={isLoading}
+                    isClearable
                     isSearchable
                     onMenuOpen={() => {
                       if(rab_level_4_6_option.length === 0){
@@ -416,7 +412,6 @@ const FormTambahData = () => {
                       set_rab_level_4_6_option([])
                     }}
                   />
-                  {errors.rab_level_4_id && <h1 className="text-red-500">{errors.rab_level_4_id.message}</h1>}
                 </>
               )}
             />
@@ -426,7 +421,6 @@ const FormTambahData = () => {
             <Controller
               name="rab_level_5_id"
               control={control}
-              rules={{required: 'RAB Level 5 Harus Terisi'}}
               render={({field}) => (
                 <>
                   <Select 
@@ -434,6 +428,7 @@ const FormTambahData = () => {
                     placeholder="Masukkan RAB Level 5"
                     options={rab_level_4_6_option}
                     isLoading={isLoading}
+                    isClearable
                     isSearchable
                     onMenuOpen={() => {
                       if(rab_level_4_6_option.length === 0){
@@ -444,7 +439,6 @@ const FormTambahData = () => {
                       set_rab_level_4_6_option([])
                     }}
                   />
-                  {errors.rab_level_5_id && <h1 className="text-red-500">{errors.rab_level_5_id.message}</h1>}
                 </>
               )}
             />
@@ -454,14 +448,14 @@ const FormTambahData = () => {
             <Controller
               name="rab_level_6_id"
               control={control}
-              rules={{required: 'RAB Level 6 Harus Terisi'}}
               render={({field}) => (
                 <>
                   <Select 
                     {...field}
-                    placeholder="Masukkan RAB Level 4"
+                    placeholder="Masukkan RAB Level 6"
                     options={rab_level_4_6_option}
                     isLoading={isLoading}
+                    isClearable
                     isSearchable
                     onMenuOpen={() => {
                       if(rab_level_4_6_option.length === 0){
@@ -472,14 +466,13 @@ const FormTambahData = () => {
                       set_rab_level_4_6_option([])
                     }}
                   />
-                  {errors.rab_level_6_id && <h1 className="text-red-500">{errors.rab_level_6_id.message}</h1>}
                 </>
               )}
             />
           </div>
           </>
         )}
-        <Button typee="submit" className="mt-5">Simpan</Button>
+        <Button typee="submit" halaman_url="/ProsesBisnis" className="mt-5">Simpan</Button>
       </form>
     </div>
   );

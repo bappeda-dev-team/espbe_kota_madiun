@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Loading from "../../../global/Loading/Loading";
-import Button from "@/components/common/Button/Button";
 
 interface rabLevel1_3 {
   Id: number;
@@ -55,7 +54,6 @@ function Table() {
   const [error, setError] = useState<string | null>();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  //fetch data proses bisnis
   useEffect(() => {
     const fetchingData = async () => {
       try {
@@ -120,66 +118,66 @@ function Table() {
             ) : (
               dataProsesBisnis.map((data, index) => (
                 <tr key={data.id} className="border rounded-b-lg hover:bg-slate-50">
-                  <td className="px-6 py-4 sticky bg-white left-[-2px]">{index + 1}</td>
+                  <td className="border px-6 py-4 sticky bg-white left-[-2px]">{index + 1}</td>
                   {data.nama_proses_bisnis? 
-                    <td className="px-6 py-4">{data.nama_proses_bisnis}</td>
+                    <td className="border px-6 py-4">{data.nama_proses_bisnis}</td>
                   : 
-                    <td className="px-6 py-4 bg-red-500">N/A</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                   {data.kode_proses_bisnis? 
-                    <td className="px-6 py-4">{data.kode_proses_bisnis}</td>
+                    <td className="border px-6 py-4">{data.kode_proses_bisnis}</td>
                   : 
-                    <td className="px-6 py-4 bg-red-500">N/A</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                   {data.kode_opd? 
-                    <td className="px-6 py-4">{data.kode_opd}</td>
+                    <td className="border px-6 py-4">{data.kode_opd}</td>
                   : 
-                    <td className="px-6 py-4 bg-red-500">N/A</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                   {data.bidang_urusan_id? 
-                    <td className="px-6 py-4">{data.bidang_urusan_id.bidang_urusan}</td>
+                    <td className="border px-6 py-4">{data.bidang_urusan_id.bidang_urusan}</td>
                   : 
-                    <td className="px-6 py-4 bg-red-500">N/A</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                   {data.sasaran_kota? 
-                    <td className="px-6 py-4">{data.sasaran_kota.Sasaran}</td>
+                    <td className="border px-6 py-4">{data.sasaran_kota.Sasaran}</td>
                   :
-                    <td className="px-6 py-4 bg-red-500">"N/A"</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                   {data.tahun? 
-                    <td className="px-6 py-4">{data.tahun}</td>
+                    <td className="border px-6 py-4">{data.tahun}</td>
                   :
-                    <td className="px-6 py-4 bg-red-500">N/A</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                   {data.rab_level_1?
-                    <td className="px-6 py-4">{data.rab_level_1.kode_referensi} {data.rab_level_1.nama_referensi}</td>
+                    <td className="border px-6 py-4">{data.rab_level_1.kode_referensi} {data.rab_level_1.nama_referensi}</td>
                   :
-                    <td className="px-6 py-4 bg-red-500">N/A</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                   {data.rab_level_2?
-                    <td className="px-6 py-4">{data.rab_level_2.kode_referensi} {data.rab_level_2.nama_referensi}</td>
+                    <td className="border px-6 py-4">{data.rab_level_2.kode_referensi} {data.rab_level_2.nama_referensi}</td>
                   :
-                    <td className="px-6 py-4 bg-red-500">N/A"</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                   {data.rab_level_3?
-                    <td className="px-6 py-4">{data.rab_level_3.kode_referensi} {data.rab_level_3.nama_referensi}</td>
+                    <td className="border px-6 py-4">{data.rab_level_3.kode_referensi} {data.rab_level_3.nama_referensi}</td>
                   :
-                    <td className="px-6 py-4 bg-red-500">N/A</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                   {data.rab_level_4?
-                    <td className="px-6 py-4">{data.rab_level_4.nama_pohon}</td>
+                    <td className="border px-6 py-4">{data.rab_level_4.nama_pohon}</td>
                   :
-                    <td className="px-6 py-4 bg-red-500">N/A</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                   {data.rab_level_5?
-                    <td className="px-6 py-4">{data.rab_level_5.nama_pohon}</td>
+                    <td className="border px-6 py-4">{data.rab_level_5.nama_pohon}</td>
                   :
-                    <td className="px-6 py-4 bg-red-500">N/A"</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                   {data.rab_level_6?
-                    <td className="px-6 py-4">{data.rab_level_6.nama_pohon}</td>
+                    <td className="border px-6 py-4">{data.rab_level_6.nama_pohon}</td>
                   :
-                    <td className="px-6 py-4 bg-red-500">N/A</td>
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
                   }
                 </tr>
               ))

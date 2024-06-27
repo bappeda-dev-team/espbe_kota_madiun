@@ -11,39 +11,6 @@ interface OptionType {
   label: string;
 }
 
-interface sasaran_kota {
-  ID: number;
-  Sasaran: string;
-}
-
-interface rab_level_1_3 {
-  Id: number;
-  kode_referensi: string;
-  nama_referensi: string;
-  level_referensi: number;
-}
-
-interface rab_level_4_6 {
-  id: number;
-  nama_pohon: string;
-  level_pohon: number;
-}
-
-interface defaultValuePB {
-  nama_proses_bisnis: string;
-  kode_proses_bisnis: string;
-  kode_opd: string;
-  bidang_urusan_id?: number;
-  tahun: number;
-  sasaran_kota?: sasaran_kota;
-  rab_level_1?: rab_level_1_3;
-  rab_level_2?: rab_level_1_3;
-  rab_level_3?: rab_level_1_3;
-  rab_level_4?: rab_level_4_6;
-  rab_level_5?: rab_level_4_6;
-  rab_level_6?: rab_level_4_6;
-}
-
 interface formValue {
   nama_proses_bisnis: string;
   kode_proses_bisnis: string;
@@ -63,10 +30,16 @@ const FormEditData = () => {
   const {id} = useParams();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const { control, handleSubmit, reset, formState: { errors } } = useForm<formValue>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
+  
+  //state untuk fetch data option
   const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>([]);
   const [bidang_urusan_option, set_bidang_urusan_option] = useState<OptionType[]>([]);
   const [rab_1_3, set_rab_1_3] = useState<OptionType[]>([]);
   const [rab_4_6, set_rab_4_6] = useState<OptionType[]>([]);
+
+  //state untuk fetch default value data by id
   const [selectedSasaranKota, setSelectedSasaranKota] = useState<OptionType | null>(null);
   const [selectedBidangUrusan, setSelectedBidangUrusan] = useState<OptionType | null>(null);
   const [selectedRab1, setSelectedRab1] = useState<OptionType | null>(null);
@@ -79,8 +52,7 @@ const FormEditData = () => {
   const [namaProsesBisnis, setNamaProsesBisnis] = useState<string>('');
   const [kode_opd, set_kode_opd] = useState<string>('');
   const [kode_proses_bisnis, set_kode_proses_bisnis] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  
   const tahun_option: OptionType[] = [
     {value: 2024, label: "2024"},
     {value: 2025, label: "2025"},
@@ -109,7 +81,7 @@ const FormEditData = () => {
         if (result.bidang_urusan_id) {
           const bidangUrusanOption = {
             value: result.bidang_urusan_id.id,
-            label: result.bidang_urusan_id.bidang_urusan,
+            label: `${result.bidang_urusan_id.id} - ${result.bidang_urusan_id.bidang_urusan}`,
           };
           setSelectedBidangUrusan(bidangUrusanOption);
           reset(prev => ({ ...prev, bidang_urusan_id: bidangUrusanOption }));
@@ -184,16 +156,17 @@ const FormEditData = () => {
           reset(prev => ({ ...prev, kode_proses_bisnis: result.kode_proses_bisnis }));
         }
       } catch (err) {
-        console.log('Gagal fetching data id');
+        console.log('Gagal fetching data by id');
       }
     }
     fetchingDataId();
+    setIsClient(true);
   }, [reset]);
 
   const fetchSasaranKota = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('http://localhost:8080/v1/sasarankota');
+      const response = await fetch(`${API_URL}/v1/sasarankota`);
       const data = await response.json();
       const result = data.data.map((item: any) => ({
         value: item.ID,
@@ -201,7 +174,7 @@ const FormEditData = () => {
       }));
       set_sasaran_kota_option(result);
     } catch (err) {
-      console.log('Gagal memuat data Sasaran Kota', err);
+      console.log('Gagal memuat data Option Sasaran Kota', err);
     } finally{
         setIsLoading(false)
     }
@@ -210,7 +183,7 @@ const FormEditData = () => {
   const fetchBidangUrusan = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('http://localhost:8080/v1/bidangurusan');
+      const response = await fetch(`${API_URL}/v1/bidangurusan`);
       const data = await response.json();
       const result = data.data.map((item: any) => ({
         value: item.id,
@@ -218,7 +191,7 @@ const FormEditData = () => {
       }));
       set_bidang_urusan_option(result);
     } catch (err) {
-      console.log('Gagal memuat data Bidang Urusan', err);
+      console.log('Gagal memuat data Option Bidang Urusan', err);
     } finally{
         setIsLoading(false)
     }
@@ -227,7 +200,7 @@ const FormEditData = () => {
   const fetchRab_1_3 = async (level: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/v1/referensiarsitektur');
+      const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
       const data = await response.json();
       const filteredData = data.data.filter((item: any) => item.level_referensi === level);
       const result = filteredData.map((item: any) => ({
@@ -236,7 +209,7 @@ const FormEditData = () => {
       }));
       set_rab_1_3(result);
     } catch (err) {
-      console.log('Gagal memuat data RAB Level 1 - 3', err);
+      console.log('Gagal memuat data Option RAB Level 1 - 3', err);
     } finally {
         setIsLoading(false)
     }
@@ -254,7 +227,7 @@ const FormEditData = () => {
       }));
       set_rab_4_6(result);
     } catch (err) {
-      console.log('Gagal memuat data RAB Level 4 - 6', err);
+      console.log('Gagal memuat data Option RAB Level 4 - 6', err);
     } finally {
         setIsLoading(false)
     }
@@ -263,6 +236,8 @@ const FormEditData = () => {
   const handleChange = (option: any, actionMeta: any) => {
     if (actionMeta.name === 'sasaran_kota_id') {
       setSelectedSasaranKota(option);
+    } else if (actionMeta.name === 'bidang_urusan_id') {
+      setSelectedBidangUrusan(option);
     } else if (actionMeta.name === 'rab_level_1_id') {
       setSelectedRab1(option);
     } else if (actionMeta.name === 'rab_level_2_id') {
@@ -275,6 +250,8 @@ const FormEditData = () => {
       setSelectedRab5(option);
     } else if (actionMeta.name === 'rab_level_6_id') {
       setSelectedRab6(option);
+    } else if (actionMeta.name === 'tahun') {
+      setSelectedTahun(option);
     }
   };
 
@@ -294,28 +271,28 @@ const FormEditData = () => {
       tahun: data.tahun?.value,
     };
     try {
-        const response = await fetch(`${API_URL}/v1/updateprosesbisnis/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-  
-        if (response.ok) {
-          alert('Data Proses Bisnis berhasil diperbarui');
-          reset();
-        } else {
-          console.error('Failed to submit data');
-        }
-      } catch (error) {
-        console.error('Data Proses Bisnis gagal diperbarui:', error);
+      const response = await fetch(`${API_URL}/v1/updateprosesbisnis/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert('Data Proses Bisnis berhasil diperbarui');
+        reset();
+      } else {
+        alert('Data Proses Bisnis gagal diperbarui');
       }
+    } catch (error) {
+      alert('Data Proses Bisnis gagal diperbarui');
+    }
   }
 
   return (
     <div className="border p-5">
-      <h1>Edit Page</h1>
+      <h1 className="uppercase font-bold">Form Edit Data Proses Bisnis</h1>
       <form className="flex flex-col mx-5 py-5" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col py-3">
             <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="nama_proses_bisnis">Nama Proses Bisnis</label>
@@ -389,7 +366,10 @@ const FormEditData = () => {
                 )}
             />
         </div>
-        <div className="flex flex-col py-3">
+
+        {isClient && (
+          <>
+          <div className="flex flex-col py-3">
             <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tahun</label>
             <Controller
                 name="tahun"
@@ -418,14 +398,14 @@ const FormEditData = () => {
             <Controller
                 name="sasaran_kota_id"
                 control={control}
-                rules={{required: 'Sasaran Kota harus terisi'}}
                 render={({ field }) => (
                     <>
                         <Select
                         {...field}
                         id="sasaran_kota_id"
                         isLoading={isLoading}
-                        value={selectedSasaranKota}
+                        value={selectedSasaranKota || null}
+                        placeholder="Pilih Sasaran kota"
                         options={sasaran_kota_option}
                         onChange={(option) => {
                             field.onChange(option);
@@ -438,7 +418,6 @@ const FormEditData = () => {
                             }
                         }}
                     />
-                    {errors.sasaran_kota_id && <h1 className="text-red-500">{errors.sasaran_kota_id.message}</h1>}
                     </>
                 )}
             />
@@ -448,27 +427,26 @@ const FormEditData = () => {
             <Controller
                 name="bidang_urusan_id"
                 control={control}
-                rules={{required: 'Bidang Urusan harus terisi'}}
                 render={({ field }) => (
                     <>
                         <Select
-                        {...field}
-                        id="bidang_urusan_id"
-                        isLoading={isLoading}
-                        value={selectedBidangUrusan}
-                        options={bidang_urusan_option}
-                        onChange={(option) => {
-                            field.onChange(option);
-                            handleChange(option, { name: 'bidang_urusan_id' });
-                        }}
-                        isClearable={true}
-                        onMenuOpen={() => {
-                            if (bidang_urusan_option.length === 0) {
-                                fetchBidangUrusan();
-                            }
-                        }}
-                    />
-                    {errors.bidang_urusan_id && <h1 className="text-red-500">{errors.bidang_urusan_id.message}</h1>}
+                          {...field}
+                          id="bidang_urusan_id"
+                          isLoading={isLoading}
+                          value={selectedBidangUrusan || null}
+                          placeholder="Pilih Bidang Urusan"
+                          options={bidang_urusan_option}
+                          onChange={(option) => {
+                              field.onChange(option);
+                              handleChange(option, { name: 'bidang_urusan_id' });
+                          }}
+                          isClearable={true}
+                          onMenuOpen={() => {
+                              if (bidang_urusan_option.length === 0) {
+                                  fetchBidangUrusan();
+                              }
+                          }}
+                        />
                     </>
                 )}
             />
@@ -478,13 +456,13 @@ const FormEditData = () => {
             <Controller
                 name="rab_level_1_id"
                 control={control}
-                rules={{required: 'RAB Level 1 harus terisi'}}
                 render={({ field }) => (
                     <>
                         <Select
                             {...field}
                             id="rab_level_1_id"
-                            value={selectedRab1}
+                            value={selectedRab1 || null}
+                            placeholder="Pilih RAB Level 1"
                             isLoading={isLoading}
                             options={rab_1_3}
                             onChange={(option) => {
@@ -500,8 +478,7 @@ const FormEditData = () => {
                             onMenuClose={() => {
                                 set_rab_1_3([])
                             }}
-                            />
-                        {errors.rab_level_1_id && <h1 className="text-red-500">{errors.rab_level_1_id.message}</h1>}
+                         />
                     </>
                 )}
             />
@@ -511,13 +488,13 @@ const FormEditData = () => {
             <Controller
                 name="rab_level_2_id"
                 control={control}
-                rules={{required: 'RAB Level 2 harus terisi'}}
                 render={({ field }) => (
                     <>
                         <Select
                             {...field}
                             id="rab_level_2_id"
-                            value={selectedRab2}
+                            value={selectedRab2 || null}
+                            placeholder="Pilih RAB Level 2"
                             isLoading={isLoading}
                             options={rab_1_3}
                             onChange={(option) => {
@@ -533,8 +510,7 @@ const FormEditData = () => {
                             onMenuClose={() => {
                                 set_rab_1_3([])
                             }}
-                            />
-                        {errors.rab_level_2_id && <h1 className="text-red-500">{errors.rab_level_2_id.message}</h1>}
+                          />
                     </>
                 )}
             />
@@ -544,13 +520,13 @@ const FormEditData = () => {
             <Controller
                 name="rab_level_3_id"
                 control={control}
-                rules={{required: 'RAB Level 3 harus terisi'}}
                 render={({ field }) => (
                     <>
                         <Select
                             {...field}
                             id="rab_level_3_id"
-                            value={selectedRab3}
+                            value={selectedRab3 || null}
+                            placeholder="Pilih RAB Level 3"
                             isLoading={isLoading}
                             options={rab_1_3}
                             onChange={(option) => {
@@ -567,7 +543,6 @@ const FormEditData = () => {
                                 set_rab_1_3([])
                             }}
                         />
-                        {errors.rab_level_3_id && <h1 className="text-red-500">{errors.rab_level_3_id.message}</h1>}
                     </>
                 )}
             />
@@ -577,13 +552,13 @@ const FormEditData = () => {
             <Controller
                 name="rab_level_4_id"
                 control={control}
-                rules={{required: 'RAB Level 4 harus terisi'}}
                 render={({ field }) => (
                     <>
                         <Select
                             {...field}
                             id="rab_level_4_id"
-                            value={selectedRab4}
+                            value={selectedRab4 || null}
+                            placeholder="Pilih RAB Level 4"
                             isLoading={isLoading}
                             options={rab_4_6}
                             onChange={(option) => {
@@ -600,7 +575,6 @@ const FormEditData = () => {
                                 set_rab_4_6([])
                             }}
                             />
-                        {errors.rab_level_4_id && <h1 className="text-red-500">{errors.rab_level_4_id.message}</h1>}
                     </>
                 )}
             />
@@ -610,13 +584,13 @@ const FormEditData = () => {
             <Controller
                 name="rab_level_5_id"
                 control={control}
-                rules={{required: 'RAB Level 5 harus terisi'}}
                 render={({ field }) => (
                     <>
                         <Select
                             {...field}
                             id="rab_level_5_id"
-                            value={selectedRab5}
+                            value={selectedRab5 || null}
+                            placeholder="Pilih RAB Level 5"
                             isLoading={isLoading}
                             options={rab_4_6}
                             onChange={(option) => {
@@ -633,7 +607,6 @@ const FormEditData = () => {
                                 set_rab_4_6([])
                             }}
                         />
-                        {errors.rab_level_5_id && <h1 className="text-red-500">{errors.rab_level_5_id.message}</h1>}
                     </>
                 )}
             />
@@ -643,13 +616,13 @@ const FormEditData = () => {
             <Controller
                 name="rab_level_6_id"
                 control={control}
-                rules={{required: 'RAB Level 6 harus terisi'}}
                 render={({ field }) => (
                     <>
                         <Select
                             {...field}
                             id="rab_level_6_id"
-                            value={selectedRab6}
+                            value={selectedRab6 || null}
+                            placeholder="Pilih RAB Level 6"
                             isLoading={isLoading}
                             options={rab_4_6}
                             onChange={(option) => {
@@ -666,12 +639,13 @@ const FormEditData = () => {
                                 set_rab_4_6([])
                             }}
                         />
-                        {errors.rab_level_6_id && <h1 className="text-red-500">{errors.rab_level_6_id.message}</h1>}
                     </>
                 )}
             />
         </div>
-        <Button typee="submit">Simpan</Button>
+          </>
+        )}
+        <Button typee="submit" halaman_url="/ProsesBinsis">Simpan</Button>
       </form>
     </div>
   );
