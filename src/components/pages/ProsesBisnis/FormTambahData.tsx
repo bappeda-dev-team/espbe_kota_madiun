@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import Button from "@/components/common/Button/Button";
 import Select from "react-select";
+import { useRouter } from "next/navigation";
 
 interface OptionType {
   value: number;
@@ -40,6 +41,7 @@ const FormTambahData = () => {
   >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
+  const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const tahun: OptionType[] = [
@@ -179,6 +181,7 @@ const FormTambahData = () => {
 
       if (response.ok) {
         alert("Data Proses Bisnis berhasil ditambahkan");
+        router.push("/ProsesBisnis");
         reset();
       } else {
         alert("Data Proses Bisnis gagal ditambahkan");
@@ -200,7 +203,7 @@ const FormTambahData = () => {
             className="uppercase text-xs font-bold text-gray-700 my-2"
             htmlFor="nama_proses_bisnis"
           >
-            Nama Proses Bisnis
+            Nama Proses Bisnis:
           </label>
           <Controller
             name="nama_proses_bisnis"
@@ -215,11 +218,13 @@ const FormTambahData = () => {
                   id="nama_proses_bisnis"
                   placeholder="masukkan nama proses bisnis"
                 />
-                {errors.nama_proses_bisnis && (
+                {errors.nama_proses_bisnis ? 
                   <h1 className="text-red-500">
                     {errors.nama_proses_bisnis.message}
                   </h1>
-                )}
+                :
+                  <h1 className="text-slate-300 text-xs">*Nama Proses Bisnis Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -229,7 +234,7 @@ const FormTambahData = () => {
             className="uppercase text-xs font-bold text-gray-700 my-2"
             htmlFor="kode_proses_bisnis"
           >
-            Kode Proses Bisnis
+            Kode Proses Bisnis:
           </label>
           <Controller
             name="kode_proses_bisnis"
@@ -244,11 +249,13 @@ const FormTambahData = () => {
                   id="kode_proses_bisnis"
                   placeholder="masukkan Kode Proses Bisnis"
                 />
-                {errors.kode_proses_bisnis && (
+                {errors.kode_proses_bisnis? 
                   <h1 className="text-red-500">
                     {errors.kode_proses_bisnis.message}
                   </h1>
-                )}
+                  :
+                  <h1 className="text-slate-300 text-xs">*Kode Proses Bisnis Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -258,7 +265,7 @@ const FormTambahData = () => {
             className="uppercase text-xs font-bold text-gray-700 my-2"
             htmlFor="kode_opd"
           >
-            Kode OPD
+            Kode OPD:
           </label>
           <Controller
             name="kode_opd"
@@ -273,9 +280,13 @@ const FormTambahData = () => {
                   id="kode_opd"
                   placeholder="masukkan Kode OPD"
                 />
-                {errors.kode_opd && (
-                  <h1 className="text-red-500">{errors.kode_opd.message}</h1>
-                )}
+                {errors.kode_opd ?
+                  <h1 className="text-red-500">
+                    {errors.kode_opd.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Kode OPD Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -284,11 +295,37 @@ const FormTambahData = () => {
         {isClient && (
           <>
             <div className="flex flex-col py-3">
+              <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tahun:</label>
+              <Controller
+                name="tahun"
+                control={control}
+                rules={{ required: "Tahun Harus Terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      options={tahun}
+                      isSearchable
+                      isClearable
+                      placeholder="Pilih Tahun"
+                    />
+                    {errors.tahun ?
+                      <h1 className="text-red-500">
+                        {errors.tahun.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tahun Harus Terisi</h1>
+                    }
+                  </>
+                )}
+              />
+            </div>
+            <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
                 htmlFor="bidang_urusan_id"
               >
-                Bidang Urusan
+                Bidang Urusan:
               </label>
               <Controller
                 name="bidang_urusan_id"
@@ -309,33 +346,6 @@ const FormTambahData = () => {
                         }
                       }}
                     />
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="tahun"
-              >
-                Tahun
-              </label>
-              <Controller
-                name="tahun"
-                control={control}
-                rules={{ required: "Tahun Harus Terisi" }}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      options={tahun}
-                      isSearchable
-                      isClearable
-                      placeholder="Pilih Tahun"
-                    />
-                    {errors.tahun && (
-                      <h1 className="text-red-500">{errors.tahun.message}</h1>
-                    )}
                   </>
                 )}
               />
@@ -563,7 +573,7 @@ const FormTambahData = () => {
             </div>
           </>
         )}
-        <Button typee="submit" halaman_url="/ProsesBisnis" className="mt-5">
+        <Button typee="submit" className="mt-5">
           Simpan
         </Button>
       </form>

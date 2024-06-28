@@ -1,10 +1,11 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import Button from '@/components/common/Button/Button';
-import Select from 'react-select';
-import { useParams } from 'next/navigation';
-import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Button from "@/components/common/Button/Button";
+import Select from "react-select";
+import { useParams } from "next/navigation";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 
 interface OptionType {
   value: number;
@@ -28,6 +29,7 @@ interface formValue {
 
 const FormEditData = () => {
   const {id} = useParams();
+  const router = useRouter();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const { control, handleSubmit, reset, formState: { errors } } = useForm<formValue>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -281,6 +283,7 @@ const FormEditData = () => {
 
       if (response.ok) {
         alert('Data Proses Bisnis berhasil diperbarui');
+        router.push("/ProsesBisnis");
         reset();
       } else {
         alert('Data Proses Bisnis gagal diperbarui');
@@ -292,7 +295,7 @@ const FormEditData = () => {
 
   return (
     <div className="border p-5">
-      <h1 className="uppercase font-bold">Form Edit Data Proses Bisnis</h1>
+      <h1 className="uppercase font-bold">Form Edit Data Proses Bisnis:</h1>
       <form className="flex flex-col mx-5 py-5" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col py-3">
             <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="nama_proses_bisnis">Nama Proses Bisnis</label>
@@ -319,7 +322,7 @@ const FormEditData = () => {
             />
         </div>
         <div className="flex flex-col py-3">
-            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="kode_opd">Kode OPD</label>
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="kode_opd">Kode OPD:</label>
             <Controller
                 name="kode_opd"
                 control={control}
@@ -343,7 +346,7 @@ const FormEditData = () => {
             />
         </div>
         <div className="flex flex-col py-3">
-            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="kode_proses_bisnis">Kode Proses Bisnis</label>
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="kode_proses_bisnis">Kode Proses Bisnis:</label>
             <Controller
                 name="kode_proses_bisnis"
                 control={control}
@@ -370,7 +373,7 @@ const FormEditData = () => {
         {isClient && (
           <>
           <div className="flex flex-col py-3">
-            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tahun</label>
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tahun:</label>
             <Controller
                 name="tahun"
                 control={control}
@@ -394,7 +397,7 @@ const FormEditData = () => {
             />
         </div>
         <div className="flex flex-col py-3">
-            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="sasaran_kota_id">Sasaran Kota</label>
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="sasaran_kota_id">Sasaran Kota:</label>
             <Controller
                 name="sasaran_kota_id"
                 control={control}
@@ -423,7 +426,7 @@ const FormEditData = () => {
             />
         </div>
         <div className="flex flex-col py-3">
-            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="bidang_urusan_id">Bidang Urusan</label>
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="bidang_urusan_id">Bidang Urusan:</label>
             <Controller
                 name="bidang_urusan_id"
                 control={control}
@@ -452,7 +455,7 @@ const FormEditData = () => {
             />
         </div>
         <div className="flex flex-col py-3">
-            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_1_id">RAB Level 1</label>
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_1_id">RAB Level 1:</label>
             <Controller
                 name="rab_level_1_id"
                 control={control}
@@ -484,7 +487,7 @@ const FormEditData = () => {
             />
         </div>
         <div className="flex flex-col py-3">
-            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_2_id">RAB Level 2</label>
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_2_id">RAB Level 2:</label>
             <Controller
                 name="rab_level_2_id"
                 control={control}
@@ -516,7 +519,7 @@ const FormEditData = () => {
             />
         </div>
         <div className="flex flex-col py-3">
-            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_3_id">RAB Level 3</label>
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_3_id">RAB Level 3:</label>
             <Controller
                 name="rab_level_3_id"
                 control={control}
@@ -548,7 +551,7 @@ const FormEditData = () => {
             />
         </div>
         <div className="flex flex-col py-3">
-            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_4_id">RAB Level 4</label>
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_4_id">RAB Level 4:</label>
             <Controller
                 name="rab_level_4_id"
                 control={control}
@@ -580,7 +583,7 @@ const FormEditData = () => {
             />
         </div>
         <div className="flex flex-col py-3">
-            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_5_id">RAB Level 5</label>
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_5_id">RAB Level 5:</label>
             <Controller
                 name="rab_level_5_id"
                 control={control}
@@ -612,7 +615,7 @@ const FormEditData = () => {
             />
         </div>
         <div className="flex flex-col py-3">
-            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_6_id">RAB Level 6</label>
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="rab_level_6_id">RAB Level 6:</label>
             <Controller
                 name="rab_level_6_id"
                 control={control}
@@ -645,7 +648,7 @@ const FormEditData = () => {
         </div>
           </>
         )}
-        <Button typee="submit" halaman_url="/ProsesBinsis">Simpan</Button>
+        <Button typee="submit">Simpan</Button>
       </form>
     </div>
   );
