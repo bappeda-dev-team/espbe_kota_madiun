@@ -37,7 +37,7 @@ interface typeProsesBisnis {
   sasaran_kota?: sasaran_kota;
   kode_proses_bisnis: string;
   kode_opd: string;
-  bidang_urusan_id:bidang_urusan;
+  bidang_urusan_id: bidang_urusan;
   rab_level_1?: rabLevel1_3;
   rab_level_2?: rabLevel1_3;
   rab_level_3?: rabLevel1_3;
@@ -48,13 +48,15 @@ interface typeProsesBisnis {
 }
 
 function Table() {
-  const [dataProsesBisnis, setDataProsesBisnis] = useState<typeProsesBisnis[]>([]);
+  const [dataProsesBisnis, setDataProsesBisnis] = useState<typeProsesBisnis[]>(
+    [],
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [dataNull, setDataNull] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const fetchingData = async () => {
       try {
         const response = await fetch(`${API_URL}/v1/GapProsesBisnis`);
@@ -111,74 +113,128 @@ function Table() {
             </tr>
           </thead>
           <tbody>
-            {dataNull? (
-               <tr>
-                <td className="px-6 py-3" colSpan={12}>Data Kosong / Belum Ditambahkan</td>
+            {dataNull ? (
+              <tr>
+                <td className="px-6 py-3" colSpan={12}>
+                  Data Kosong / Belum Ditambahkan
+                </td>
               </tr>
             ) : (
               dataProsesBisnis.map((data, index) => (
-                <tr key={data.id} className="border rounded-b-lg hover:bg-slate-50">
-                  <td className="border px-6 py-4 sticky bg-white left-[-2px]">{index + 1}</td>
-                  {data.nama_proses_bisnis? 
-                    <td className="border px-6 py-4">{data.nama_proses_bisnis}</td>
-                  : 
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
-                  {data.kode_proses_bisnis? 
-                    <td className="border px-6 py-4">{data.kode_proses_bisnis}</td>
-                  : 
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
-                  {data.kode_opd? 
+                <tr
+                  key={data.id}
+                  className="border rounded-b-lg hover:bg-slate-50"
+                >
+                  <td className="border px-6 py-4 sticky bg-white left-[-2px]">
+                    {index + 1}
+                  </td>
+                  {data.nama_proses_bisnis ? (
+                    <td className="border px-6 py-4">
+                      {data.nama_proses_bisnis}
+                    </td>
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
+                  {data.kode_proses_bisnis ? (
+                    <td className="border px-6 py-4">
+                      {data.kode_proses_bisnis}
+                    </td>
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
+                  {data.kode_opd ? (
                     <td className="border px-6 py-4">{data.kode_opd}</td>
-                  : 
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
-                  {data.bidang_urusan_id? 
-                    <td className="border px-6 py-4">{data.bidang_urusan_id.bidang_urusan}</td>
-                  : 
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
-                  {data.sasaran_kota? 
-                    <td className="border px-6 py-4">{data.sasaran_kota.Sasaran}</td>
-                  :
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
-                  {data.tahun? 
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
+                  {data.bidang_urusan_id ? (
+                    <td className="border px-6 py-4">
+                      {data.bidang_urusan_id.bidang_urusan}
+                    </td>
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
+                  {data.sasaran_kota ? (
+                    <td className="border px-6 py-4">
+                      {data.sasaran_kota.Sasaran}
+                    </td>
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
+                  {data.tahun ? (
                     <td className="border px-6 py-4">{data.tahun}</td>
-                  :
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
-                  {data.rab_level_1?
-                    <td className="border px-6 py-4">{data.rab_level_1.kode_referensi} {data.rab_level_1.nama_referensi}</td>
-                  :
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
-                  {data.rab_level_2?
-                    <td className="border px-6 py-4">{data.rab_level_2.kode_referensi} {data.rab_level_2.nama_referensi}</td>
-                  :
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
-                  {data.rab_level_3?
-                    <td className="border px-6 py-4">{data.rab_level_3.kode_referensi} {data.rab_level_3.nama_referensi}</td>
-                  :
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
-                  {data.rab_level_4?
-                    <td className="border px-6 py-4">{data.rab_level_4.nama_pohon}</td>
-                  :
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
-                  {data.rab_level_5?
-                    <td className="border px-6 py-4">{data.rab_level_5.nama_pohon}</td>
-                  :
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
-                  {data.rab_level_6?
-                    <td className="border px-6 py-4">{data.rab_level_6.nama_pohon}</td>
-                  :
-                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">GAP</td>
-                  }
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
+                  {data.rab_level_1 ? (
+                    <td className="border px-6 py-4">
+                      {data.rab_level_1.kode_referensi}{" "}
+                      {data.rab_level_1.nama_referensi}
+                    </td>
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
+                  {data.rab_level_2 ? (
+                    <td className="border px-6 py-4">
+                      {data.rab_level_2.kode_referensi}{" "}
+                      {data.rab_level_2.nama_referensi}
+                    </td>
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
+                  {data.rab_level_3 ? (
+                    <td className="border px-6 py-4">
+                      {data.rab_level_3.kode_referensi}{" "}
+                      {data.rab_level_3.nama_referensi}
+                    </td>
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
+                  {data.rab_level_4 ? (
+                    <td className="border px-6 py-4">
+                      {data.rab_level_4.nama_pohon}
+                    </td>
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
+                  {data.rab_level_5 ? (
+                    <td className="border px-6 py-4">
+                      {data.rab_level_5.nama_pohon}
+                    </td>
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
+                  {data.rab_level_6 ? (
+                    <td className="border px-6 py-4">
+                      {data.rab_level_6.nama_pohon}
+                    </td>
+                  ) : (
+                    <td className="border px-6 py-4 bg-red-500 text-white text-center font-bold">
+                      GAP
+                    </td>
+                  )}
                 </tr>
               ))
             )}

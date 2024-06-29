@@ -38,7 +38,7 @@ interface typeProsesBisnis {
   sasaran_kota?: sasaran_kota;
   kode_proses_bisnis: string;
   kode_opd: string;
-  bidang_urusan_id:bidang_urusan;
+  bidang_urusan_id: bidang_urusan;
   rab_level_1?: rabLevel1_3;
   rab_level_2?: rabLevel1_3;
   rab_level_3?: rabLevel1_3;
@@ -55,10 +55,10 @@ function Table() {
   const [loading, setLoading] = useState<boolean>(true);
   const [dataNull, setDataNull] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   //fetch data proses bisnis
   useEffect(() => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const fetchingData = async () => {
       try {
         const response = await fetch(`${API_URL}/v1/prosesbisnis`);
@@ -87,6 +87,7 @@ function Table() {
 
   //hapus data
   const hapusProsesBisnis = async (id: number) => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     try {
       const response = await fetch(`${API_URL}/v1/deleteprosesbisnis/${id}`, {
         method: "DELETE",
@@ -134,9 +135,11 @@ function Table() {
             </tr>
           </thead>
           <tbody>
-            {dataNull? (
-               <tr>
-                <td className="px-6 py-3" colSpan={13}>Data Kosong / Belum Ditambahkan</td>
+            {dataNull ? (
+              <tr>
+                <td className="px-6 py-3" colSpan={13}>
+                  Data Kosong / Belum Ditambahkan
+                </td>
               </tr>
             ) : (
               dataProsesBisnis.map((data, index) => (
@@ -150,7 +153,11 @@ function Table() {
                   <td className="px-6 py-4">{data.nama_proses_bisnis}</td>
                   <td className="px-6 py-4">{data.kode_proses_bisnis}</td>
                   <td className="px-6 py-4">{data.kode_opd}</td>
-                  <td className="px-6 py-4">{data.bidang_urusan_id ? `${data.bidang_urusan_id.bidang_urusan}` : "N/A"}</td>
+                  <td className="px-6 py-4">
+                    {data.bidang_urusan_id
+                      ? `${data.bidang_urusan_id.bidang_urusan}`
+                      : "N/A"}
+                  </td>
                   <td className="px-6 py-4">
                     {data.sasaran_kota ? `${data.sasaran_kota.Sasaran}` : "N/A"}
                   </td>

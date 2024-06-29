@@ -1,0 +1,20 @@
+services:
+  espbe-fe:
+    container_name: espbe-fe
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8080
+    ports:
+      - 3000:3000
+    networks:
+      - my_network_spbe
+
+  # Add more containers below (nginx, postgres, etc.)
+
+# Define a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
+networks:
+  my_network_spbe:
+    external: true
