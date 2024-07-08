@@ -1,14 +1,13 @@
+"use client"
+
+import Head from "next/head";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "@/components/global/Sidebar/Sidebar";
 import Header from "@/components/global/Header/Header";
-
-export const metadata: Metadata = {
-  title: "E-SPBE",
-  description: "Aplikasi E-SPBE Kota Madiun",
-  icons: [{ rel: 'icon', url: '/logo.png' }]
-};
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,13 +18,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <body className={`${inter.className} flex`}>
-          <Sidebar />
-          <div className="pl-[17rem] w-full">
-            <Header />
-            <main className="p-5">{children}</main>
-          </div>
-        </body>
+        <Provider store={store}>
+          <head>
+            <title>E-SPBE</title>
+            <meta name="description" content="Aplikasi E-SPBE Kota Madiun" />
+            <link rel="icon" href="/logo.png" />
+          </head>
+          <body className={`${inter.className} flex`}>
+            <Sidebar />
+            <div className="pl-[17rem] w-full">
+              <Header />
+              <main className="p-5">{children}</main>
+            </div>
+          </body>
+        </Provider>
     </html>
   );
 }

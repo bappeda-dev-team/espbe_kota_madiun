@@ -195,9 +195,11 @@ function Sidebar() {
         <div className="flex items-center pb-2">
           <div className="flex justify-center items-center bg-white rounded-full">
             <Image
-              src="/avatar.png"
-              alt="sidebar avatar"
               className="w-7 h-7 rounded-full"
+              src="/avatar.png"
+              alt="avatar"
+              width={30}
+              height={30}
             />
           </div>
           <h1 className="ml-3">Admin Kota</h1>
@@ -206,7 +208,13 @@ function Sidebar() {
 
       <div className="p-5 overflow-y-auto border-b border-stone-300">
         <div className="flex flex-col items-center text-center">
-          <Image src="/logo.png" alt="logo sidebar" className="w-16 h-16" />
+          <Image
+            className="pr-2"
+            src="/logo.png"
+            alt="Logo"
+            width={80}
+            height={80}
+          />
           <h1>E-SPBE-Kota Madiun</h1>
         </div>
       </div>

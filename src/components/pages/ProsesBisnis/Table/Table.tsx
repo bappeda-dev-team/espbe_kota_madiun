@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Loading from "../../../global/Loading/Loading";
 import Button from "@/components/common/Button/Button";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface rabLevel1_3 {
   Id: number;
@@ -49,6 +51,7 @@ interface typeProsesBisnis {
 }
 
 function Table() {
+  const tahun = useSelector((state: RootState) => state.tahunProsesBisnis.tahun) //tahunProsesBisnis diambil dari store.ts, tahun diambil dari ProsesBisnisSlicer.ts -> interface TahunState{ tahun: number }
   const [dataProsesBisnis, setDataProsesBisnis] = useState<typeProsesBisnis[]>(
     [],
   );
@@ -59,31 +62,57 @@ function Table() {
   //fetch data proses bisnis
   useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    const fetchingData = async () => {
-      try {
-        const response = await fetch(`${API_URL}/v1/prosesbisnis`);
-        if (!response.ok) {
-          throw new Error("cant fetching data");
+    if(tahun !== 0){
+      const fetchingData = async () => {
+        try {
+          const response = await fetch(`${API_URL}/v1/prosesbisnisbytahun/${tahun}`);
+          if (!response.ok) {
+            throw new Error("cant fetching data");
+          }
+          const data = await response.json();
+          if (data.data === null) {
+            setDataProsesBisnis([]);
+            setDataNull(true);
+          } else {
+            setDataProsesBisnis(data.data);
+            setDataNull(false);
+          }
+        } catch (err) {
+          setError(
+            "Gagal memuat data, silakan cek koneksi internet atau database server",
+          );
+        } finally {
+          setLoading(false);
         }
-        const data = await response.json();
-        if (data.data === null) {
-          setDataProsesBisnis([]);
-          setDataNull(true);
-        } else {
-          setDataProsesBisnis(data.data);
-          setDataNull(false);
+      };
+      fetchingData();
+    } else if(tahun == 0){
+      const fetchingData = async () => {
+        try {
+          const response = await fetch(`${API_URL}/v1/prosesbisnis`);
+          if (!response.ok) {
+            throw new Error("cant fetching data");
+          }
+          const data = await response.json();
+          if (data.data === null) {
+            setDataProsesBisnis([]);
+            setDataNull(true);
+          } else {
+            setDataProsesBisnis(data.data);
+            setDataNull(false);
+          }
+        } catch (err) {
+          setError(
+            "Gagal memuat data, silakan cek koneksi internet atau database server",
+          );
+        } finally {
+          setLoading(false);
         }
-      } catch (err) {
-        setError(
-          "Gagal memuat data, silakan cek koneksi internet atau database server",
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchingData();
-  }, []);
+      };
+  
+      fetchingData();
+    }
+  }, [tahun]);
 
   //hapus data
   const hapusProsesBisnis = async (id: number) => {
