@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 
 function Header() {
   const { id } = useParams();
-  const pathName = usePathname();
   const [textPath, setTextPath] = useState<string>();
   const url = usePathname();
 
@@ -25,6 +24,8 @@ function Header() {
       url === "/Aplikasi" ||
       url === "/Aplikasi/TambahData" ||
       url === "/GapArsitektur" ||
+      url === "/Arsitektur" ||
+      url === "/SdmInfrastruktur" ||
       url === "/PetaRencana"
     ) {
       setTextPath("Arsitekur SPBE");
@@ -39,7 +40,6 @@ function Header() {
         <div className="flex justify-between flex-row w-full p-5">
           <div className="text-page flex flex-row">
             <h1 className="text-stone-300">{textPath}</h1>
-            <h1 className="ml-3">{pathName}</h1>
           </div>
           <input
             type="text"

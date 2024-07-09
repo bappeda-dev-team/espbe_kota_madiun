@@ -14,14 +14,13 @@ function Sidebar() {
   const [DataMasterActive, setDataMasterActive] = useState<boolean>(false);
   const [ProsesBisnisActive, setProsesBisnisActive] = useState<boolean>(false);
   const [LayananActive, setLayananActive] = useState<boolean>(false);
-  const [standartPelayananActive, setStandartPelayananActive] =
-    useState<boolean>(false);
+  const [standartPelayananActive, setStandartPelayananActive] = useState<boolean>(false);
   const [formLayananActive, setFormLayananActive] = useState<boolean>(false);
-  const [DataInformasiActive, setDataInformasiActive] =
-    useState<boolean>(false);
+  const [DataInformasiActive, setDataInformasiActive] = useState<boolean>(false);
   const [AplikasiActive, setAplikasiActive] = useState<boolean>(false);
-  const [GapArsiterturActive, setGapArsitekturActive] =
-    useState<boolean>(false);
+  const [ArsiterturActive, setArsitekturActive] = useState<boolean>(false);
+  const [GapArsiterturActive, setGapArsitekturActive] = useState<boolean>(false);
+  const [SdmInfrastrukturActive, setSdmInfrastrukturActive] = useState<boolean>(false);
   const [petaRencanaActive, setPetaRencanaActive] = useState<boolean>(false);
 
   const breakLayanan = () => {
@@ -44,6 +43,8 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/User") {
       setDahsboardActive(false),
@@ -56,6 +57,8 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/DataMaster") {
       setDahsboardActive(false),
@@ -68,6 +71,8 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/ProsesBisnis" || url === "/ProsesBisnis/TambahData") {
       setDahsboardActive(false),
@@ -80,6 +85,8 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
       url === "/ProsesBisnis" ||
@@ -95,6 +102,8 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
       url === "/Layanan/LayananSPBE" ||
@@ -110,6 +119,8 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/Layanan/StandartPelayanan") {
       setDahsboardActive(false),
@@ -122,6 +133,8 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
       url === "/DataInformasi" ||
@@ -137,6 +150,8 @@ function Sidebar() {
         setDataInformasiActive(true),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/Aplikasi" || url === "/Aplikasi/TambahData") {
       setDahsboardActive(false),
@@ -149,6 +164,8 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(true),
         setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/GapArsitektur") {
       setDahsboardActive(false),
@@ -161,6 +178,36 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(true);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
+      setPetaRencanaActive(false);
+    } else if (url === "/Arsitektur") {
+      setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(false),
+        setProsesBisnisActive(false),
+        setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false);
+        setArsitekturActive(true);
+        setSdmInfrastrukturActive(false);
+      setPetaRencanaActive(false);
+    } else if (url === "/SdmInfrastruktur") {
+      setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(false),
+        setProsesBisnisActive(false),
+        setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(true);
       setPetaRencanaActive(false);
     } else if (url === "/PetaRencana") {
       setDahsboardActive(false),
@@ -173,6 +220,8 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
       setPetaRencanaActive(true);
     } else {
       setDahsboardActive(false),
@@ -185,12 +234,14 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     }
   }, [url, id]);
 
   return (
-    <div className="fixed min-w-[270px] border-r">
+    <div className="fixed min-w-[270px] border-r h-screen overflow-scroll">
       <div className="p-5 border-b border-stone-300">
         <div className="flex items-center pb-2">
           <div className="flex justify-center items-center bg-white rounded-full">
@@ -332,16 +383,16 @@ function Sidebar() {
                 {ProsesBisnisActive ? (
                   <Image
                     className="pr-2"
-                    src="/iconLight/ListChecks.svg"
-                    alt="ListChecks"
+                    src="/iconLight/layer.svg"
+                    alt="layer"
                     width={30}
                     height={30}
                   />
                 ) : (
                   <Image
                     className="pr-2"
-                    src="/iconDark/ListChecks.svg"
-                    alt="ListChecks"
+                    src="/iconDark/layer.svg"
+                    alt="layer"
                     width={30}
                     height={30}
                   />
@@ -360,8 +411,8 @@ function Sidebar() {
             >
               <Image
                 className="pr-2"
-                src="/iconDark/ListDashes.svg"
-                alt="ListDashes"
+                src="/iconDark/ChatsTeardrop.svg"
+                alt="ChatsTeardrop"
                 width={30}
                 height={30}
               />
@@ -476,21 +527,52 @@ function Sidebar() {
                 {AplikasiActive ? (
                   <Image
                     className="pr-2"
-                    src="/iconLight/ChatsTeardrop.svg"
-                    alt="ChatsTeardrop"
+                    src="/iconLight/monitor-mobbile.svg"
+                    alt="monitor-mobbile"
                     width={30}
                     height={30}
                   />
                 ) : (
                   <Image
                     className="pr-2"
-                    src="/iconDark/ChatsTeardrop.svg"
-                    alt="ChatsTeardrop"
+                    src="/iconDark/monitor-mobbile.svg"
+                    alt="monitor-mobbile"
                     width={30}
                     height={30}
                   />
                 )}
                 Aplikasi
+              </li>
+            </Link>
+            <Link
+              className={ArsiterturActive ? "text-white" : ""}
+              href="/Arsitektur"
+            >
+              <li
+                className={
+                  ArsiterturActive
+                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                }
+              >
+                {ArsiterturActive ? (
+                  <Image
+                    className="pr-2"
+                    src="/iconLight/ListChecks.svg"
+                    alt="ListChecks"
+                    width={30}
+                    height={30}
+                  />
+                ) : (
+                  <Image
+                    className="pr-2"
+                    src="/iconDark/ListChecks.svg"
+                    alt="ListChecks"
+                    width={30}
+                    height={30}
+                  />
+                )}
+                Arsitektur
               </li>
             </Link>
             <Link
@@ -507,21 +589,52 @@ function Sidebar() {
                 {GapArsiterturActive ? (
                   <Image
                     className="pr-2"
-                    src="/iconLight/ChatsTeardrop.svg"
-                    alt="ChatsTearDrop"
+                    src="/iconLight/ListDashes.svg"
+                    alt="ListDashes"
                     width={30}
                     height={30}
                   />
                 ) : (
                   <Image
                     className="pr-2"
-                    src="/iconDark/ChatsTeardrop.svg"
-                    alt="ChatsTeardrop"
+                    src="/iconDark/ListDashes.svg"
+                    alt="ListDashes"
                     width={30}
                     height={30}
                   />
                 )}
                 Gap Arsitektur
+              </li>
+            </Link>
+            <Link
+              className={SdmInfrastrukturActive ? "text-white" : ""}
+              href="/SdmInfrastruktur"
+            >
+              <li
+                className={
+                  SdmInfrastrukturActive
+                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                }
+              >
+                {SdmInfrastrukturActive ? (
+                  <Image
+                    className="pr-2"
+                    src="/iconLight/tag-user.svg"
+                    alt="Calendar"
+                    width={30}
+                    height={30}
+                  />
+                ) : (
+                  <Image
+                    className="pr-2"
+                    src="/iconDark/tag-user.svg"
+                    alt="Calendar"
+                    width={30}
+                    height={30}
+                  />
+                )}
+                SDM Infrastruktur
               </li>
             </Link>
             <Link
