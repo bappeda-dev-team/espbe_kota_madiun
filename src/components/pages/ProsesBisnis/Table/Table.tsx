@@ -5,6 +5,7 @@ import Loading from "../../../global/Loading/Loading";
 import Button from "@/components/common/Button/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import PopUp from "@/components/common/PopUp/PopUp";
 
 interface rabLevel1_3 {
   Id: number;
@@ -52,12 +53,13 @@ interface typeProsesBisnis {
 
 function Table() {
   const tahun = useSelector((state: RootState) => state.tahunProsesBisnis.tahun) //tahunProsesBisnis diambil dari store.ts, tahun diambil dari ProsesBisnisSlicer.ts -> interface TahunState{ tahun: number }
-  const [dataProsesBisnis, setDataProsesBisnis] = useState<typeProsesBisnis[]>(
-    [],
-  );
+  const [dataProsesBisnis, setDataProsesBisnis] = useState<typeProsesBisnis[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [dataNull, setDataNull] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
+  const [popUp, setPopUp] = useState<boolean>(false);
+  const [deleted, setDeleted] = useState<boolean>(false);
+  const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
   //fetch data proses bisnis
   useEffect(() => {
@@ -124,12 +126,12 @@ function Table() {
       if (!response.ok) {
         throw new Error("cant fetch data");
       }
-      alert("berhasil menghapus data");
       setDataProsesBisnis(dataProsesBisnis.filter((item) => item.id !== id));
+      setDeleted(true);
+      setIsDeleted(true);
     } catch (err) {
-      alert(
-        "gagal menghapus data, silakan cek koneksi internet/database server",
-      );
+      setDeleted(true);
+      setIsDeleted(false);
     }
   };
 
@@ -230,12 +232,40 @@ function Table() {
                       Edit
                     </Button>
                     <Button
-                      onClick={() => hapusProsesBisnis(data.id)}
+                      onClick={() => setPopUp(true)}
                       typee="button"
-                      className="bg-red-500 my-1"
+                      className="bg-red-500 hover:bg-red-700 my-1"
                     >
                       Hapus
                     </Button>
+                    <PopUp isOpen={popUp} onClose={() => setPopUp(false)}>
+                        {deleted? 
+                        <>
+                          {isDeleted? 
+                            <h1>Data berhasil dihapus</h1>
+                          :
+                            <h1>Data gagal dihapus, silakan periksa koneksi internet/database server</h1>
+                          }
+                          <div className="flex justify-around mt-3">
+                            <Button onClick={() => {setPopUp(false); setDeleted(false); setIsDeleted(false);}}>
+                              tutup
+                            </Button>
+                          </div>
+                        </>
+                        :
+                        <>
+                          <h1>Hapus data yang dipilih?</h1>
+                          <div className="flex justify-around mt-3">
+                            <Button onClick={() => setPopUp(false)}>
+                              Batal
+                            </Button>
+                            <Button className="bg-red-500 hover:bg-red-700" onClick={() => hapusProsesBisnis(data.id)}>
+                              Ya
+                            </Button>
+                          </div>
+                        </>
+                        }
+                    </PopUp>
                   </td>
                 </tr>
               ))
