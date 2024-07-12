@@ -6,6 +6,7 @@ import Button from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import PopUp from "@/components/common/PopUp/PopUp";
 
 interface OptionType {
   value: number;
@@ -38,6 +39,8 @@ const FormEditData = () => {
   } = useForm<formValue>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
+  const [popup, setPopup] = useState<boolean>(false);
+  const [edited, setEdited] = useState<boolean>(false);
 
   //state untuk fetch data option
   const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>(
@@ -308,11 +311,12 @@ const FormEditData = () => {
       });
 
       if (response.ok) {
-        alert("Data Proses Bisnis berhasil diperbarui");
-        router.push("/ProsesBisnis");
+        setPopup(true);
+        setEdited(true);
         reset();
       } else {
-        alert("Data Proses Bisnis gagal diperbarui");
+        setPopup(true);
+        setEdited(false);
       }
     } catch (error) {
       alert("Data Proses Bisnis gagal diperbarui");
@@ -750,6 +754,25 @@ const FormEditData = () => {
           </>
         )}
         <Button typee="submit">Simpan</Button>
+        <PopUp isOpen={popup} onClose={() => {setPopup(false); router.push("/ProsesBisnis")}}>
+          <div className="flex flex-col justify-center">
+            {edited ? 
+              <h1>Data Proses Bisnis berhasil di edit</h1>
+            :
+              <h1>Data Proses Bisnis gagal di edit, cek koneksi internet/database server</h1>
+            }
+            <Button 
+            className="mt-5"
+              onClick={() => {
+                setPopup(false);
+                setEdited(false);
+                router.push("/ProsesBisnis")
+                }}
+            >
+              Tutup
+            </Button>
+          </div>
+        </PopUp>
       </form>
     </div>
   );

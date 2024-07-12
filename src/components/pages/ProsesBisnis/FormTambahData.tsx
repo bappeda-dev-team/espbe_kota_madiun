@@ -5,6 +5,7 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import Button from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useRouter } from "next/navigation";
+import PopUp from "@/components/common/PopUp/PopUp";
 
 interface OptionType {
   value: number;
@@ -41,6 +42,8 @@ const FormTambahData = () => {
   >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
+  const [popup, setPopup] = useState<boolean>(false);
+  const [isEdited, setIsEdited] = useState<boolean>(false);
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -180,11 +183,12 @@ const FormTambahData = () => {
       });
 
       if (response.ok) {
-        alert("Data Proses Bisnis berhasil ditambahkan");
-        router.push("/ProsesBisnis");
+        setPopup(true)
+        setIsEdited(true);
         reset();
       } else {
-        alert("Data Proses Bisnis gagal ditambahkan");
+        setPopup(true)
+        setIsEdited(false);
       }
     } catch (error) {
       alert("Data Proses Bisnis gagal ditambahkan");
@@ -576,6 +580,24 @@ const FormTambahData = () => {
         <Button typee="submit" className="mt-5">
           Simpan
         </Button>
+        <PopUp isOpen={popup} onClose={() => {setPopup(false); router.push("/ProsesBisnis")}}>
+          <div className="flex flex-col justify-center">
+            {isEdited? 
+              <h1>Data Proses Bisnis berhasil ditambahkan</h1>
+            :
+              <h1>Data gagal ditambahkan, silakan cek koneksi internet/database server</h1>
+            }
+            <Button 
+              className="mt-5"
+              onClick={() => { 
+                router.push("/ProsesBisnis")
+                setIsEdited(false);
+                }}
+            >
+              tutup
+            </Button>
+          </div>
+        </PopUp>
       </form>
     </div>
   );
