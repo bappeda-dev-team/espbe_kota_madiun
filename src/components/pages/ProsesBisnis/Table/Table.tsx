@@ -111,7 +111,6 @@ function Table() {
           setLoading(false);
         }
       };
-  
       fetchingData();
     }
   }, [tahun]);
