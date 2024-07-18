@@ -1,4 +1,4 @@
-import FormLayanan from "@/components/pages/Layanan/FormLayanan";
+import FormLayanan from "@/components/pages/Layanan/FormTambahData";
 
 const TambahData = () => {
     return(

@@ -52,14 +52,17 @@ interface typeProsesBisnis {
 }
 
 function Table() {
+  //state fetch data proses bisnis
   const tahun = useSelector((state: RootState) => state.tahunProsesBisnis.tahun) //tahunProsesBisnis diambil dari store.ts, tahun diambil dari ProsesBisnisSlicer.ts -> interface TahunState{ tahun: number }
   const [dataProsesBisnis, setDataProsesBisnis] = useState<typeProsesBisnis[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [dataNull, setDataNull] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
+  //state validasi & popup
   const [popUp, setPopUp] = useState<boolean>(false);
   const [deleted, setDeleted] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
+  const [getId, setId] = useState<number | null>(null);
 
   //fetch data proses bisnis
   useEffect(() => {
@@ -116,7 +119,7 @@ function Table() {
   }, [tahun]);
 
   //hapus data
-  const hapusProsesBisnis = async (id: number) => {
+  const hapusProsesBisnis = async (id: any) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     try {
       const response = await fetch(`${API_URL}/v1/deleteprosesbisnis/${id}`, {
@@ -231,13 +234,16 @@ function Table() {
                       Edit
                     </Button>
                     <Button
-                      onClick={() => setPopUp(true)}
                       typee="button"
                       className="bg-red-500 hover:bg-red-700 my-1"
+                      onClick={() => {
+                        setPopUp(true);
+                        setId(data.id)
+                      }}
                     >
                       Hapus
                     </Button>
-                    <PopUp isOpen={popUp} onClose={() => setPopUp(false)}>
+                    <PopUp isOpen={popUp} onClose={() => {setPopUp(false); setId(null);}}>
                         {deleted? 
                         <>
                           {isDeleted? 
@@ -246,7 +252,13 @@ function Table() {
                             <h1>Data gagal dihapus, silakan periksa koneksi internet/database server</h1>
                           }
                           <div className="flex justify-around mt-3">
-                            <Button onClick={() => {setPopUp(false); setDeleted(false); setIsDeleted(false);}}>
+                            <Button onClick={() => {
+                                setPopUp(false); 
+                                setDeleted(false); 
+                                setIsDeleted(false);
+                                setId(null);
+                              }}
+                            >
                               tutup
                             </Button>
                           </div>
@@ -255,10 +267,14 @@ function Table() {
                         <>
                           <h1>Hapus data yang dipilih?</h1>
                           <div className="flex justify-around mt-3">
-                            <Button onClick={() => setPopUp(false)}>
+                            <Button onClick={() => {
+                              setPopUp(false);
+                              setId(null);
+                              }}
+                            >
                               Batal
                             </Button>
-                            <Button className="bg-red-500 hover:bg-red-700" onClick={() => hapusProsesBisnis(data.id)}>
+                            <Button className="bg-red-500 hover:bg-red-700" onClick={() => hapusProsesBisnis(getId)}>
                               Ya
                             </Button>
                           </div>
