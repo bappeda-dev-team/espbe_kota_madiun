@@ -127,23 +127,6 @@ const FormTambahData = () => {
     }
   };
 
-  const fetchSasaranKota = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/v1/sasarankota`);
-      const data = await response.json();
-      const result = data.data.map((item: any) => ({
-        value: item.ID,
-        label: item.Sasaran,
-      }));
-      set_sasaran_kota_option(result);
-    } catch (err) {
-      console.log("gagal memuat data option sasaran kota");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const formData = {
       //key : value

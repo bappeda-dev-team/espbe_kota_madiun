@@ -754,12 +754,12 @@ const FormEditData = () => {
           </>
         )}
         <Button typee="submit">Simpan</Button>
-        <PopUp isOpen={popup} onClose={() => {setPopup(false); router.push("/ProsesBisnis")}}>
+        <PopUp isOpen={popup} onClose={() => {setPopup(false); setEdited(false); router.push("/ProsesBisnis")}}>
           <div className="flex flex-col justify-center">
             {edited ? 
               <h1>Data Proses Bisnis berhasil di edit</h1>
             :
-              <h1>Data Proses Bisnis gagal di edit, cek koneksi internet/database server</h1>
+              <h1>Data Proses Bisnis gagal di edit, cek koneksi internet atau database server</h1>
             }
             <Button 
             className="mt-5"

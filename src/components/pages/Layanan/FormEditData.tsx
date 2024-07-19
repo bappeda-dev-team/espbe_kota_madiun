@@ -14,18 +14,20 @@ interface OptionType {
 }
 
 interface formValue {
-  nama_proses_bisnis: string;
-  kode_proses_bisnis: string;
-  kode_opd: string;
-  bidang_urusan_id: OptionType | null;
-  sasaran_kota_id: OptionType | null;
+  nama_layanan: string;
+  tujuan_layanan_id: OptionType | null;
+  fungsi_layanan: string;
   tahun: OptionType | null;
-  rab_level_1_id: OptionType | null;
-  rab_level_2_id: OptionType | null;
-  rab_level_3_id: OptionType | null;
-  rab_level_4_id: OptionType | null;
-  rab_level_5_id: OptionType | null;
-  rab_level_6_id: OptionType | null;
+  kode_opd: string;
+  kementrian_terkait: string;
+  metode_layanan: string;
+  ral_level_1_id: OptionType | null;
+  ral_level_2_id: OptionType | null;
+  ral_level_3_id: OptionType | null;
+  ral_level_4_id: OptionType | null;
+  strategic_id: OptionType | null;
+  tactical_id: OptionType | null;
+  operational_id: OptionType | null;
 }
 
 const FormEditData = () => {
@@ -42,31 +44,25 @@ const FormEditData = () => {
   const [popup, setPopup] = useState<boolean>(false);
   const [edited, setEdited] = useState<boolean>(false);
 
-  //state untuk fetch data option
-  const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>(
-    [],
-  );
-  const [bidang_urusan_option, set_bidang_urusan_option] = useState<
-    OptionType[]
-  >([]);
-  const [rab_1_3, set_rab_1_3] = useState<OptionType[]>([]);
-  const [rab_4_6, set_rab_4_6] = useState<OptionType[]>([]);
+  const [ral_1_4, set_ral_1_4] = useState<OptionType[]>([]);
+  const [ral_5_7, set_ral_5_7] = useState<OptionType[]>([]);
 
   //state untuk fetch default value data by id
-  const [selectedSasaranKota, setSelectedSasaranKota] =
-    useState<OptionType | null>(null);
-  const [selectedBidangUrusan, setSelectedBidangUrusan] =
-    useState<OptionType | null>(null);
-  const [selectedRab1, setSelectedRab1] = useState<OptionType | null>(null);
-  const [selectedRab2, setSelectedRab2] = useState<OptionType | null>(null);
-  const [selectedRab3, setSelectedRab3] = useState<OptionType | null>(null);
-  const [selectedRab4, setSelectedRab4] = useState<OptionType | null>(null);
-  const [selectedRab5, setSelectedRab5] = useState<OptionType | null>(null);
-  const [selectedRab6, setSelectedRab6] = useState<OptionType | null>(null);
-  const [selectedTahun, setSelectedTahun] = useState<OptionType | null>(null);
-  const [namaProsesBisnis, setNamaProsesBisnis] = useState<string>("");
+  const [namaLayanan, setNamaLayanan] = useState<string>("");
+  const [selectedFungsiLayanan, setSelectedFungsiLayanan] = useState<string>("");
   const [kode_opd, set_kode_opd] = useState<string>("");
-  const [kode_proses_bisnis, set_kode_proses_bisnis] = useState<string>("");
+  const [selectedKementrianTerkait, setSelectedKementrianTerkait] = useState<string>("");
+  const [selectedMetodeLayanan, setSelectedMetodeLayanan] = useState<string>("");
+  
+  const [selectedTujuanLayanan, setSelectedTujuanLayanan] = useState<OptionType | null>(null);
+  const [selectedTahun, setSelectedTahun] = useState<OptionType | null>(null);
+  const [selectedRal1, setSelectedRal1] = useState<OptionType | null>(null);
+  const [selectedRal2, setSelectedRal2] = useState<OptionType | null>(null);
+  const [selectedRal3, setSelectedRal3] = useState<OptionType | null>(null);
+  const [selectedRal4, setSelectedRal4] = useState<OptionType | null>(null);
+  const [selectedStrategic, setSelectedStrategic] = useState<OptionType | null>(null);
+  const [selectedTactical, setSelectedTactical] = useState<OptionType | null>(null);
+  const [selectedOperational, setSelectedOperational] = useState<OptionType | null>(null);
 
   const tahun_option: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -82,101 +78,104 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const fetchingDataId = async () => {
       try {
-        const response = await fetch(`${API_URL}/v1/prosesbisnisbyid/${Id}`);
+        const response = await fetch(`${API_URL}/v1/layananspbebyid/${Id}`);
         const data = await response.json();
         const result = data.data;
+        
+        if (result.NamaLayanan) {
+          setNamaLayanan(result.NamaLayanan);
+          reset((prev) => ({...prev, nama_layanan: result.NamaLayanan,}));
+        }
+        if (result.FungsiLayanan) {
+          setSelectedFungsiLayanan(result.FungsiLayanan);
+          reset((prev) => ({...prev, fungsi_layanan: result.FungsiLayanan,}));
+        }
+        if (result.KodeOPD) {
+          set_kode_opd(result.KodeOPD);
+          reset((prev) => ({...prev, kode_opd: result.KodeOPD,}));
+        }
+        if (result.KementrianTerkait) {
+          setSelectedKementrianTerkait(result.KementrianTerkait);
+          reset((prev) => ({ ...prev, kementrian_terkait: result.KementrianTerkait }));
+        }
+        if (result.MetodeLayanan) {
+          setSelectedMetodeLayanan(result.MetodeLayanan);
+          reset((prev) => ({ ...prev, metode_layanan: result.MetodeLayanan }));
+        }
 
-        if (result.sasaran_kota) {
-          const sasaranKotaOption = {
-            value: result.sasaran_kota.ID,
-            label: result.sasaran_kota.Sasaran,
+        if (result.TujuanLayananId) {
+          const tujuanLayananOption = {
+            value: result.TujuanLayananId.id,
+            label: result.TujuanLayananId.nama_pohon,
           };
-          setSelectedSasaranKota(sasaranKotaOption);
-          reset((prev) => ({ ...prev, sasaran_kota_id: sasaranKotaOption }));
+          setSelectedTujuanLayanan(tujuanLayananOption);
+          reset((prev) => ({ ...prev, tujuan_layanan_id: tujuanLayananOption }));
         }
-        if (result.bidang_urusan_id) {
-          const bidangUrusanOption = {
-            value: result.bidang_urusan_id.id,
-            label: `${result.bidang_urusan_id.id} - ${result.bidang_urusan_id.bidang_urusan}`,
-          };
-          setSelectedBidangUrusan(bidangUrusanOption);
-          reset((prev) => ({ ...prev, bidang_urusan_id: bidangUrusanOption }));
-        }
-        if (result.rab_level_1) {
-          const rabLevel1Option = {
-            value: result.rab_level_1.Id,
-            label: result.rab_level_1.kode_referensi,
-          };
-          setSelectedRab1(rabLevel1Option);
-          reset((prev) => ({ ...prev, rab_level_1_id: rabLevel1Option }));
-        }
-        if (result.rab_level_2) {
-          const rabLevel2Option = {
-            value: result.rab_level_2.Id,
-            label: result.rab_level_2.kode_referensi,
-          };
-          setSelectedRab2(rabLevel2Option);
-          reset((prev) => ({ ...prev, rab_level_2_id: rabLevel2Option }));
-        }
-        if (result.rab_level_3) {
-          const rabLevel3Option = {
-            value: result.rab_level_3.Id,
-            label: result.rab_level_3.kode_referensi,
-          };
-          setSelectedRab3(rabLevel3Option);
-          reset((prev) => ({ ...prev, rab_level_3_id: rabLevel3Option }));
-        }
-        if (result.rab_level_4) {
-          const rabLevel4Option = {
-            value: result.rab_level_4.id,
-            label: result.rab_level_4.nama_pohon,
-          };
-          setSelectedRab4(rabLevel4Option);
-          reset((prev) => ({ ...prev, rab_level_4_id: rabLevel4Option }));
-        }
-        if (result.rab_level_5) {
-          const rabLevel5Option = {
-            value: result.rab_level_5.id,
-            label: result.rab_level_5.nama_pohon,
-          };
-          setSelectedRab5(rabLevel5Option);
-          reset((prev) => ({ ...prev, rab_level_5_id: rabLevel5Option }));
-        }
-        if (result.rab_level_6) {
-          const rabLevel6Option = {
-            value: result.rab_level_6.id,
-            label: result.rab_level_6.nama_pohon,
-          };
-          setSelectedRab6(rabLevel6Option);
-          reset((prev) => ({ ...prev, rab_level_6_id: rabLevel6Option }));
-        }
-        if (result.tahun) {
+        if (result.Tahun) {
           const selectedTahun = {
-            value: result.tahun,
-            label: result.tahun,
+            value: result.Tahun,
+            label: result.Tahun,
           };
           setSelectedTahun(selectedTahun);
           reset((prev) => ({ ...prev, tahun: selectedTahun }));
         }
+        if (result.RalLevel1id) {
+          const ralLevel1Option = {
+            value: result.RalLevel1id.Id,
+            label: `${result.RalLevel1id.kode_referensi} ${result.RalLevel1id.nama_referensi}`,
+          };
+          setSelectedRal1(ralLevel1Option);
+          reset((prev) => ({ ...prev, ral_level_1_id: ralLevel1Option }));
+        }
+        if (result.RalLevel2id) {
+          const ralLevel2Option = {
+            value: result.RalLevel2id.Id,
+            label: `${result.RalLevel2id.kode_referensi} ${result.RalLevel2id.nama_referensi}`,
+          };
+          setSelectedRal2(ralLevel2Option);
+          reset((prev) => ({ ...prev, ral_level_2_id: ralLevel2Option }));
+        }
+        if (result.RalLevel3id) {
+          const ralLevel3Option = {
+            value: result.RalLevel3id.Id,
+            label: `${result.RalLevel3id.kode_referensi} ${result.RalLevel3id.nama_referensi}`,
+          };
+          setSelectedRal3(ralLevel3Option);
+          reset((prev) => ({ ...prev, ral_level_3_id: ralLevel3Option }));
+        }
+        if (result.RalLevel4id) {
+          const ralLevel4Option = {
+            value: result.RalLevel4id.Id,
+            label: `${result.RalLevel4id.kode_referensi} ${result.RalLevel4id.nama_referensi}`,
+          };
+          setSelectedRal4(ralLevel4Option);
+          reset((prev) => ({ ...prev, ral_level_4_id: ralLevel4Option }));
+        }
+        if (result.StrategicId) {
+          const strategicOption = {
+            value: result.StrategicId.id,
+            label: result.StrategicId.nama_pohon,
+          };
+          setSelectedStrategic(strategicOption);
+          reset((prev) => ({ ...prev, strategic_id: strategicOption }));
+        }
+        if (result.TacticalId) {
+          const tacticalOption = {
+            value: result.TacticalId.id,
+            label: result.TacticalId.nama_pohon,
+          };
+          setSelectedTactical(tacticalOption);
+          reset((prev) => ({ ...prev, tactical_id: tacticalOption }));
+        }
+        if (result.OperationalId) {
+          const operationalOption = {
+            value: result.OperationalId.id,
+            label: result.OperationalId.nama_pohon,
+          };
+          setSelectedOperational(operationalOption);
+          reset((prev) => ({ ...prev, operational_id: operationalOption }));
+        }
 
-        if (result.nama_proses_bisnis) {
-          setNamaProsesBisnis(result.nama_proses_bisnis);
-          reset((prev) => ({
-            ...prev,
-            nama_proses_bisnis: result.nama_proses_bisnis,
-          }));
-        }
-        if (result.kode_opd) {
-          set_kode_opd(result.kode_opd);
-          reset((prev) => ({ ...prev, kode_opd: result.kode_opd }));
-        }
-        if (result.kode_proses_bisnis) {
-          set_kode_proses_bisnis(result.kode_proses_bisnis);
-          reset((prev) => ({
-            ...prev,
-            kode_proses_bisnis: result.kode_proses_bisnis,
-          }));
-        }
       } catch (err) {
         console.log("Gagal fetching data by id");
       }
@@ -185,43 +184,8 @@ const FormEditData = () => {
     setIsClient(true);
   }, [reset, Id]);
 
-  const fetchSasaranKota = async () => {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/v1/sasarankota`);
-      const data = await response.json();
-      const result = data.data.map((item: any) => ({
-        value: item.ID,
-        label: item.Sasaran,
-      }));
-      set_sasaran_kota_option(result);
-    } catch (err) {
-      console.log("Gagal memuat data Option Sasaran Kota", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fetchBidangUrusan = async () => {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/v1/bidangurusan`);
-      const data = await response.json();
-      const result = data.data.map((item: any) => ({
-        value: item.id,
-        label: `${item.id}. ${item.kode_bidang_urusan} - ${item.bidang_urusan}`,
-      }));
-      set_bidang_urusan_option(result);
-    } catch (err) {
-      console.log("Gagal memuat data Option Bidang Urusan", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fetchRab_1_3 = async (level: number) => {
+  //fetching data RAL 1 - 4
+  const fetchRal_1_4 = async (level: number) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
@@ -234,7 +198,7 @@ const FormEditData = () => {
         value: item.Id,
         label: item.kode_referensi,
       }));
-      set_rab_1_3(result);
+      set_ral_1_4(result);
     } catch (err) {
       console.log("Gagal memuat data Option RAB Level 1 - 3", err);
     } finally {
@@ -242,67 +206,72 @@ const FormEditData = () => {
     }
   };
 
-  const fetchRab_4_6 = async (level: number) => {
+  //fetching data RAL 5 - 7
+  const fetchRal_5_7 = async (pohon_kinerja: any) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
       const response = await fetch(`${API_URL}/v1/pohonkinerja`);
       const data = await response.json();
       const filteredData = data.data.filter(
-        (pohon: any) => pohon.level_pohon === level,
+        (pohon: any) => pohon.jenis_pohon === pohon_kinerja,
       );
       const result = filteredData.map((item: any) => ({
         value: item.id,
         label: item.nama_pohon,
       }));
-      set_rab_4_6(result);
+      set_ral_5_7(result);
     } catch (err) {
-      console.log("Gagal memuat data Option RAB Level 4 - 6", err);
+      console.log("Gagal memuat data Option RAL Level 5 - 7", err);
     } finally {
       setIsLoading(false);
     }
   };
 
+  //
   const handleChange = (option: any, actionMeta: any) => {
-    if (actionMeta.name === "sasaran_kota_id") {
-      setSelectedSasaranKota(option);
-    } else if (actionMeta.name === "bidang_urusan_id") {
-      setSelectedBidangUrusan(option);
-    } else if (actionMeta.name === "rab_level_1_id") {
-      setSelectedRab1(option);
-    } else if (actionMeta.name === "rab_level_2_id") {
-      setSelectedRab2(option);
-    } else if (actionMeta.name === "rab_level_3_id") {
-      setSelectedRab3(option);
-    } else if (actionMeta.name === "rab_level_4_id") {
-      setSelectedRab4(option);
-    } else if (actionMeta.name === "rab_level_5_id") {
-      setSelectedRab5(option);
-    } else if (actionMeta.name === "rab_level_6_id") {
-      setSelectedRab6(option);
+    if (actionMeta.name === "tujuan_layanan_id") {
+      setSelectedTujuanLayanan(option);
+    } else if (actionMeta.name === "ral_level_1_id") {
+      setSelectedRal1(option);
+    } else if (actionMeta.name === "ral_level_2_id") {
+      setSelectedRal2(option);
+    } else if (actionMeta.name === "ral_level_3_id") {
+      setSelectedRal3(option);
+    } else if (actionMeta.name === "ral_level_4_id") {
+      setSelectedRal4(option);
+    } else if (actionMeta.name === "strategic_id") {
+      setSelectedStrategic(option);
+    } else if (actionMeta.name === "tactical_id") {
+      setSelectedTactical(option);
+    } else if (actionMeta.name === "operational_id") {
+      setSelectedOperational(option);
     } else if (actionMeta.name === "tahun") {
       setSelectedTahun(option);
     }
   };
 
+  //aski form di submit
   const onSubmit: SubmitHandler<formValue> = async (data) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const formData = {
-      nama_proses_bisnis: data.nama_proses_bisnis,
-      kode_opd: data.kode_opd,
-      kode_proses_bisnis: data.kode_proses_bisnis,
-      sasaran_kota_id: data.sasaran_kota_id?.value,
-      bidang_urusan_id: data.bidang_urusan_id?.value,
-      rab_level_1_id: data.rab_level_1_id?.value,
-      rab_level_2_id: data.rab_level_2_id?.value,
-      rab_level_3_id: data.rab_level_3_id?.value,
-      rab_level_4_id: data.rab_level_4_id?.value,
-      rab_level_5_id: data.rab_level_5_id?.value,
-      rab_level_6_id: data.rab_level_6_id?.value,
+      nama_layanan: data.nama_layanan,
+      tujuan_layanan_id: data.tujuan_layanan_id?.value,
+      fungsi_layanan: data.fungsi_layanan,
       tahun: data.tahun?.value,
+      kode_opd: data.kode_opd,
+      kementrian_terkait: data.kementrian_terkait,
+      metode_layanan: data.metode_layanan,
+      ral_level_1_id: data.ral_level_1_id?.value,
+      ral_level_2_id: data.ral_level_2_id?.value,
+      ral_level_3_id: data.ral_level_3_id?.value,
+      ral_level_4_id: data.ral_level_4_id?.value,
+      strategic_id: data.strategic_id?.value,
+      tactical_id: data.tactical_id?.value,
+      operational_id: data.operational_id?.value,
     };
     try {
-      const response = await fetch(`${API_URL}/v1/updateprosesbisnis/${Id}`, {
+      const response = await fetch(`${API_URL}/v1/updatelayananspbe/${Id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -311,21 +280,21 @@ const FormEditData = () => {
       });
 
       if (response.ok) {
-        setPopup(true);
-        setEdited(true);
+        alert("berhasil edit data layanan")
         reset();
+        router.push("/Layanan/LayananSPBE")
       } else {
-        setPopup(true);
-        setEdited(false);
+        alert("gagal edit data layanan")
+        router.push("/Layanan/LayananSPBE")
       }
     } catch (error) {
-      alert("Data Proses Bisnis gagal diperbarui");
+      alert("Terdapat kesalahan pada Database server atau koneksi internet bermasalah");
     }
   };
 
   return (
     <div className="border p-5">
-      <h1 className="uppercase font-bold">Form Edit Data Proses Bisnis:</h1>
+      <h1 className="uppercase font-bold">Form Edit Data Layanan SPBE:</h1>
       <form
         className="flex flex-col mx-5 py-5"
         onSubmit={handleSubmit(onSubmit)}
@@ -333,12 +302,12 @@ const FormEditData = () => {
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="nama_proses_bisnis"
+            htmlFor="nama_layanan"
           >
-            Nama Proses Bisnis
+            Nama Layanan :
           </label>
           <Controller
-            name="nama_proses_bisnis"
+            name="nama_layanan"
             control={control}
             rules={{ required: "Nama Proses Bisnis harus terisi" }}
             render={({ field }) => (
@@ -346,17 +315,17 @@ const FormEditData = () => {
                 <input
                   {...field}
                   className="border px-4 py-2 rounded"
-                  id="nama_proses_bisnis"
+                  id="nama_layanan"
                   type="text"
-                  value={field.value || namaProsesBisnis}
+                  value={field.value || namaLayanan}
                   onChange={(e) => {
                     field.onChange(e);
-                    setNamaProsesBisnis(e.target.value);
+                    setNamaLayanan(e.target.value);
                   }}
                 />
-                {errors.nama_proses_bisnis && (
+                {errors.nama_layanan && (
                   <h1 className="text-red-500">
-                    {errors.nama_proses_bisnis.message}
+                    {errors.nama_layanan.message}
                   </h1>
                 )}
               </>
@@ -397,32 +366,80 @@ const FormEditData = () => {
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="kode_proses_bisnis"
+            htmlFor="fungsi_layanan"
           >
-            Kode Proses Bisnis:
+            Fungsi Layanan :
           </label>
           <Controller
-            name="kode_proses_bisnis"
+            name="fungsi_layanan"
             control={control}
-            rules={{ required: "Kode Proses Bisnis harus terisi" }}
             render={({ field }) => (
               <>
                 <input
                   {...field}
                   className="border px-4 py-2 rounded"
-                  id="kode_proses_bisnis"
+                  id="fungsi_layanan"
                   type="text"
-                  value={field.value || kode_proses_bisnis}
+                  value={field.value || selectedFungsiLayanan}
                   onChange={(e) => {
                     field.onChange(e);
-                    setNamaProsesBisnis(e.target.value);
+                    setSelectedFungsiLayanan(e.target.value);
                   }}
                 />
-                {errors.kode_proses_bisnis && (
-                  <h1 className="text-red-500">
-                    {errors.kode_proses_bisnis.message}
-                  </h1>
-                )}
+              </>
+            )}
+          />
+        </div>
+        <div className="flex flex-col py-3">
+          <label
+            className="uppercase text-xs font-bold text-gray-700 my-2"
+            htmlFor="kementrian_terkait"
+          >
+            Kementrian Terkait :
+          </label>
+          <Controller
+            name="kementrian_terkait"
+            control={control}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  className="border px-4 py-2 rounded"
+                  id="kementrian_terkait"
+                  type="text"
+                  value={field.value || selectedKementrianTerkait}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setSelectedKementrianTerkait(e.target.value);
+                  }}
+                />
+              </>
+            )}
+          />
+        </div>
+        <div className="flex flex-col py-3">
+          <label
+            className="uppercase text-xs font-bold text-gray-700 my-2"
+            htmlFor="metode_layanan"
+          >
+            Metode Layanan :
+          </label>
+          <Controller
+            name="metode_layanan"
+            control={control}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  className="border px-4 py-2 rounded"
+                  id="metode_layanan"
+                  type="text"
+                  value={field.value || selectedMetodeLayanan}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setSelectedMetodeLayanan(e.target.value);
+                  }}
+                />
               </>
             )}
           />
@@ -430,6 +447,43 @@ const FormEditData = () => {
 
         {isClient && (
           <>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="tujuan_layanan_id"
+              >
+                Tujuan Layanan :
+              </label>
+              <Controller
+                name="tujuan_layanan_id"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      id="tujuan_layanan_id"
+                      value={selectedTujuanLayanan || null}
+                      placeholder="Pilih Tujuan Layanan"
+                      options={ral_5_7}
+                      isLoading={isLoading}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        handleChange(option, { name: "tujuan_layanan_id" });
+                      }}
+                      isClearable={true}
+                      onMenuOpen={() => {
+                        if(ral_5_7.length === 0){
+                          fetchRal_5_7("Operational")
+                        }
+                      }}
+                      onMenuClose={() => {
+                        set_ral_5_7([])
+                      }}
+                    />
+                  </>
+                )}
+              />
+            </div>
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
@@ -464,102 +518,34 @@ const FormEditData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="sasaran_kota_id"
+                htmlFor="ral_level_1_id"
               >
-                Sasaran Kota:
+                RAL Level 1 :
               </label>
               <Controller
-                name="sasaran_kota_id"
+                name="ral_level_1_id"
                 control={control}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      id="sasaran_kota_id"
+                      id="ral_level_1_id"
+                      value={selectedRal1 || null}
+                      placeholder="Pilih RAL Level 1"
                       isLoading={isLoading}
-                      value={selectedSasaranKota || null}
-                      placeholder="Pilih Sasaran kota"
-                      options={sasaran_kota_option}
+                      options={ral_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "sasaran_kota_id" });
+                        handleChange(option, { name: "ral_level_1_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (sasaran_kota_option.length === 0) {
-                          fetchSasaranKota();
-                        }
-                      }}
-                    />
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="bidang_urusan_id"
-              >
-                Bidang Urusan:
-              </label>
-              <Controller
-                name="bidang_urusan_id"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      id="bidang_urusan_id"
-                      isLoading={isLoading}
-                      value={selectedBidangUrusan || null}
-                      placeholder="Pilih Bidang Urusan"
-                      options={bidang_urusan_option}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "bidang_urusan_id" });
-                      }}
-                      isClearable={true}
-                      onMenuOpen={() => {
-                        if (bidang_urusan_option.length === 0) {
-                          fetchBidangUrusan();
-                        }
-                      }}
-                    />
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="rab_level_1_id"
-              >
-                RAB Level 1:
-              </label>
-              <Controller
-                name="rab_level_1_id"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      id="rab_level_1_id"
-                      value={selectedRab1 || null}
-                      placeholder="Pilih RAB Level 1"
-                      isLoading={isLoading}
-                      options={rab_1_3}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "rab_level_1_id" });
-                      }}
-                      isClearable={true}
-                      onMenuOpen={() => {
-                        if (rab_1_3.length === 0) {
-                          fetchRab_1_3(1);
+                        if (ral_1_4.length === 0) {
+                          fetchRal_1_4(1);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rab_1_3([]);
+                        set_ral_1_4([]);
                       }}
                     />
                   </>
@@ -569,34 +555,34 @@ const FormEditData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="rab_level_2_id"
+                htmlFor="ral_level_2_id"
               >
-                RAB Level 2:
+                RAL Level 2 :
               </label>
               <Controller
-                name="rab_level_2_id"
+                name="ral_level_2_id"
                 control={control}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      id="rab_level_2_id"
-                      value={selectedRab2 || null}
-                      placeholder="Pilih RAB Level 2"
+                      id="ral_level_2_id"
+                      value={selectedRal2 || null}
+                      placeholder="Pilih RAL Level 2"
                       isLoading={isLoading}
-                      options={rab_1_3}
+                      options={ral_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "rab_level_2_id" });
+                        handleChange(option, { name: "ral_level_2_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (rab_1_3.length === 0) {
-                          fetchRab_1_3(2);
+                        if (ral_1_4.length === 0) {
+                          fetchRal_1_4(2);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rab_1_3([]);
+                        set_ral_1_4([]);
                       }}
                     />
                   </>
@@ -606,34 +592,34 @@ const FormEditData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="rab_level_3_id"
+                htmlFor="ral_level_3_id"
               >
-                RAB Level 3:
+                RAL Level 3 :
               </label>
               <Controller
-                name="rab_level_3_id"
+                name="ral_level_3_id"
                 control={control}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      id="rab_level_3_id"
-                      value={selectedRab3 || null}
-                      placeholder="Pilih RAB Level 3"
+                      id="ral_level_3_id"
+                      value={selectedRal3 || null}
+                      placeholder="Pilih RAL Level 3"
                       isLoading={isLoading}
-                      options={rab_1_3}
+                      options={ral_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "rab_level_3_id" });
+                        handleChange(option, { name: "ral_level_3_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (rab_1_3.length === 0) {
-                          fetchRab_1_3(3);
+                        if (ral_1_4.length === 0) {
+                          fetchRal_1_4(3);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rab_1_3([]);
+                        set_ral_1_4([]);
                       }}
                     />
                   </>
@@ -643,34 +629,34 @@ const FormEditData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="rab_level_4_id"
+                htmlFor="ral_level_4_id"
               >
-                RAB Level 4:
+                RAL Level 4 :
               </label>
               <Controller
-                name="rab_level_4_id"
+                name="ral_level_4_id"
                 control={control}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      id="rab_level_4_id"
-                      value={selectedRab4 || null}
-                      placeholder="Pilih RAB Level 4"
+                      id="ral_level_4_id"
+                      value={selectedRal4 || null}
+                      placeholder="Pilih RAL Level 4"
                       isLoading={isLoading}
-                      options={rab_4_6}
+                      options={ral_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "rab_level_4_id" });
+                        handleChange(option, { name: "ral_level_4_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (rab_4_6.length === 0) {
-                          fetchRab_4_6(4);
+                        if (ral_1_4.length === 0) {
+                          fetchRal_1_4(4);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rab_4_6([]);
+                        set_ral_1_4([]);
                       }}
                     />
                   </>
@@ -680,34 +666,71 @@ const FormEditData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="rab_level_5_id"
+                htmlFor="strategic_id"
               >
-                RAB Level 5:
+                Strategic :
               </label>
               <Controller
-                name="rab_level_5_id"
+                name="strategic_id"
                 control={control}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      id="rab_level_5_id"
-                      value={selectedRab5 || null}
+                      id="strategic_id"
+                      value={selectedStrategic || null}
+                      placeholder="Pilih Strategic"
+                      isLoading={isLoading}
+                      options={ral_5_7}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        handleChange(option, { name: "strategic_id" });
+                      }}
+                      isClearable={true}
+                      onMenuOpen={() => {
+                        if (ral_5_7.length === 0) {
+                          fetchRal_5_7("Strategic");
+                        }
+                      }}
+                      onMenuClose={() => {
+                        set_ral_5_7([]);
+                      }}
+                    />
+                  </>
+                )}
+              />
+            </div>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="tactical_id"
+              >
+                Tactical :
+              </label>
+              <Controller
+                name="tactical_id"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      id="tactical_id"
+                      value={selectedTactical || null}
                       placeholder="Pilih RAB Level 5"
                       isLoading={isLoading}
-                      options={rab_4_6}
+                      options={ral_5_7}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "rab_level_5_id" });
+                        handleChange(option, { name: "tactical_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (rab_4_6.length === 0) {
-                          fetchRab_4_6(5);
+                        if (ral_5_7.length === 0) {
+                          fetchRal_5_7("Tactical");
                         }
                       }}
                       onMenuClose={() => {
-                        set_rab_4_6([]);
+                        set_ral_5_7([]);
                       }}
                     />
                   </>
@@ -717,34 +740,34 @@ const FormEditData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="rab_level_6_id"
+                htmlFor="operational_id"
               >
-                RAB Level 6:
+                Operational :
               </label>
               <Controller
-                name="rab_level_6_id"
+                name="operational_id"
                 control={control}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      id="rab_level_6_id"
-                      value={selectedRab6 || null}
-                      placeholder="Pilih RAB Level 6"
+                      id="operational_id"
+                      value={selectedOperational || null}
+                      placeholder="Pilih Operational"
                       isLoading={isLoading}
-                      options={rab_4_6}
+                      options={ral_5_7}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "rab_level_6_id" });
+                        handleChange(option, { name: "operational_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (rab_4_6.length === 0) {
-                          fetchRab_4_6(6);
+                        if (ral_5_7.length === 0) {
+                          fetchRal_5_7("Operational");
                         }
                       }}
                       onMenuClose={() => {
-                        set_rab_4_6([]);
+                        set_ral_5_7([]);
                       }}
                     />
                   </>
@@ -754,25 +777,6 @@ const FormEditData = () => {
           </>
         )}
         <Button typee="submit">Simpan</Button>
-        <PopUp isOpen={popup} onClose={() => {setPopup(false); router.push("/ProsesBisnis")}}>
-          <div className="flex flex-col justify-center">
-            {edited ? 
-              <h1>Data Proses Bisnis berhasil di edit</h1>
-            :
-              <h1>Data Proses Bisnis gagal di edit, cek koneksi internet/database server</h1>
-            }
-            <Button 
-            className="mt-5"
-              onClick={() => {
-                setPopup(false);
-                setEdited(false);
-                router.push("/ProsesBisnis")
-                }}
-            >
-              Tutup
-            </Button>
-          </div>
-        </PopUp>
       </form>
     </div>
   );
