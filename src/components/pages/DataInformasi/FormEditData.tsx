@@ -14,20 +14,35 @@ interface OptionType {
 }
 
 interface formValue {
-  nama_layanan: string;
-  tujuan_layanan_id: OptionType | null;
-  fungsi_layanan: string;
-  tahun: OptionType | null;
-  kode_opd: string;
-  kementrian_terkait: string;
-  metode_layanan: string;
-  ral_level_1_id: OptionType | null;
-  ral_level_2_id: OptionType | null;
-  ral_level_3_id: OptionType | null;
-  ral_level_4_id: OptionType | null;
-  strategic_id: OptionType | null;
-  tactical_id: OptionType | null;
-  operational_id: OptionType | null;
+    nama_data : string,
+    sifat_data : string,
+    jenis_data : string,
+    produsen_data : string,
+    pj_data : string,
+    kode_opd : string,
+    informasi_terkait_input : string,
+    informasi_terkait_output : string,
+    interoprabilitas : string,
+    tahun : OptionType | null,
+    rad_level_1_id : OptionType | null,
+    rad_level_2_id : OptionType | null,
+    rad_level_3_id : OptionType | null,
+    rad_level_4_id : OptionType | null,
+    strategic_id : OptionType | null,
+    tactical_id : OptionType | null,
+    operational_id : OptionType | null;
+}
+
+interface rad_level_1_4 {
+  Id: number;
+  nama_referensi: string;
+  kode_referensi: string;
+  level_referensi: number;
+}
+interface rad_level_5_7 {
+  id: number;
+  nama_pohon: string;
+  level_pohon: string;
 }
 
 const FormEditData = () => {
@@ -44,22 +59,25 @@ const FormEditData = () => {
   const [popup, setPopup] = useState<boolean>(false);
   const [edited, setEdited] = useState<boolean>(false);
 
-  const [ral_1_4, set_ral_1_4] = useState<OptionType[]>([]);
-  const [ral_5_7, set_ral_5_7] = useState<OptionType[]>([]);
+  const [rad_1_4, set_rad_1_4] = useState<OptionType[]>([]);
+  const [rad_5_7, set_rad_5_7] = useState<OptionType[]>([]);
 
   //state untuk fetch default value data by id
-  const [namaLayanan, setNamaLayanan] = useState<string>("");
-  const [selectedFungsiLayanan, setSelectedFungsiLayanan] = useState<string>("");
+  const [namaData, setNamaData] = useState<string>("");
+  const [selectedSifatData, setSelectedSifatData] = useState<string>("");
+  const [selectedJenisData, setSelectedJenisData] = useState<string>("");
+  const [selectedProdusenData, setSelectedProdusenData] = useState<string>("");
+  const [selectedPjData, setSelectedPjData] = useState<string>("");
   const [kode_opd, set_kode_opd] = useState<string>("");
-  const [selectedKementrianTerkait, setSelectedKementrianTerkait] = useState<string>("");
-  const [selectedMetodeLayanan, setSelectedMetodeLayanan] = useState<string>("");
+  const [selectedInformasiTerkaitInput, setSelectedInformasiTerkaitInput] = useState<string>("");
+  const [selectedInformasiTerkaitOutput, setSelectedInformasiTerkaitOutput] = useState<string>("");
+  const [selectedInteroprabilitas, setSelectedInteroprabilitas] = useState<string>("");
   
-  const [selectedTujuanLayanan, setSelectedTujuanLayanan] = useState<OptionType | null>(null);
   const [selectedTahun, setSelectedTahun] = useState<OptionType | null>(null);
-  const [selectedRal1, setSelectedRal1] = useState<OptionType | null>(null);
-  const [selectedRal2, setSelectedRal2] = useState<OptionType | null>(null);
-  const [selectedRal3, setSelectedRal3] = useState<OptionType | null>(null);
-  const [selectedRal4, setSelectedRal4] = useState<OptionType | null>(null);
+  const [selectedRad1, setSelectedRad1] = useState<OptionType | null>(null);
+  const [selectedRad2, setSelectedRad2] = useState<OptionType | null>(null);
+  const [selectedRad3, setSelectedRad3] = useState<OptionType | null>(null);
+  const [selectedRad4, setSelectedRad4] = useState<OptionType | null>(null);
   const [selectedStrategic, setSelectedStrategic] = useState<OptionType | null>(null);
   const [selectedTactical, setSelectedTactical] = useState<OptionType | null>(null);
   const [selectedOperational, setSelectedOperational] = useState<OptionType | null>(null);
@@ -78,39 +96,47 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const fetchingDataId = async () => {
       try {
-        const response = await fetch(`${API_URL}/v1/layananspbebyid/${Id}`);
+        const response = await fetch(`${API_URL}/v1/datainformasibyid/${Id}`);
         const data = await response.json();
         const result = data.data;
         
-        if (result.NamaLayanan) {
-          setNamaLayanan(result.NamaLayanan);
-          reset((prev) => ({...prev, nama_layanan: result.NamaLayanan,}));
+        if (result.NamaData) {
+          setNamaData(result.NamaData);
+          reset((prev) => ({...prev, nama_data: result.NamaData,}));
         }
-        if (result.FungsiLayanan) {
-          setSelectedFungsiLayanan(result.FungsiLayanan);
-          reset((prev) => ({...prev, fungsi_layanan: result.FungsiLayanan,}));
+        if (result.SifatData) {
+          setSelectedSifatData(result.SifatData);
+          reset((prev) => ({...prev, sifat_data: result.SifatData,}));
+        }
+        if (result.JenisData) {
+          setSelectedJenisData(result.JenisData);
+          reset((prev) => ({...prev, jenis_data: result.JenisData,}));
+        }
+        if (result.SifatData) {
+          setSelectedProdusenData(result.ProdusenData);
+          reset((prev) => ({...prev, produsen_data: result.ProdusenData,}));
+        }
+        if (result.PjData) {
+          setSelectedPjData(result.PjData);
+          reset((prev) => ({...prev, pj_data: result.PjData,}));
         }
         if (result.KodeOPD) {
           set_kode_opd(result.KodeOPD);
           reset((prev) => ({...prev, kode_opd: result.KodeOPD,}));
         }
-        if (result.KementrianTerkait) {
-          setSelectedKementrianTerkait(result.KementrianTerkait);
-          reset((prev) => ({ ...prev, kementrian_terkait: result.KementrianTerkait }));
+        if (result.InformasiTerkaitInput) {
+          setSelectedInformasiTerkaitInput(result.InformasiTerkaitInput);
+          reset((prev) => ({...prev, informasi_terkait_input: result.InformasiTerkaitInput,}));
         }
-        if (result.MetodeLayanan) {
-          setSelectedMetodeLayanan(result.MetodeLayanan);
-          reset((prev) => ({ ...prev, metode_layanan: result.MetodeLayanan }));
+        if (result.InformasiTerkaitOutput) {
+          setSelectedInformasiTerkaitOutput(result.InformasiTerkaitOutput);
+          reset((prev) => ({ ...prev, informasi_terkait_output: result.InformasiTerkaitOutput }));
+        }
+        if (result.Interoprabilitas) {
+          setSelectedInteroprabilitas(result.Interoprabilitas);
+          reset((prev) => ({ ...prev, interoprabilitas: result.Interoprabilitas }));
         }
 
-        if (result.TujuanLayananId) {
-          const tujuanLayananOption = {
-            value: result.TujuanLayananId.id,
-            label: result.TujuanLayananId.nama_pohon,
-          };
-          setSelectedTujuanLayanan(tujuanLayananOption);
-          reset((prev) => ({ ...prev, tujuan_layanan_id: tujuanLayananOption }));
-        }
         if (result.Tahun) {
           const selectedTahun = {
             value: result.Tahun,
@@ -119,37 +145,37 @@ const FormEditData = () => {
           setSelectedTahun(selectedTahun);
           reset((prev) => ({ ...prev, tahun: selectedTahun }));
         }
-        if (result.RalLevel1id) {
-          const ralLevel1Option = {
-            value: result.RalLevel1id.Id,
-            label: `${result.RalLevel1id.kode_referensi} ${result.RalLevel1id.nama_referensi}`,
+        if (result.RadLevel1id) {
+          const radLevel1Option = {
+            value: result.RadLevel1id.Id,
+            label: `${result.RadLevel1id.kode_referensi} ${result.RadLevel1id.nama_referensi}`,
           };
-          setSelectedRal1(ralLevel1Option);
-          reset((prev) => ({ ...prev, ral_level_1_id: ralLevel1Option }));
+          setSelectedRad1(radLevel1Option);
+          reset((prev) => ({ ...prev, rad_level_1_id: radLevel1Option }));
         }
-        if (result.RalLevel2id) {
-          const ralLevel2Option = {
-            value: result.RalLevel2id.Id,
-            label: `${result.RalLevel2id.kode_referensi} ${result.RalLevel2id.nama_referensi}`,
+        if (result.RadLevel2id) {
+          const radLevel2Option = {
+            value: result.RadLevel2id.Id,
+            label: `${result.RadLevel2id.kode_referensi} ${result.RadLevel2id.nama_referensi}`,
           };
-          setSelectedRal2(ralLevel2Option);
-          reset((prev) => ({ ...prev, ral_level_2_id: ralLevel2Option }));
+          setSelectedRad2(radLevel2Option);
+          reset((prev) => ({ ...prev, rad_level_2_id: radLevel2Option }));
         }
-        if (result.RalLevel3id) {
-          const ralLevel3Option = {
-            value: result.RalLevel3id.Id,
-            label: `${result.RalLevel3id.kode_referensi} ${result.RalLevel3id.nama_referensi}`,
+        if (result.RadLevel3id) {
+          const radLevel3Option = {
+            value: result.RadLevel3id.Id,
+            label: `${result.RadLevel3id.kode_referensi} ${result.RadLevel3id.nama_referensi}`,
           };
-          setSelectedRal3(ralLevel3Option);
-          reset((prev) => ({ ...prev, ral_level_3_id: ralLevel3Option }));
+          setSelectedRad3(radLevel3Option);
+          reset((prev) => ({ ...prev, rad_level_3_id: radLevel3Option }));
         }
-        if (result.RalLevel4id) {
-          const ralLevel4Option = {
-            value: result.RalLevel4id.Id,
-            label: `${result.RalLevel4id.kode_referensi} ${result.RalLevel4id.nama_referensi}`,
+        if (result.RadLevel4id) {
+          const radLevel4Option = {
+            value: result.RadLevel4id.Id,
+            label: `${result.RadLevel4id.kode_referensi} ${result.RadLevel4id.nama_referensi}`,
           };
-          setSelectedRal4(ralLevel4Option);
-          reset((prev) => ({ ...prev, ral_level_4_id: ralLevel4Option }));
+          setSelectedRad4(radLevel4Option);
+          reset((prev) => ({ ...prev, rad_level_4_id: radLevel4Option }));
         }
         if (result.StrategicId) {
           const strategicOption = {
@@ -185,7 +211,7 @@ const FormEditData = () => {
   }, [reset, Id]);
 
   //fetching data RAL 1 - 4
-  const fetchRal_1_4 = async (level: number) => {
+  const fetchRad_1_4 = async (level: number) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
@@ -198,16 +224,16 @@ const FormEditData = () => {
         value: item.Id,
         label: item.kode_referensi,
       }));
-      set_ral_1_4(result);
+      set_rad_1_4(result);
     } catch (err) {
-      console.log("Gagal memuat data Option RAB Level 1 - 3", err);
+      console.log("Gagal memuat data Option RAD Level 1 - 3", err);
     } finally {
       setIsLoading(false);
     }
   };
 
   //fetching data RAL 5 - 7
-  const fetchRal_5_7 = async (pohon_kinerja: any) => {
+  const fetchRad_5_7 = async (pohon_kinerja: any) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
@@ -220,9 +246,9 @@ const FormEditData = () => {
         value: item.id,
         label: item.nama_pohon,
       }));
-      set_ral_5_7(result);
+      set_rad_5_7(result);
     } catch (err) {
-      console.log("Gagal memuat data Option RAL Level 5 - 7", err);
+      console.log("Gagal memuat data Option RAD Level 5 - 7", err);
     } finally {
       setIsLoading(false);
     }
@@ -230,16 +256,14 @@ const FormEditData = () => {
 
   //
   const handleChange = (option: any, actionMeta: any) => {
-    if (actionMeta.name === "tujuan_layanan_id") {
-      setSelectedTujuanLayanan(option);
-    } else if (actionMeta.name === "ral_level_1_id") {
-      setSelectedRal1(option);
-    } else if (actionMeta.name === "ral_level_2_id") {
-      setSelectedRal2(option);
-    } else if (actionMeta.name === "ral_level_3_id") {
-      setSelectedRal3(option);
-    } else if (actionMeta.name === "ral_level_4_id") {
-      setSelectedRal4(option);
+    if (actionMeta.name === "rad_level_1_id") {
+      setSelectedRad1(option);
+    } else if (actionMeta.name === "rad_level_2_id") {
+      setSelectedRad2(option);
+    } else if (actionMeta.name === "rad_level_3_id") {
+      setSelectedRad3(option);
+    } else if (actionMeta.name === "rad_level_4_id") {
+      setSelectedRad4(option);
     } else if (actionMeta.name === "strategic_id") {
       setSelectedStrategic(option);
     } else if (actionMeta.name === "tactical_id") {
@@ -255,23 +279,26 @@ const FormEditData = () => {
   const onSubmit: SubmitHandler<formValue> = async (data) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const formData = {
-      nama_layanan: data.nama_layanan,
-      tujuan_layanan_id: data.tujuan_layanan_id?.value,
-      fungsi_layanan: data.fungsi_layanan,
-      tahun: data.tahun?.value,
+      nama_data: data.nama_data,
+      sifat_data: data.sifat_data,
+      jenis_data: data.jenis_data,
+      produsen_data: data.produsen_data,
+      pj_data: data.pj_data,
       kode_opd: data.kode_opd,
-      kementrian_terkait: data.kementrian_terkait,
-      metode_layanan: data.metode_layanan,
-      ral_level_1_id: data.ral_level_1_id?.value,
-      ral_level_2_id: data.ral_level_2_id?.value,
-      ral_level_3_id: data.ral_level_3_id?.value,
-      ral_level_4_id: data.ral_level_4_id?.value,
+      informasi_terkait_input: data.informasi_terkait_input,
+      informasi_terkait_output: data.informasi_terkait_output,
+      interoprabilitas: data.interoprabilitas,
+      tahun: data.tahun?.value,
+      rad_level_1_id: data.rad_level_1_id?.value,
+      rad_level_2_id: data.rad_level_2_id?.value,
+      rad_level_3_id: data.rad_level_3_id?.value,
+      rad_level_4_id: data.rad_level_4_id?.value,
       strategic_id: data.strategic_id?.value,
       tactical_id: data.tactical_id?.value,
       operational_id: data.operational_id?.value,
     };
     try {
-      const response = await fetch(`${API_URL}/v1/updatelayananspbe/${Id}`, {
+      const response = await fetch(`${API_URL}/v1/updatedatainformasi/${Id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -295,7 +322,7 @@ const FormEditData = () => {
 
   return (
     <div className="border p-5">
-      <h1 className="uppercase font-bold">Form Edit Data Layanan SPBE:</h1>
+      <h1 className="uppercase font-bold">Form Edit Data Informasi :</h1>
       <form
         className="flex flex-col mx-5 py-5"
         onSubmit={handleSubmit(onSubmit)}
@@ -303,32 +330,148 @@ const FormEditData = () => {
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="nama_layanan"
+            htmlFor="nama_data"
           >
-            Nama Layanan :
+            Nama Data Informasi :
           </label>
           <Controller
-            name="nama_layanan"
+            name="nama_data"
             control={control}
-            rules={{ required: "Nama Proses Bisnis harus terisi" }}
+            rules={{ required: "Nama Data Informasi harus terisi" }}
             render={({ field }) => (
               <>
                 <input
                   {...field}
                   className="border px-4 py-2 rounded"
-                  id="nama_layanan"
+                  id="nama_data"
                   type="text"
-                  value={field.value || namaLayanan}
+                  value={field.value || namaData}
                   onChange={(e) => {
                     field.onChange(e);
-                    setNamaLayanan(e.target.value);
+                    setNamaData(e.target.value);
                   }}
                 />
-                {errors.nama_layanan && (
+                {errors.nama_data && (
                   <h1 className="text-red-500">
-                    {errors.nama_layanan.message}
+                    {errors.nama_data.message}
                   </h1>
                 )}
+              </>
+            )}
+          />
+        </div>
+        <div className="flex flex-col py-3">
+          <label
+            className="uppercase text-xs font-bold text-gray-700 my-2"
+            htmlFor="sifat_data"
+          >
+            Sifat Data :
+          </label>
+          <Controller
+            name="sifat_data"
+            control={control}
+            rules={{required: "Sifat Data Harus Terisi"}}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  className="border px-4 py-2 rounded"
+                  id="sifat_data"
+                  type="text"
+                  value={field.value || selectedSifatData}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setSelectedSifatData(e.target.value);
+                  }}
+                />
+                {errors.nama_data && <h1 className="text-red-500">{errors.nama_data.message}</h1>}
+              </>
+            )}
+          />
+        </div>
+        <div className="flex flex-col py-3">
+          <label
+            className="uppercase text-xs font-bold text-gray-700 my-2"
+            htmlFor="jenis_data"
+          >
+            Jenis Data :
+          </label>
+          <Controller
+            name="jenis_data"
+            control={control}
+            rules={{required: "Jenis Data Harus Terisi"}}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  className="border px-4 py-2 rounded"
+                  id="jenis_data"
+                  type="text"
+                  value={field.value || selectedJenisData}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setSelectedJenisData(e.target.value);
+                  }}
+                />
+                {errors.jenis_data && <h1 className="text-red-500">{errors.jenis_data.message}</h1>}
+              </>
+            )}
+          />
+        </div>
+        <div className="flex flex-col py-3">
+          <label
+            className="uppercase text-xs font-bold text-gray-700 my-2"
+            htmlFor="produsen_data"
+          >
+            Produsen Data :
+          </label>
+          <Controller
+            name="produsen_data"
+            control={control}
+            rules={{required: "Produse Data Harus Terisi"}}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  className="border px-4 py-2 rounded"
+                  id="produsen_data"
+                  type="text"
+                  value={field.value || selectedProdusenData}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setSelectedProdusenData(e.target.value);
+                  }}
+                />
+                {errors.produsen_data && <h1 className="text-red-500">{errors.produsen_data.message}</h1>}
+              </>
+            )}
+          />
+        </div>
+        <div className="flex flex-col py-3">
+          <label
+            className="uppercase text-xs font-bold text-gray-700 my-2"
+            htmlFor="pj_data"
+          >
+            Penanggung Jawab Data :
+          </label>
+          <Controller
+            name="pj_data"
+            control={control}
+            rules={{required: "Penanggung Jawab Data Harus Terisi"}}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  className="border px-4 py-2 rounded"
+                  id="pj_data"
+                  type="text"
+                  value={field.value || selectedPjData}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setSelectedPjData(e.target.value);
+                  }}
+                />
+                {errors.pj_data && <h1 className="text-red-500">{errors.pj_data.message}</h1>}
               </>
             )}
           />
@@ -367,26 +510,28 @@ const FormEditData = () => {
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="fungsi_layanan"
+            htmlFor="informasi_terkait_input"
           >
-            Fungsi Layanan :
+            Informasi Terkait Input :
           </label>
           <Controller
-            name="fungsi_layanan"
+            name="informasi_terkait_input"
             control={control}
+            rules={{required: "Informasi Terkait Input Harus Terisi"}}
             render={({ field }) => (
               <>
                 <input
                   {...field}
                   className="border px-4 py-2 rounded"
-                  id="fungsi_layanan"
+                  id="informasi_terkait_input"
                   type="text"
-                  value={field.value || selectedFungsiLayanan}
+                  value={field.value || selectedInformasiTerkaitInput}
                   onChange={(e) => {
                     field.onChange(e);
-                    setSelectedFungsiLayanan(e.target.value);
+                    setSelectedInformasiTerkaitInput(e.target.value);
                   }}
                 />
+                {errors.informasi_terkait_input && <h1 className="text-red-500">{errors.informasi_terkait_input.message}</h1>}
               </>
             )}
           />
@@ -394,26 +539,28 @@ const FormEditData = () => {
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="kementrian_terkait"
+            htmlFor="informasi_terkait_output"
           >
-            Kementrian Terkait :
+            Informasi Terkait Output :
           </label>
           <Controller
-            name="kementrian_terkait"
+            name="informasi_terkait_output"
             control={control}
+            rules={{required: "Informasi Terkait Output Harus Terisi"}}
             render={({ field }) => (
               <>
                 <input
                   {...field}
                   className="border px-4 py-2 rounded"
-                  id="kementrian_terkait"
+                  id="informasi_terkait_output"
                   type="text"
-                  value={field.value || selectedKementrianTerkait}
+                  value={field.value || selectedInformasiTerkaitOutput}
                   onChange={(e) => {
                     field.onChange(e);
-                    setSelectedKementrianTerkait(e.target.value);
+                    setSelectedInformasiTerkaitOutput(e.target.value);
                   }}
                 />
+                {errors.informasi_terkait_output && <h1 className="text-red-500">{errors.informasi_terkait_output.message}</h1>}
               </>
             )}
           />
@@ -421,70 +568,36 @@ const FormEditData = () => {
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="metode_layanan"
+            htmlFor="interoprabilitas"
           >
-            Metode Layanan :
+            Interoprabilitas :
           </label>
           <Controller
-            name="metode_layanan"
+            name="interoprabilitas"
             control={control}
+            rules={{required: "Interoprabilitas Harus Terisi"}}
             render={({ field }) => (
               <>
                 <input
                   {...field}
                   className="border px-4 py-2 rounded"
-                  id="metode_layanan"
+                  id="interoprabilitas"
                   type="text"
-                  value={field.value || selectedMetodeLayanan}
+                  value={field.value || selectedInteroprabilitas}
                   onChange={(e) => {
                     field.onChange(e);
-                    setSelectedMetodeLayanan(e.target.value);
+                    setSelectedInteroprabilitas(e.target.value);
                   }}
                 />
+                {errors.interoprabilitas && <h1 className="text-red-500">{errors.interoprabilitas.message}</h1>}
               </>
             )}
           />
         </div>
 
+
         {isClient && (
           <>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="tujuan_layanan_id"
-              >
-                Tujuan Layanan :
-              </label>
-              <Controller
-                name="tujuan_layanan_id"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      id="tujuan_layanan_id"
-                      value={selectedTujuanLayanan || null}
-                      placeholder="Pilih Tujuan Layanan"
-                      options={ral_5_7}
-                      isLoading={isLoading}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "tujuan_layanan_id" });
-                      }}
-                      isClearable={true}
-                      onMenuOpen={() => {
-                        if(ral_5_7.length === 0){
-                          fetchRal_5_7("Operational")
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_ral_5_7([])
-                      }}
-                    />
-                  </>
-                )}
-              />
-            </div>
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
@@ -519,36 +632,38 @@ const FormEditData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="ral_level_1_id"
+                htmlFor="rad_level_1_id"
               >
-                RAL Level 1 :
+                RAD Level 1 :
               </label>
               <Controller
-                name="ral_level_1_id"
+                name="rad_level_1_id"
                 control={control}
+                rules={{required: "RAD Level 1 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      id="ral_level_1_id"
-                      value={selectedRal1 || null}
-                      placeholder="Pilih RAL Level 1"
+                      id="rad_level_1_id"
+                      value={selectedRad1 || null}
+                      placeholder="Pilih RAD Level 1"
                       isLoading={isLoading}
-                      options={ral_1_4}
+                      options={rad_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "ral_level_1_id" });
+                        handleChange(option, { name: "rad_level_1_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_1_4.length === 0) {
-                          fetchRal_1_4(1);
+                        if (rad_1_4.length === 0) {
+                          fetchRad_1_4(1);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_1_4([]);
+                        set_rad_1_4([]);
                       }}
                     />
+                    {errors.rad_level_1_id && (<h1 className="text-red-500">{errors.rad_level_1_id.message}</h1>)}
                   </>
                 )}
               />
@@ -556,36 +671,38 @@ const FormEditData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="ral_level_2_id"
+                htmlFor="rad_level_2_id"
               >
-                RAL Level 2 :
+                RAD Level 2 :
               </label>
               <Controller
-                name="ral_level_2_id"
+                name="rad_level_2_id"
                 control={control}
+                rules={{required: "RAD Level 2 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      id="ral_level_2_id"
-                      value={selectedRal2 || null}
-                      placeholder="Pilih RAL Level 2"
+                      id="rad_level_2_id"
+                      value={selectedRad2 || null}
+                      placeholder="Pilih RAD Level 2"
                       isLoading={isLoading}
-                      options={ral_1_4}
+                      options={rad_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "ral_level_2_id" });
+                        handleChange(option, { name: "rad_level_2_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_1_4.length === 0) {
-                          fetchRal_1_4(2);
+                        if (rad_1_4.length === 0) {
+                          fetchRad_1_4(2);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_1_4([]);
+                        set_rad_1_4([]);
                       }}
                     />
+                    {errors.rad_level_2_id && (<h1 className="text-red-500">{errors.rad_level_2_id.message}</h1>)}
                   </>
                 )}
               />
@@ -593,36 +710,38 @@ const FormEditData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="ral_level_3_id"
+                htmlFor="rad_level_3_id"
               >
-                RAL Level 3 :
+                RAD Level 3 :
               </label>
               <Controller
-                name="ral_level_3_id"
+                name="rad_level_3_id"
                 control={control}
+                rules={{required: "RAD Level 3 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      id="ral_level_3_id"
-                      value={selectedRal3 || null}
-                      placeholder="Pilih RAL Level 3"
+                      id="rad_level_3_id"
+                      value={selectedRad3 || null}
+                      placeholder="Pilih RAD Level 3"
                       isLoading={isLoading}
-                      options={ral_1_4}
+                      options={rad_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "ral_level_3_id" });
+                        handleChange(option, { name: "rad_level_3_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_1_4.length === 0) {
-                          fetchRal_1_4(3);
+                        if (rad_1_4.length === 0) {
+                          fetchRad_1_4(3);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_1_4([]);
+                        set_rad_1_4([]);
                       }}
                     />
+                    {errors.rad_level_3_id && (<h1 className="text-red-500">{errors.rad_level_3_id.message}</h1>)}
                   </>
                 )}
               />
@@ -630,36 +749,38 @@ const FormEditData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="ral_level_4_id"
+                htmlFor="rad_level_4_id"
               >
-                RAL Level 4 :
+                RAD Level 4 :
               </label>
               <Controller
-                name="ral_level_4_id"
+                name="rad_level_4_id"
                 control={control}
+                rules={{required: "RAD Level 4 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      id="ral_level_4_id"
-                      value={selectedRal4 || null}
-                      placeholder="Pilih RAL Level 4"
+                      id="rad_level_4_id"
+                      value={selectedRad4 || null}
+                      placeholder="Pilih RAD Level 4"
                       isLoading={isLoading}
-                      options={ral_1_4}
+                      options={rad_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "ral_level_4_id" });
+                        handleChange(option, { name: "rad_level_4_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_1_4.length === 0) {
-                          fetchRal_1_4(4);
+                        if (rad_1_4.length === 0) {
+                          fetchRad_1_4(4);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_1_4([]);
+                        set_rad_1_4([]);
                       }}
                     />
+                    {errors.rad_level_4_id && (<h1 className="text-red-500">{errors.rad_level_4_id.message}</h1>)}
                   </>
                 )}
               />
@@ -674,6 +795,7 @@ const FormEditData = () => {
               <Controller
                 name="strategic_id"
                 control={control}
+                rules={{required: "Strategic Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -682,21 +804,22 @@ const FormEditData = () => {
                       value={selectedStrategic || null}
                       placeholder="Pilih Strategic"
                       isLoading={isLoading}
-                      options={ral_5_7}
+                      options={rad_5_7}
                       onChange={(option) => {
                         field.onChange(option);
                         handleChange(option, { name: "strategic_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_5_7.length === 0) {
-                          fetchRal_5_7("Strategic");
+                        if (rad_5_7.length === 0) {
+                          fetchRad_5_7("Strategic");
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_5_7([]);
+                        set_rad_5_7([]);
                       }}
                     />
+                    {errors.strategic_id && (<h1 className="text-red-500">{errors.strategic_id.message}</h1>)}
                   </>
                 )}
               />
@@ -711,6 +834,7 @@ const FormEditData = () => {
               <Controller
                 name="tactical_id"
                 control={control}
+                rules={{required: "Tactical Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -719,21 +843,22 @@ const FormEditData = () => {
                       value={selectedTactical || null}
                       placeholder="Pilih RAB Level 5"
                       isLoading={isLoading}
-                      options={ral_5_7}
+                      options={rad_5_7}
                       onChange={(option) => {
                         field.onChange(option);
                         handleChange(option, { name: "tactical_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_5_7.length === 0) {
-                          fetchRal_5_7("Tactical");
+                        if (rad_5_7.length === 0) {
+                          fetchRad_5_7("Tactical");
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_5_7([]);
+                        set_rad_5_7([]);
                       }}
                     />
+                    {errors.tactical_id && (<h1 className="text-red-500">{errors.tactical_id.message}</h1>)}
                   </>
                 )}
               />
@@ -748,6 +873,7 @@ const FormEditData = () => {
               <Controller
                 name="operational_id"
                 control={control}
+                rules={{required: "Operational Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -756,21 +882,22 @@ const FormEditData = () => {
                       value={selectedOperational || null}
                       placeholder="Pilih Operational"
                       isLoading={isLoading}
-                      options={ral_5_7}
+                      options={rad_5_7}
                       onChange={(option) => {
                         field.onChange(option);
                         handleChange(option, { name: "operational_id" });
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_5_7.length === 0) {
-                          fetchRal_5_7("Operational");
+                        if (rad_5_7.length === 0) {
+                          fetchRad_5_7("Operational");
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_5_7([]);
+                        set_rad_5_7([]);
                       }}
                     />
+                    {errors.operational_id && (<h1 className="text-red-500">{errors.operational_id.message}</h1>)}
                   </>
                 )}
               />
@@ -782,16 +909,16 @@ const FormEditData = () => {
       <PopUp isOpen={popup} onClose={() => setPopup(false)}>
         <div className="flex flex-col justify-around">
           {edited ?
-            <h1>Berhasil edit data layanan</h1>
+            <h1>Berhasil edit data informasi</h1>
             :
-            <h1>Gagal edit data layanan, periksa koneksi internet atau database server</h1>
+            <h1>Gagal edit data informasi, periksa koneksi internet atau database server</h1>
           }
           <Button 
             className="mt-5"
             onClick={() => {
               setPopup(false);
               setEdited(false);
-              router.push("/Layanan/LayananSPBE")
+              router.push("/DataInformasi")
             }}
           >
             Tutup

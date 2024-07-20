@@ -1,4 +1,4 @@
-import FormDataInformasi from "@/components/pages/DataInformasi/FormDataInformasi";
+import FormDataInformasi from "@/components/pages/DataInformasi/FormTambahData";
 
 const TambahData = () => {
     return(

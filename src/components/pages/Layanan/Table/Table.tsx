@@ -176,7 +176,15 @@ const Table = () => {
                                 >
                                     Hapus
                                 </Button>
-                                <PopUp isOpen={popup} onClose={() => {setPopup(false); setId(null);}}>
+                                <PopUp 
+                                    isOpen={popup} 
+                                    onClose={() => {
+                                        setPopup(false);
+                                        setId(null);
+                                        setHapus(false);
+                                        setTerhapus(false);
+                                        }}
+                                    >
                                     {hapus ? 
                                    <>
                                        <div className="flex flex-col justify-center">
@@ -184,12 +192,13 @@ const Table = () => {
                                             <h1>data berhasil terhapus</h1>
                                             :
                                             <h1>data gagal terhapus</h1>
-                                            }
-                                            <Button className="mt-5" onClick={() => {
-                                                setPopup(false);
-                                                setId(null);
-                                                setHapus(false);
-                                                setTerhapus(false);
+                                        }
+                                            <Button className="mt-5" 
+                                                onClick={() => {
+                                                    setPopup(false);
+                                                    setId(null);
+                                                    setHapus(false);
+                                                    setTerhapus(false);
                                                 }}
                                             >
                                                 Tutup
@@ -200,15 +209,17 @@ const Table = () => {
                                    <>
                                         <h1>Hapus data Layanan yang dipilih?</h1>
                                         <div className="flex justify-around mt-5">
-                                            <Button onClick={() => {
-                                                setPopup(false);
-                                                setId(null)
+                                            <Button 
+                                                onClick={() => {
+                                                    setPopup(false);
+                                                    setId(null)
                                                 }}
                                             >
                                                 Batal
                                             </Button>
-                                            <Button className="bg-red-500 hover:bg-red-700" onClick={() => {
-                                                hapusDataLayanan(getId);
+                                            <Button className="bg-red-500 hover:bg-red-700" 
+                                                onClick={() => {
+                                                    hapusDataLayanan(getId);
                                                 }}
                                             >
                                                 Hapus

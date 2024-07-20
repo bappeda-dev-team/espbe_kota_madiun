@@ -243,20 +243,29 @@ function Table() {
                     >
                       Hapus
                     </Button>
-                    <PopUp isOpen={popUp} onClose={() => {setPopUp(false); setId(null);}}>
+                    <PopUp 
+                      isOpen={popUp} 
+                      onClose={() => {
+                        setPopUp(false);
+                        setId(null);
+                        setDeleted(false); 
+                        setIsDeleted(false);
+                        }}
+                    >
                         {deleted? 
                         <>
                           {isDeleted? 
                             <h1>Data berhasil dihapus</h1>
                           :
-                            <h1>Data gagal dihapus, silakan periksa koneksi internet/database server</h1>
+                            <h1>Data gagal dihapus, periksa koneksi internet/database server</h1>
                           }
                           <div className="flex justify-around mt-3">
-                            <Button onClick={() => {
+                            <Button 
+                              onClick={() => {
                                 setPopUp(false); 
+                                setId(null);
                                 setDeleted(false); 
                                 setIsDeleted(false);
-                                setId(null);
                               }}
                             >
                               tutup
@@ -275,7 +284,7 @@ function Table() {
                               Batal
                             </Button>
                             <Button className="bg-red-500 hover:bg-red-700" onClick={() => hapusProsesBisnis(getId)}>
-                              Ya
+                              Hapus
                             </Button>
                           </div>
                         </>

@@ -13,27 +13,30 @@ interface OptionType {
 }
 
 interface FormValues {
-  nama_layanan: string;
-  tujuan_layanan_id: OptionType | null;
-  fungsi_layanan: string;
-  tahun: OptionType | null;
-  kode_opd: string;
-  kementrian_terkait: string;
-  metode_layanan: string;
-  ral_level_1_id: OptionType | null;
-  ral_level_2_id: OptionType | null;
-  ral_level_3_id: OptionType | null;
-  ral_level_4_id: OptionType | null;
-  strategic_id: OptionType | null;
-  tactical_id: OptionType | null;
-  operational_id: OptionType | null;
+  nama_data : string,
+  sifat_data : string,
+  jenis_data : string,
+  produsen_data : string,
+  pj_data : string,
+  kode_opd : string,
+  informasi_terkait_input : string,
+  informasi_terkait_output : string,
+  interoprabilitas : string,
+  tahun : OptionType | null,
+  rad_level_1_id : OptionType | null,
+  rad_level_2_id : OptionType | null,
+  rad_level_3_id : OptionType | null,
+  rad_level_4_id : OptionType | null,
+  strategic_id : OptionType | null,
+  tactical_id : OptionType | null,
+  operational_id : OptionType | null;
 }
 
 const FormTambahData = () => {
-  const [ral_level_1_4_option, set_ral_level_1_4_option] = useState<
+  const [rad_level_1_4_option, set_rad_level_1_4_option] = useState<
     OptionType[]
   >([]);
-  const [ral_level_5_7_option, set_ral_level_5_7_option] = useState<
+  const [rad_level_5_7_option, set_rad_level_5_7_option] = useState<
     OptionType[]
   >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -60,20 +63,23 @@ const FormTambahData = () => {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      nama_layanan: "",
-      tujuan_layanan_id: null,
-      fungsi_layanan: "",
-      tahun: null,
-      kode_opd: "",
-      kementrian_terkait: "",
-      metode_layanan: "",
-      ral_level_1_id: null,
-      ral_level_2_id: null,
-      ral_level_3_id: null,
-      ral_level_4_id: null,
-      strategic_id: null,
-      tactical_id: null,
-      operational_id: null,
+        nama_data : "",
+        sifat_data : "",
+        jenis_data : "",
+        produsen_data : "",
+        pj_data : "",
+        kode_opd : "",
+        informasi_terkait_input : "",
+        informasi_terkait_output : "",
+        interoprabilitas : "",
+        tahun : null,
+        rad_level_1_id : null,
+        rad_level_2_id : null,
+        rad_level_3_id : null,
+        rad_level_4_id : null,
+        strategic_id :  null,
+        tactical_id : null,
+        operational_id : null
     },
   });
 
@@ -81,7 +87,7 @@ const FormTambahData = () => {
     setIsClient(true);
   }, []);
 
-  const fetchRalLevel1_4 = async (level: number) => {
+  const fetchRadLevel1_4 = async (level: number) => {
     setIsLoading(true);
     try {
       const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
@@ -93,15 +99,15 @@ const FormTambahData = () => {
         value: referensi.Id,
         label: `${referensi.kode_referensi} ${referensi.nama_referensi}`,
       }));
-      set_ral_level_1_4_option(result);
+      set_rad_level_1_4_option(result);
     } catch (error) {
-      console.error("gagal memuat data option RAB Level 1 - 4");
+      console.error("gagal memuat data option RAD Level 1 - 4");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const fetchRalLevel5_7 = async (jenis_pohon: string) => {
+  const fetchRadLevel5_7 = async (jenis_pohon: string) => {
     setIsLoading(true);
     try {
       const response = await fetch(`${API_URL}/v1/pohonkinerja`);
@@ -113,9 +119,9 @@ const FormTambahData = () => {
         value: pohon.id,
         label: pohon.nama_pohon,
       }));
-      set_ral_level_5_7_option(result);
+      set_rad_level_5_7_option(result);
     } catch (err) {
-      console.log("gagal memuat data option RAB Level 5 - 7");
+      console.log("gagal memuat data option RAD Level 5 - 7");
     } finally {
       setIsLoading(false);
     }
@@ -124,23 +130,26 @@ const FormTambahData = () => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const formData = {
       //key : value
-      nama_layanan: data.nama_layanan,
-      tujuan_layanan_id: data.tujuan_layanan_id?.value,
-      fungsi_layanan: data.fungsi_layanan,
-      tahun: data.tahun?.value,
-      kode_opd: data.kode_opd,
-      kementrian_terkait: data.kementrian_terkait,
-      metode_layanan: data.metode_layanan,
-      ral_level_1_id: data.ral_level_1_id?.value,
-      ral_level_2_id: data.ral_level_2_id?.value,
-      ral_level_3_id: data.ral_level_3_id?.value,
-      ral_level_4_id: data.ral_level_4_id?.value,
-      strategic_id: data.strategic_id?.value,
-      tactical_id: data.tactical_id?.value,
-      operational_id: data.operational_id?.value,
+        nama_data : data.nama_data,
+        sifat_data : data.sifat_data,
+        jenis_data : data.jenis_data,
+        produsen_data : data.produsen_data,
+        pj_data : data.pj_data,
+        kode_opd : data.kode_opd,
+        informasi_terkait_input : data.informasi_terkait_input,
+        informasi_terkait_output : data.informasi_terkait_output,
+        interoprabilitas : data.interoprabilitas,
+        tahun : data.tahun?.value,
+        rad_level_1_id : data.rad_level_1_id?.value,
+        rad_level_2_id : data.rad_level_2_id?.value,
+        rad_level_3_id : data.rad_level_3_id?.value,
+        rad_level_4_id : data.rad_level_4_id?.value,
+        strategic_id :  data.strategic_id?.value,
+        tactical_id : data.tactical_id?.value,
+        operational_id : data.operational_id?.value,
     };
     try{
-      const response = await fetch(`${API_URL}/v1/createlayananspbe`, {
+      const response = await fetch(`${API_URL}/v1/createdatainformasi`, {
         method: "POST",
         headers: {
           "Content-Type" : "application/json"
@@ -162,37 +171,54 @@ const FormTambahData = () => {
 
   return (
     <div className="border p-5">
-      <h1 className="uppercase font-bold">Form tambah data Layanan SPBE</h1>
-      <form
-        className="flex flex-col mx-5 py-5"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <h1 className="uppercase font-bold">Form tambah Data Informasi SPBE</h1>
+      <form className="flex flex-col mx-5 py-5" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="nama_layanan"
-          >
-            Nama Layanan:
+          <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="nama_data">
+            Nama Data Informasi :
           </label>
           <Controller
-            name="nama_layanan"
+            name="nama_data"
             control={control}
-            rules={{ required: "Nama Layanan Harus Terisi" }}
+            rules={{ required: "Nama Data Informasi Harus Terisi" }}
             render={({ field }) => (
               <>
                 <input
                   className="border px-4 py-2 rounded"
                   {...field}
                   type="text"
-                  id="nama_layanan"
-                  placeholder="masukkan nama Layanan"
+                  id="nama_data"
+                  placeholder="masukkan nama data informasi"
                 />
-                {errors.nama_layanan ? 
+                {errors.nama_data && <h1 className="text-red-500">{errors.nama_data.message}</h1>}
+              </>
+            )}
+          />
+        </div>
+        <div className="flex flex-col py-3">
+          <label
+            className="uppercase text-xs font-bold text-gray-700 my-2"
+            htmlFor="sifat_data"
+          >
+            Sifat Data :
+          </label>
+          <Controller
+            name="sifat_data"
+            control={control}
+            rules={{ required: "Sifat Data Harus Terisi" }}
+            render={({ field }) => (
+              <>
+                <input
+                  className="border px-4 py-2 rounded"
+                  {...field}
+                  type="text"
+                  id="sifat_data"
+                  placeholder="masukkan Sifat Data"
+                />
+                {errors.sifat_data &&
                   <h1 className="text-red-500">
-                    {errors.nama_layanan.message}
+                    {errors.sifat_data.message}
                   </h1>
-                :
-                  <h1 className="text-slate-300 text-xs">*Nama Layanan Harus Terisi</h1>
                 }
               </>
             )}
@@ -201,29 +227,85 @@ const FormTambahData = () => {
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="fungsi_layanan"
+            htmlFor="jenis_data"
           >
-            Fungsi Layanan:
+            Jenis Data :
           </label>
           <Controller
-            name="fungsi_layanan"
+            name="jenis_data"
             control={control}
-            rules={{ required: "Fungsi Layanan Harus Terisi" }}
+            rules={{ required: "Jenis Data Harus Terisi" }}
             render={({ field }) => (
               <>
                 <input
                   className="border px-4 py-2 rounded"
                   {...field}
                   type="text"
-                  id="fungsi_layanan"
-                  placeholder="masukkan Fungsi Layanan"
+                  id="jenis_data"
+                  placeholder="masukkan Jenis Data"
                 />
-                {errors.fungsi_layanan? 
+                {errors.jenis_data &&
                   <h1 className="text-red-500">
-                    {errors.fungsi_layanan.message}
+                    {errors.jenis_data.message}
                   </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Fungsi Layanan Harus Terisi</h1>
+                }
+              </>
+            )}
+          />
+        </div>
+        <div className="flex flex-col py-3">
+          <label
+            className="uppercase text-xs font-bold text-gray-700 my-2"
+            htmlFor="produsen_data"
+          >
+            Produsen Data :
+          </label>
+          <Controller
+            name="produsen_data"
+            control={control}
+            rules={{ required: "Produsen Data Harus Terisi" }}
+            render={({ field }) => (
+              <>
+                <input
+                  className="border px-4 py-2 rounded"
+                  {...field}
+                  type="text"
+                  id="produsen_data"
+                  placeholder="masukkan Produsen Data"
+                />
+                {errors.produsen_data &&
+                  <h1 className="text-red-500">
+                    {errors.produsen_data.message}
+                  </h1>
+                }
+              </>
+            )}
+          />
+        </div>
+        <div className="flex flex-col py-3">
+          <label
+            className="uppercase text-xs font-bold text-gray-700 my-2"
+            htmlFor="pj_data"
+          >
+            Pengngguan Jawab Data :
+          </label>
+          <Controller
+            name="pj_data"
+            control={control}
+            rules={{ required: "Pengngguan Jawab Data Harus Terisi" }}
+            render={({ field }) => (
+              <>
+                <input
+                  className="border px-4 py-2 rounded"
+                  {...field}
+                  type="text"
+                  id="pj_data"
+                  placeholder="masukkan Pengngguan Jawab Data"
+                />
+                {errors.pj_data &&
+                  <h1 className="text-red-500">
+                    {errors.pj_data.message}
+                  </h1>
                 }
               </>
             )}
@@ -249,12 +331,10 @@ const FormTambahData = () => {
                   id="kode_opd"
                   placeholder="masukkan Kode OPD"
                 />
-                {errors.kode_opd ?
+                {errors.kode_opd &&
                   <h1 className="text-red-500">
                     {errors.kode_opd.message}
                   </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Kode OPD Harus Terisi</h1>
                 }
               </>
             )}
@@ -263,22 +343,28 @@ const FormTambahData = () => {
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="kementrian_terkait"
+            htmlFor="informasi_terkait_input"
           >
-            Kementrian Terkait:
+            Informasi Terkait Input :
           </label>
           <Controller
-            name="kementrian_terkait"
+            name="informasi_terkait_input"
             control={control}
+            rules={{ required: "Informasi Terkait Input Harus Terisi" }}
             render={({ field }) => (
               <>
                 <input
                   className="border px-4 py-2 rounded"
                   {...field}
                   type="text"
-                  id="kementrian_terkait"
-                  placeholder="masukkan Kementrian Terkait"
+                  id="informasi_terkait_input"
+                  placeholder="masukkan Informasi Terkait Input"
                 />
+                {errors.informasi_terkait_input &&
+                  <h1 className="text-red-500">
+                    {errors.informasi_terkait_input.message}
+                  </h1>
+                }
               </>
             )}
           />
@@ -286,22 +372,57 @@ const FormTambahData = () => {
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="metode_layanan"
+            htmlFor="informasi_terkait_output"
           >
-            Metode Layanan:
+            Informasi Terkait Output :
           </label>
           <Controller
-            name="metode_layanan"
+            name="informasi_terkait_output"
             control={control}
+            rules={{ required: "Informasi Terkait Output Harus Terisi" }}
             render={({ field }) => (
               <>
                 <input
                   className="border px-4 py-2 rounded"
                   {...field}
                   type="text"
-                  id="metode_layanan"
-                  placeholder="masukkan Metode Layanan"
+                  id="informasi_terkait_output"
+                  placeholder="masukkan Informasi Terkait Output"
                 />
+                {errors.informasi_terkait_output &&
+                  <h1 className="text-red-500">
+                    {errors.informasi_terkait_output.message}
+                  </h1>
+                }
+              </>
+            )}
+          />
+        </div>
+        <div className="flex flex-col py-3">
+          <label
+            className="uppercase text-xs font-bold text-gray-700 my-2"
+            htmlFor="interoprabilitas"
+          >
+            Interoprabilitas :
+          </label>
+          <Controller
+            name="interoprabilitas"
+            control={control}
+            rules={{ required: "Interoprabilitas Harus Terisi" }}
+            render={({ field }) => (
+              <>
+                <input
+                  className="border px-4 py-2 rounded"
+                  {...field}
+                  type="text"
+                  id="interoprabilitas"
+                  placeholder="masukkan Interoprabilitas"
+                />
+                {errors.interoprabilitas &&
+                  <h1 className="text-red-500">
+                    {errors.interoprabilitas.message}
+                  </h1>
+                }
               </>
             )}
           />
@@ -309,32 +430,6 @@ const FormTambahData = () => {
 
         {isClient && (
           <>
-            <div className="flex flex-col py-3">
-              <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tujuan Layanan:</label>
-              <Controller
-                name="tujuan_layanan_id"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      placeholder="Pilih Tujuan Layanan"
-                      options={ral_level_5_7_option}
-                      isSearchable
-                      isClearable
-                      onMenuOpen={() => {
-                        if(ral_level_5_7_option.length === 0){
-                          fetchRalLevel5_7("Operational");
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_ral_level_5_7_option([]);
-                      }}
-                    />
-                  </>
-                )}
-              />
-            </div>
             <div className="flex flex-col py-3">
               <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tahun:</label>
               <Controller
@@ -350,12 +445,10 @@ const FormTambahData = () => {
                       isClearable
                       placeholder="Pilih Tahun"
                     />
-                    {errors.tahun ?
+                    {errors.tahun &&
                       <h1 className="text-red-500">
                         {errors.tahun.message}
                       </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*Tahun Harus Terisi</h1>
                     }
                   </>
                 )}
@@ -364,31 +457,33 @@ const FormTambahData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="ral_level_1_id"
+                htmlFor="rad_level_1_id"
               >
-                RAL Level 1:
+                RAD Level 1:
               </label>
               <Controller
-                name="ral_level_1_id"
+                name="rad_level_1_id"
                 control={control}
+                rules={{required : "RAD Level 1 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      placeholder="Masukkan RAB Level 1"
-                      options={ral_level_1_4_option}
+                      placeholder="Masukkan RAD Level 1"
+                      options={rad_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
                       onMenuOpen={() => {
-                        if (ral_level_1_4_option.length === 0) {
-                          fetchRalLevel1_4(1);
+                        if (rad_level_1_4_option.length === 0) {
+                          fetchRadLevel1_4(1);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_level_1_4_option([]);
+                        set_rad_level_1_4_option([]);
                       }}
                     />
+                    {errors.rad_level_1_id && <h1 className="text-red-500">{errors.rad_level_1_id.message}</h1>}
                   </>
                 )}
               />
@@ -396,31 +491,33 @@ const FormTambahData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="ral_level_2_id"
+                htmlFor="rad_level_2_id"
               >
-                RAL Level 2:
+                RAD Level 2:
               </label>
               <Controller
-                name="ral_level_2_id"
+                name="rad_level_2_id"
                 control={control}
+                rules={{required: "RAD Level 2 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      placeholder="Masukkan RAL Level 2"
-                      options={ral_level_1_4_option}
+                      placeholder="Masukkan RAD Level 2"
+                      options={rad_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
                       onMenuOpen={() => {
-                        if (ral_level_1_4_option.length === 0) {
-                          fetchRalLevel1_4(2);
+                        if (rad_level_1_4_option.length === 0) {
+                          fetchRadLevel1_4(2);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_level_1_4_option([]);
+                        set_rad_level_1_4_option([]);
                       }}
                     />
+                    {errors.rad_level_2_id && <h1 className="text-red-500">{errors.rad_level_2_id.message}</h1>}
                   </>
                 )}
               />
@@ -428,31 +525,33 @@ const FormTambahData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="ral_level_3_id"
+                htmlFor="rad_level_3_id"
               >
-                RAL Level 3:
+                RAD Level 3:
               </label>
               <Controller
-                name="ral_level_3_id"
+                name="rad_level_3_id"
                 control={control}
+                rules={{required: "RAD Level 3 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      placeholder="Masukkan RAL Level 3"
-                      options={ral_level_1_4_option}
+                      placeholder="Masukkan RAD Level 3"
+                      options={rad_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
                       onMenuOpen={() => {
-                        if (ral_level_1_4_option.length === 0) {
-                          fetchRalLevel1_4(3);
+                        if (rad_level_1_4_option.length === 0) {
+                          fetchRadLevel1_4(3);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_level_1_4_option([]);
+                        set_rad_level_1_4_option([]);
                       }}
                     />
+                    {errors.rad_level_3_id && <h1 className="text-red-500">{errors.rad_level_3_id.message}</h1>}
                   </>
                 )}
               />
@@ -460,31 +559,33 @@ const FormTambahData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="ral_level_4_id"
+                htmlFor="rad_level_4_id"
               >
-                RAL Level 4:
+                RAD Level 4:
               </label>
               <Controller
-                name="ral_level_4_id"
+                name="rad_level_4_id"
                 control={control}
+                rules={{required: "RAD Level 4 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      placeholder="Masukkan RAL Level 4"
-                      options={ral_level_1_4_option}
+                      placeholder="Masukkan RAD Level 4"
+                      options={rad_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
                       onMenuOpen={() => {
-                        if (ral_level_1_4_option.length === 0) {
-                          fetchRalLevel1_4(4);
+                        if (rad_level_1_4_option.length === 0) {
+                          fetchRadLevel1_4(4);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_level_1_4_option([]);
+                        set_rad_level_1_4_option([]);
                       }}
                     />
+                    {errors.rad_level_4_id && <h1 className="text-red-500">{errors.rad_level_4_id.message}</h1>}
                   </>
                 )}
               />
@@ -499,24 +600,26 @@ const FormTambahData = () => {
               <Controller
                 name="strategic_id"
                 control={control}
+                rules={{required: "Strategic Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
                       placeholder="Masukkan Strategic"
-                      options={ral_level_5_7_option}
+                      options={rad_level_5_7_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
                       onMenuOpen={() => {
-                        if (ral_level_5_7_option.length === 0) {
-                          fetchRalLevel5_7("Strategic");
+                        if (rad_level_5_7_option.length === 0) {
+                          fetchRadLevel5_7("Strategic");
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_level_5_7_option([]);
+                        set_rad_level_5_7_option([]);
                       }}
                     />
+                    {errors.strategic_id && <h1 className="text-red-500">{errors.strategic_id.message}</h1>}
                   </>
                 )}
               />
@@ -531,24 +634,26 @@ const FormTambahData = () => {
               <Controller
                 name="tactical_id"
                 control={control}
+                rules={{required: "Tactical Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
                       placeholder="Masukkan Tactical"
-                      options={ral_level_5_7_option}
+                      options={rad_level_5_7_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
                       onMenuOpen={() => {
-                        if (ral_level_5_7_option.length === 0) {
-                          fetchRalLevel5_7("Tactical");
+                        if (rad_level_5_7_option.length === 0) {
+                          fetchRadLevel5_7("Tactical");
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_level_5_7_option([]);
+                        set_rad_level_5_7_option([]);
                       }}
                     />
+                    {errors.tactical_id && <h1 className="text-red-500">{errors.tactical_id.message}</h1>}
                   </>
                 )}
               />
@@ -563,24 +668,26 @@ const FormTambahData = () => {
               <Controller
                 name="operational_id"
                 control={control}
+                rules={{required: "Operational Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
                       placeholder="Masukkan Operational"
-                      options={ral_level_5_7_option}
+                      options={rad_level_5_7_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
                       onMenuOpen={() => {
-                        if (ral_level_5_7_option.length === 0) {
-                          fetchRalLevel5_7("Operational");
+                        if (rad_level_5_7_option.length === 0) {
+                          fetchRadLevel5_7("Operational");
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_level_5_7_option([]);
+                        set_rad_level_5_7_option([]);
                       }}
                     />
+                    {errors.operational_id && <h1 className="text-red-500">{errors.operational_id.message}</h1>}
                   </>
                 )}
               />
@@ -594,16 +701,16 @@ const FormTambahData = () => {
       <PopUp isOpen={popup} onClose={() => {setPopup(false); setIsAdded(false);}}>
         <div className="flex flex-col justify-center">
           {isAdded ? 
-            <h1>Berhasil menambahkan data Layanan SPBE</h1>
+            <h1>Berhasil menambahkan Data Informasi</h1>
             :
-            <h1>Gagal menambahkan data Layanan SPBE, silakan cek koneksi internet atau database server</h1>
+            <h1>Gagal menambahkan Data Informasi, silakan cek koneksi internet atau database server</h1>
           }
           <Button
             className="mt-5"
             onClick={() => {
               setPopup(false);
               setIsAdded(false);
-              router.push("/Layanan/LayananSPBE");
+              router.push("/DataInformasi");
             }}
           >
             Tutup
