@@ -1,9 +1,8 @@
-import FormAplikasi from "@/components/pages/Aplikasi/FormAplikasi";
-
+import FormTambahData from "@/components/pages/Aplikasi/FormTambahData";
 const TambahData = () => {
     return(
         <>
-            <FormAplikasi />
+            <FormTambahData />
         </>
     );
 }

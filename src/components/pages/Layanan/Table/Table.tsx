@@ -133,105 +133,105 @@ const Table = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {dataNull ? 
+                        {dataNull ? (
                         <tr>
-                            <td className="px-6 py-3" colSpan={17}>
-                            Data Kosong / Belum Ditambahkan
-                            </td>
+                           <td className="px-6 py-3" colSpan={17}>
+                               Data Kosong / Belum Ditambahkan
+                           </td>
                         </tr>
-                        :
-                        layanan.map((data, index) => (
-                        <tr key={data.Id} className="border rounded-b-lg hover:bg-slate-50">
-                            <td className="px-6 py-4 sticky bg-white left-[-2px]">{index + 1}</td>
-                            <td className="px-6 py-4">{data.NamaLayanan ? `${data.NamaLayanan}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.KodeLayanan ? `${data.KodeLayanan}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.Tahun ? `${data.Tahun}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.KodeOPD ? `${data.KodeOPD}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.TujuanLayananId ? `${data.TujuanLayananId.nama_pohon}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.FungsiLayanan ? `${data.FungsiLayanan}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.MetodeLayanan ? `${data.MetodeLayanan}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.KementrianTerkait ? `${data.KementrianTerkait}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.RalLevel1id ? `${data.RalLevel1id.kode_referensi} ${data.RalLevel1id.nama_referensi}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.RalLevel2id ? `${data.RalLevel2id.kode_referensi} ${data.RalLevel2id.nama_referensi}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.RalLevel3id ? `${data.RalLevel3id.kode_referensi} ${data.RalLevel3id.nama_referensi}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.RalLevel4id ? `${data.RalLevel4id.kode_referensi} ${data.RalLevel4id.nama_referensi}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.StrategicId ? `${data.StrategicId.nama_pohon}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.TacticalId ? `${data.TacticalId.nama_pohon}` : "N/A"}</td>
-                            <td className="px-6 py-4">{data.OperationalId ? `${data.OperationalId.nama_pohon}` : "N/A"}</td>
-                            <td className="px-6 py-4 flex flex-col">
-                                <Button 
-                                    typee="button" 
-                                    className="my-1"
-                                    halaman_url={`/Layanan/LayananSPBE/EditData/${data.Id}`}
-                                >
-                                    Edit
-                                </Button>
-                                <Button 
-                                    typee="button" 
-                                    className="bg-red-500 my-1"
-                                    onClick={() => {
-                                        setPopup(true);
-                                        setId(data.Id);
-                                    }}
-                                >
-                                    Hapus
-                                </Button>
-                                <PopUp 
-                                    isOpen={popup} 
-                                    onClose={() => {
-                                        setPopup(false);
-                                        setId(null);
-                                        setHapus(false);
-                                        setTerhapus(false);
+                        ) : (
+                            layanan.map((data, index) => (
+                            <tr key={data.Id} className="border rounded-b-lg hover:bg-slate-50">
+                                <td className="px-6 py-4 sticky bg-white left-[-2px]">{index + 1}</td>
+                                <td className="px-6 py-4">{data.NamaLayanan ? `${data.NamaLayanan}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.KodeLayanan ? `${data.KodeLayanan}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.Tahun ? `${data.Tahun}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.KodeOPD ? `${data.KodeOPD}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.TujuanLayananId ? `${data.TujuanLayananId.nama_pohon}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.FungsiLayanan ? `${data.FungsiLayanan}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.MetodeLayanan ? `${data.MetodeLayanan}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.KementrianTerkait ? `${data.KementrianTerkait}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.RalLevel1id ? `${data.RalLevel1id.kode_referensi} ${data.RalLevel1id.nama_referensi}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.RalLevel2id ? `${data.RalLevel2id.kode_referensi} ${data.RalLevel2id.nama_referensi}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.RalLevel3id ? `${data.RalLevel3id.kode_referensi} ${data.RalLevel3id.nama_referensi}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.RalLevel4id ? `${data.RalLevel4id.kode_referensi} ${data.RalLevel4id.nama_referensi}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.StrategicId ? `${data.StrategicId.nama_pohon}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.TacticalId ? `${data.TacticalId.nama_pohon}` : "N/A"}</td>
+                                <td className="px-6 py-4">{data.OperationalId ? `${data.OperationalId.nama_pohon}` : "N/A"}</td>
+                                <td className="px-6 py-4 flex flex-col">
+                                    <Button 
+                                        typee="button" 
+                                        className="my-1"
+                                        halaman_url={`/Layanan/LayananSPBE/EditData/${data.Id}`}
+                                    >
+                                        Edit
+                                    </Button>
+                                    <Button 
+                                        typee="button" 
+                                        className="bg-red-500 my-1"
+                                        onClick={() => {
+                                            setPopup(true);
+                                            setId(data.Id);
                                         }}
                                     >
-                                    {hapus ? 
-                                   <>
-                                       <div className="flex flex-col justify-center">
-                                        {terhapus ?
-                                            <h1>data berhasil terhapus</h1>
-                                            :
-                                            <h1>data gagal terhapus</h1>
+                                        Hapus
+                                    </Button>
+                                    <PopUp 
+                                        isOpen={popup} 
+                                        onClose={() => {
+                                            setPopup(false);
+                                            setId(null);
+                                            setHapus(false);
+                                            setTerhapus(false);
+                                            }}
+                                        >
+                                        {hapus ? 
+                                       <>
+                                           <div className="flex flex-col justify-center">
+                                            {terhapus ?
+                                                <h1>data berhasil terhapus</h1>
+                                                :
+                                                <h1>data gagal terhapus</h1>
+                                            }
+                                                <Button className="mt-5" 
+                                                    onClick={() => {
+                                                        setPopup(false);
+                                                        setId(null);
+                                                        setHapus(false);
+                                                        setTerhapus(false);
+                                                    }}
+                                                >
+                                                    Tutup
+                                                </Button>
+                                           </div>
+                                       </>
+                                        :
+                                       <>
+                                            <h1>Hapus data Layanan yang dipilih?</h1>
+                                            <div className="flex justify-around mt-5">
+                                                <Button 
+                                                    onClick={() => {
+                                                        setPopup(false);
+                                                        setId(null)
+                                                    }}
+                                                >
+                                                    Batal
+                                                </Button>
+                                                <Button className="bg-red-500 hover:bg-red-700" 
+                                                    onClick={() => {
+                                                        hapusDataLayanan(getId);
+                                                    }}
+                                                >
+                                                    Hapus
+                                                </Button>
+                                            </div>
+                                       </>
                                         }
-                                            <Button className="mt-5" 
-                                                onClick={() => {
-                                                    setPopup(false);
-                                                    setId(null);
-                                                    setHapus(false);
-                                                    setTerhapus(false);
-                                                }}
-                                            >
-                                                Tutup
-                                            </Button>
-                                       </div>
-                                   </>
-                                    :
-                                   <>
-                                        <h1>Hapus data Layanan yang dipilih?</h1>
-                                        <div className="flex justify-around mt-5">
-                                            <Button 
-                                                onClick={() => {
-                                                    setPopup(false);
-                                                    setId(null)
-                                                }}
-                                            >
-                                                Batal
-                                            </Button>
-                                            <Button className="bg-red-500 hover:bg-red-700" 
-                                                onClick={() => {
-                                                    hapusDataLayanan(getId);
-                                                }}
-                                            >
-                                                Hapus
-                                            </Button>
-                                        </div>
-                                   </>
-                                    }
-                                </PopUp>
-                            </td>
-                        </tr>
-                        ))
-                        }
+                                    </PopUp>
+                                </td>
+                            </tr>
+                            ))
+                        )}
                     </tbody>
                     </table>
                 </div>
