@@ -10,7 +10,7 @@ function Header() {
   const url = usePathname();
 
   useEffect(() => {
-    if (url === "/" || url === "/User" || url === "/DataMaster") {
+    if (url === "/" || url === "/User" || url === "/DataMaster" || url === "/PohonKinerja") {
       setTextPath("Kota");
     } else if (
       url === "/ProsesBisnis" ||

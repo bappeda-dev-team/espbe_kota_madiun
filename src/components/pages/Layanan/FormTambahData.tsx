@@ -64,7 +64,7 @@ const FormTambahData = () => {
       tujuan_layanan_id: null,
       fungsi_layanan: "",
       tahun: null,
-      kode_opd: "",
+      kode_opd: "7.01.0.00.0.00.02.0005",
       kementrian_terkait: "",
       metode_layanan: "",
       ral_level_1_id: null,
@@ -128,7 +128,7 @@ const FormTambahData = () => {
       tujuan_layanan_id: data.tujuan_layanan_id?.value,
       fungsi_layanan: data.fungsi_layanan,
       tahun: data.tahun?.value,
-      kode_opd: data.kode_opd,
+      kode_opd: "7.01.0.00.0.00.02.0005",
       kementrian_terkait: data.kementrian_terkait,
       metode_layanan: data.metode_layanan,
       ral_level_1_id: data.ral_level_1_id?.value,
@@ -247,6 +247,7 @@ const FormTambahData = () => {
                   {...field}
                   type="text"
                   id="kode_opd"
+                  value="7.01.0.00.0.00.02.0005"
                   placeholder="masukkan Kode OPD"
                 />
                 {errors.kode_opd ?

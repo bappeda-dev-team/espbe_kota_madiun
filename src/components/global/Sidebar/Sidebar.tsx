@@ -12,6 +12,8 @@ function Sidebar() {
   const [dahsboardActive, setDahsboardActive] = useState<boolean>(false);
   const [UserActive, setUserActive] = useState<boolean>(false);
   const [DataMasterActive, setDataMasterActive] = useState<boolean>(false);
+  const [pohonKinerja, setPohonKinerja] = useState<boolean>(false);
+
   const [ProsesBisnisActive, setProsesBisnisActive] = useState<boolean>(false);
   const [LayananActive, setLayananActive] = useState<boolean>(false);
   const [standartPelayananActive, setStandartPelayananActive] = useState<boolean>(false);
@@ -36,6 +38,7 @@ function Sidebar() {
       setDahsboardActive(true),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -50,6 +53,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(true),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -64,6 +68,22 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(true),
+        setPohonKinerja(false);
+        setProsesBisnisActive(false),
+        setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
+      setPetaRencanaActive(false);
+    } else if (url === "/PohonKinerja") {
+      setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(false),
+        setPohonKinerja(true),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -78,6 +98,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(true),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -95,6 +116,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(true),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -112,6 +134,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(false),
         setLayananActive(true),
         setStandartPelayananActive(false),
@@ -126,6 +149,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(false),
         setLayananActive(true),
         setStandartPelayananActive(true),
@@ -143,6 +167,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -157,6 +182,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -171,6 +197,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -185,6 +212,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -199,6 +227,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -213,6 +242,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -227,6 +257,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerja(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -359,6 +390,37 @@ function Sidebar() {
                   />
                 )}
                 Data Master
+              </li>
+            </Link>
+            <Link
+              className={pohonKinerja ? "text-white" : ""}
+              href="/PohonKinerja"
+            >
+              <li
+                className={
+                  pohonKinerja
+                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                }
+              >
+                {pohonKinerja ? (
+                  <Image
+                    className="pr-2"
+                    src="/iconLight/data.svg"
+                    alt="data"
+                    width={30}
+                    height={30}
+                  />
+                ) : (
+                  <Image
+                    className="pr-2"
+                    src="/iconDark/data.svg"
+                    alt="data"
+                    width={30}
+                    height={30}
+                  />
+                )}
+                Pohon Kinerja
               </li>
             </Link>
           </ul>

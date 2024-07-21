@@ -65,7 +65,7 @@ const FormTambahData = () => {
   } = useForm<FormValues>({
     defaultValues: {
       nama_proses_bisnis: "",
-      kode_opd: "",
+      kode_opd: "7.01.0.00.0.00.02.0005",
       bidang_urusan_id: null,
       tahun: null,
       sasaran_kota_id: null,
@@ -160,7 +160,7 @@ const FormTambahData = () => {
     const formData = {
       //key : value
       nama_proses_bisnis: data.nama_proses_bisnis,
-      kode_opd: data.kode_opd,
+      kode_opd: "7.01.0.00.0.00.02.0005",
       bidang_urusan_id: data.bidang_urusan_id?.value,
       tahun: data.tahun?.value,
       sasaran_kota_id: data.sasaran_kota_id?.value,
@@ -171,26 +171,7 @@ const FormTambahData = () => {
       rab_level_5_id: data.rab_level_5_id?.value,
       rab_level_6_id: data.rab_level_6_id?.value,
     };
-    try {
-      const response = await fetch(`${API_URL}/v1/createprosesbisnis`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        setPopup(true);
-        setIsAdded(true);
-        reset();
-      } else {
-        setPopup(true);
-        setIsAdded(false);
-      }
-    } catch (error) {
-      setPopup(true);
-      setIsAdded(false);
-    }
+    console.log(formData);
   };
 
   return (
@@ -241,7 +222,6 @@ const FormTambahData = () => {
           <Controller
             name="kode_opd"
             control={control}
-            rules={{ required: "Kode OPD Harus Terisi" }}
             render={({ field }) => (
               <>
                 <input
@@ -249,15 +229,9 @@ const FormTambahData = () => {
                   {...field}
                   type="text"
                   id="kode_opd"
+                  value="7.01.0.00.0.00.02.0005"
                   placeholder="masukkan Kode OPD"
                 />
-                {errors.kode_opd ?
-                  <h1 className="text-red-500">
-                    {errors.kode_opd.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Kode OPD Harus Terisi</h1>
-                }
               </>
             )}
           />

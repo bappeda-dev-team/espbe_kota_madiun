@@ -68,7 +68,7 @@ const FormTambahData = () => {
         jenis_data : "",
         produsen_data : "",
         pj_data : "",
-        kode_opd : "",
+        kode_opd : "7.01.0.00.0.00.02.0005",
         informasi_terkait_input : "",
         informasi_terkait_output : "",
         interoprabilitas : "",
@@ -135,7 +135,7 @@ const FormTambahData = () => {
         jenis_data : data.jenis_data,
         produsen_data : data.produsen_data,
         pj_data : data.pj_data,
-        kode_opd : data.kode_opd,
+        kode_opd : "7.01.0.00.0.00.02.0005",
         informasi_terkait_input : data.informasi_terkait_input,
         informasi_terkait_output : data.informasi_terkait_output,
         interoprabilitas : data.interoprabilitas,
@@ -329,6 +329,7 @@ const FormTambahData = () => {
                   {...field}
                   type="text"
                   id="kode_opd"
+                  value="7.01.0.00.0.00.02.0005"
                   placeholder="masukkan Kode OPD"
                 />
                 {errors.kode_opd &&
