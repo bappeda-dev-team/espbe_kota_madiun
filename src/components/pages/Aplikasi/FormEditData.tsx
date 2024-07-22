@@ -27,7 +27,6 @@ interface formValue {
     raa_level_1_id : OptionType | null,
     raa_level_2_id : OptionType | null,
     raa_level_3_id : OptionType | null,
-    raa_level_4_id : OptionType | null,
     strategic_id : OptionType | null,
     tactical_id : OptionType | null,
     operational_id : OptionType | null;
@@ -161,14 +160,6 @@ const FormEditData = () => {
           setSelectedRaa3(raaLevel3Option);
           reset((prev) => ({ ...prev, raa_level_3_id: raaLevel3Option }));
         }
-        if (result.RaaLevel4id) {
-          const raaLevel4Option = {
-            value: result.RaaLevel4id.Id,
-            label: `${result.RaaLevel4id.kode_referensi} ${result.RaaLevel4id.nama_referensi}`,
-          };
-          setSelectedRaa4(raaLevel4Option);
-          reset((prev) => ({ ...prev, raa_level_4_id: raaLevel4Option }));
-        }
         if (result.StrategicId) {
           const strategicOption = {
             value: result.StrategicId.id,
@@ -210,11 +201,11 @@ const FormEditData = () => {
       const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
       const data = await response.json();
       const filteredData = data.data.filter(
-        (item: any) => item.level_referensi === level,
+        (item: any) => item.level_referensi === level && item.jenis_referensi === "Aplikasi",
       );
       const result = filteredData.map((item: any) => ({
         value: item.Id,
-        label: item.kode_referensi,
+        label: `${item.kode_referensi} ${item.nama_referensi}`,
       }));
       set_raa_1_4(result);
     } catch (err) {
@@ -276,7 +267,7 @@ const FormEditData = () => {
       jenis_aplikasi: data.jenis_aplikasi,
       produsen_aplikasi: data.produsen_aplikasi,
       pj_aplikasi: data.pj_aplikasi,
-      kode_opd: data.kode_opd,
+      kode_opd: "5.01.5.05.0.00.02.0000",
       informasi_terkait_input: data.informasi_terkait_input,
       informasi_terkait_output: data.informasi_terkait_output,
       interoprabilitas: data.interoprabilitas,
@@ -284,7 +275,6 @@ const FormEditData = () => {
       raa_level_1_id: data.raa_level_1_id?.value,
       raa_level_2_id: data.raa_level_2_id?.value,
       raa_level_3_id: data.raa_level_3_id?.value,
-      raa_level_4_id: data.raa_level_4_id?.value,
       strategic_id: data.strategic_id?.value,
       tactical_id: data.tactical_id?.value,
       operational_id: data.operational_id?.value,
@@ -486,7 +476,7 @@ const FormEditData = () => {
                   className="border px-4 py-2 rounded"
                   id="kode_opd"
                   type="text"
-                  value={field.value || kode_opd}
+                  value={field.value}
                   onChange={(e) => {
                     field.onChange(e);
                     set_kode_opd(e.target.value);
@@ -741,45 +731,6 @@ const FormEditData = () => {
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="raa_level_4_id"
-              >
-                RAA Level 4 :
-              </label>
-              <Controller
-                name="raa_level_4_id"
-                control={control}
-                rules={{required: "RAA Level 4 Harus Terisi"}}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      id="raa_level_4_id"
-                      value={selectedRaa4 || null}
-                      placeholder="Pilih RAA Level 4"
-                      isLoading={isLoading}
-                      options={raa_1_4}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "raa_level_4_id" });
-                      }}
-                      isClearable={true}
-                      onMenuOpen={() => {
-                        if (raa_1_4.length === 0) {
-                          fetchRaa_1_4(4);
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_raa_1_4([]);
-                      }}
-                    />
-                    {errors.raa_level_4_id && (<h1 className="text-red-500">{errors.raa_level_4_id.message}</h1>)}
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
                 htmlFor="strategic_id"
               >
                 Strategic :
@@ -910,7 +861,7 @@ const FormEditData = () => {
             onClick={() => {
               setPopup(false);
               setEdited(false);
-              router.push("/DataInformasi")
+              router.push("/Aplikasi")
             }}
           >
             Tutup

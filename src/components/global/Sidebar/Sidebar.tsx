@@ -8,7 +8,7 @@ import { useParams } from "next/navigation";
 
 function Sidebar() {
   const url = usePathname();
-  const { id } = useParams();
+  const { id, Id } = useParams();
   const [dahsboardActive, setDahsboardActive] = useState<boolean>(false);
   const [UserActive, setUserActive] = useState<boolean>(false);
   const [DataMasterActive, setDataMasterActive] = useState<boolean>(false);
@@ -94,23 +94,9 @@ function Sidebar() {
         setArsitekturActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
-    } else if (url === "/ProsesBisnis" || url === "/ProsesBisnis/TambahData") {
-      setDahsboardActive(false),
-        setUserActive(false),
-        setDataMasterActive(false),
-        setPohonKinerja(false);
-        setProsesBisnisActive(true),
-        setLayananActive(false),
-        setStandartPelayananActive(false),
-        setFormLayananActive(false),
-        setDataInformasiActive(false),
-        setAplikasiActive(false),
-        setGapArsitekturActive(false);
-        setArsitekturActive(false);
-        setSdmInfrastrukturActive(false);
-      setPetaRencanaActive(false);
     } else if (
       url === "/ProsesBisnis" ||
+      url === "/ProsesBisnis/TambahData" ||
       url === `/ProsesBisnis/EditData/${id}`
     ) {
       setDahsboardActive(false),
@@ -129,7 +115,8 @@ function Sidebar() {
       setPetaRencanaActive(false);
     } else if (
       url === "/Layanan/LayananSPBE" ||
-      url === "/Layanan/LayananSPBE/TambahData"
+      url === "/Layanan/LayananSPBE/TambahData" ||
+      url === `/Layanan/LayananSPBE/EditData/${Id}`
     ) {
       setDahsboardActive(false),
         setUserActive(false),
@@ -162,7 +149,8 @@ function Sidebar() {
       setPetaRencanaActive(false);
     } else if (
       url === "/DataInformasi" ||
-      url === "/DataInformasi/TambahData"
+      url === "/DataInformasi/TambahData" ||
+      url === `/DataInformasi/EditData/${Id}`
     ) {
       setDahsboardActive(false),
         setUserActive(false),
@@ -178,7 +166,11 @@ function Sidebar() {
         setArsitekturActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
-    } else if (url === "/Aplikasi" || url === "/Aplikasi/TambahData") {
+    } else if (
+      url === "/Aplikasi" || 
+      url === "/Aplikasi/TambahData" ||
+      url === `/Aplikasi/EditData/${Id}`
+    ) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),

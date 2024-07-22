@@ -20,7 +20,6 @@ interface aplikasi {
     RaaLevel1id : Raa_Level_1_4;
     RaaLevel2id : Raa_Level_1_4;
     RaaLevel3id : Raa_Level_1_4;
-    RaaLevel4id : Raa_Level_1_4;
     StrategicId : Raa_Level_5_7;
     TacticalId : Raa_Level_5_7;
     OperationalId : Raa_Level_5_7;
@@ -117,7 +116,6 @@ const Table = () => {
                         <th className="px-6 py-3 min-w-[200px]">RAA Level 1</th>
                         <th className="px-6 py-3 min-w-[200px]">RAA Level 2</th>
                         <th className="px-6 py-3 min-w-[200px]">RAA Level 3</th>
-                        <th className="px-6 py-3 min-w-[200px]">RAA Level 4</th>
                         <th className="px-6 py-3 min-w-[200px]">Strategic</th>
                         <th className="px-6 py-3 min-w-[200px]">Tactical</th>
                         <th className="px-6 py-3 min-w-[200px]">Operational</th>
@@ -146,7 +144,6 @@ const Table = () => {
                             <td className="px-6 py-4">{data.RaaLevel1id? `${data.RaaLevel1id.kode_referensi} ${data.RaaLevel1id.nama_referensi}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.RaaLevel2id? `${data.RaaLevel2id.kode_referensi} ${data.RaaLevel2id.nama_referensi}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.RaaLevel3id? `${data.RaaLevel3id.kode_referensi} ${data.RaaLevel3id.nama_referensi}`: "N/A"}</td>
-                            <td className="px-6 py-4">{data.RaaLevel4id? `${data.RaaLevel4id.kode_referensi} ${data.RaaLevel4id.nama_referensi}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.StrategicId? `${data.StrategicId.nama_pohon}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.TacticalId? `${data.TacticalId.nama_pohon}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.OperationalId? `${data.OperationalId.nama_pohon}`: "N/A"}</td>

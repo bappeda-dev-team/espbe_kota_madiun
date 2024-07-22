@@ -68,7 +68,7 @@ const FormTambahData = () => {
         jenis_data : "",
         produsen_data : "",
         pj_data : "",
-        kode_opd : "7.01.0.00.0.00.02.0005",
+        kode_opd : "5.01.5.05.0.00.02.0000",
         informasi_terkait_input : "",
         informasi_terkait_output : "",
         interoprabilitas : "",
@@ -93,7 +93,7 @@ const FormTambahData = () => {
       const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
       const data = await response.json();
       const filteredData = data.data.filter(
-        (referensi: any) => referensi.level_referensi === level,
+        (referensi: any) => referensi.level_referensi === level && referensi.jenis_referensi === "DataDanInformasi",
       );
       const result = filteredData.map((referensi: any) => ({
         value: referensi.Id,
@@ -135,7 +135,7 @@ const FormTambahData = () => {
         jenis_data : data.jenis_data,
         produsen_data : data.produsen_data,
         pj_data : data.pj_data,
-        kode_opd : "7.01.0.00.0.00.02.0005",
+        kode_opd : "5.01.5.05.0.00.02.0000",
         informasi_terkait_input : data.informasi_terkait_input,
         informasi_terkait_output : data.informasi_terkait_output,
         interoprabilitas : data.interoprabilitas,
@@ -329,7 +329,7 @@ const FormTambahData = () => {
                   {...field}
                   type="text"
                   id="kode_opd"
-                  value="7.01.0.00.0.00.02.0005"
+                  value="5.01.5.05.0.00.02.0000"
                   placeholder="masukkan Kode OPD"
                 />
                 {errors.kode_opd &&

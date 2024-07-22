@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
 function Header() {
-  const { id } = useParams();
+  const { id, Id } = useParams();
   const [textPath, setTextPath] = useState<string>();
   const url = usePathname();
 
@@ -19,10 +19,13 @@ function Header() {
       url === "/Layanan/StandartPelayanan" ||
       url === "/Layanan/LayananSPBE" ||
       url === "/Layanan/LayananSPBE/TambahData" ||
+      url === `/Layanan/LayananSPBE/EditData/${Id}` ||
       url === "/DataInformasi" ||
       url === "/DataInformasi/TambahData" ||
+      url === `/DataInformasi/EditData/${Id}` ||
       url === "/Aplikasi" ||
       url === "/Aplikasi/TambahData" ||
+      url === `/Aplikasi/EditData/${Id}` ||
       url === "/GapArsitektur" ||
       url === "/Arsitektur" ||
       url === "/SdmInfrastruktur" ||

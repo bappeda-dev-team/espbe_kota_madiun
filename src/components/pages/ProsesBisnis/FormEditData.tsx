@@ -105,7 +105,7 @@ const FormEditData = () => {
         if (result.rab_level_1) {
           const rabLevel1Option = {
             value: result.rab_level_1.Id,
-            label: result.rab_level_1.kode_referensi,
+            label: `${result.rab_level_1.kode_referensi} ${result.rab_level_1.nama_referensi}`,
           };
           setSelectedRab1(rabLevel1Option);
           reset((prev) => ({ ...prev, rab_level_1_id: rabLevel1Option }));
@@ -113,7 +113,7 @@ const FormEditData = () => {
         if (result.rab_level_2) {
           const rabLevel2Option = {
             value: result.rab_level_2.Id,
-            label: result.rab_level_2.kode_referensi,
+            label: `${result.rab_level_2.kode_referensi} ${result.rab_level_2.nama_referensi}`,
           };
           setSelectedRab2(rabLevel2Option);
           reset((prev) => ({ ...prev, rab_level_2_id: rabLevel2Option }));
@@ -121,7 +121,7 @@ const FormEditData = () => {
         if (result.rab_level_3) {
           const rabLevel3Option = {
             value: result.rab_level_3.Id,
-            label: result.rab_level_3.kode_referensi,
+            label: `${result.rab_level_3.kode_referensi} ${result.rab_level_3.nama_referensi}`,
           };
           setSelectedRab3(rabLevel3Option);
           reset((prev) => ({ ...prev, rab_level_3_id: rabLevel3Option }));
@@ -228,11 +228,11 @@ const FormEditData = () => {
       const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
       const data = await response.json();
       const filteredData = data.data.filter(
-        (item: any) => item.level_referensi === level,
+        (item: any) => item.level_referensi === level && item.jenis_referensi === "ProsesBisnis",
       );
       const result = filteredData.map((item: any) => ({
         value: item.Id,
-        label: item.kode_referensi,
+        label: `${item.kode_referensi} ${item.nama_referensi}`,
       }));
       set_rab_1_3(result);
     } catch (err) {
@@ -289,7 +289,7 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const formData = {
       nama_proses_bisnis: data.nama_proses_bisnis,
-      kode_opd: data.kode_opd,
+      kode_opd: "5.01.5.05.0.00.02.0000",
       kode_proses_bisnis: data.kode_proses_bisnis,
       sasaran_kota_id: data.sasaran_kota_id?.value,
       bidang_urusan_id: data.bidang_urusan_id?.value,
@@ -381,7 +381,7 @@ const FormEditData = () => {
                   className="border px-4 py-2 rounded"
                   id="kode_opd"
                   type="text"
-                  value={field.value || kode_opd}
+                  value={field.value}
                   onChange={(e) => {
                     field.onChange(e);
                     set_kode_opd(e.target.value);

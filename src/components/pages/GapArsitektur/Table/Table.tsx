@@ -84,39 +84,45 @@ const Table = () => {
                         </td>
                       )}
 
-                      <td className="border px-6 py-4">
-                        {data.layanans.length > 0 ? (
+                      {data.layanans.length > 0 && data.layanans.some(data => data.nama_layanan !== null) ? (
+                        <td className="border px-6 py-4">
                           <ul>
-                            {data.layanans.map((layanan, idx) => (
-                              <li key={idx}>{layanan.nama_layanan || <h1 className="text-red-500 font-bold">GAP</h1>}</li>
+                          {data.layanans.map((info, idx) => (
+                              <li key={idx}>{info.nama_layanan}.</li>
                             ))}
                           </ul>
-                        ) : (
-                          <h1 className="text-red-500">GAP</h1>
-                        )}
-                      </td>
-                      <td className="border px-6 py-4">
-                        {data.data_dan_informasi.length > 0 ? (
+                        </td>
+                      ) : (
+                        <td className="border px-6 py-4 bg-red-500">
+                          <h1 className="text-white font-bold">GAP</h1>
+                        </td>
+                      )}
+                      {data.data_dan_informasi.length > 0 && data.data_dan_informasi.some(data => data.nama_data !== null) ? (
+                        <td className="border px-6 py-4">
                           <ul>
-                            {data.data_dan_informasi.map((info, idx) => (
-                              <li key={idx}>{info.nama_data || <h1 className="text-red-500 font-bold">GAP</h1>}</li>
+                          {data.data_dan_informasi.map((info, idx) => (
+                              <li key={idx}>{info.nama_data}.</li>
                             ))}
                           </ul>
-                        ) : (
-                          <h1 className="text-red-500">GAP</h1>
-                        )}
-                      </td>
-                      <td className="border px-6 py-4">
-                        {data.aplikasi.length > 0 ? (
+                        </td>
+                      ) : (
+                        <td className="border px-6 -y-4 bg-red-500">
+                          <h1 className="text-white font-bold">GAP</h1>
+                        </td>
+                      )}
+                      {data.aplikasi.length > 0 && data.aplikasi.some(aplikasi => aplikasi.nama_aplikasi !== null) ? (
+                        <td className="border px-6 -y-4">
                           <ul>
-                            {data.aplikasi.map((aplikasi, idx) => (
-                              <li key={idx}>{aplikasi.nama_aplikasi || <h1 className="text-red-500 font-bold">GAP</h1>}</li>
+                          {data.aplikasi.map((info, idx) => (
+                              <li key={idx}>{info.nama_aplikasi}.</li>
                             ))}
                           </ul>
-                        ) : (
-                          <h1 className="text-red-500">GAP</h1>
-                        )}
-                      </td>
+                        </td>
+                      ) : (
+                        <td className="border px-6 -y-4 bg-red-500">
+                          <h1 className="text-white font-bold">GAP</h1>
+                        </td>
+                      )}
                       
                   </tr>
                   ))

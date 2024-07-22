@@ -218,15 +218,15 @@ const FormEditData = () => {
       const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
       const data = await response.json();
       const filteredData = data.data.filter(
-        (item: any) => item.level_referensi === level,
+        (item: any) => item.level_referensi === level && item.jenis_referensi === "DataDanInformasi",
       );
       const result = filteredData.map((item: any) => ({
         value: item.Id,
-        label: item.kode_referensi,
+        label: `${item.kode_referensi} ${item.nama_referensi}`,
       }));
       set_rad_1_4(result);
     } catch (err) {
-      console.log("Gagal memuat data Option RAD Level 1 - 3", err);
+      console.log("Gagal memuat data Option RAD Level 1 - 4", err);
     } finally {
       setIsLoading(false);
     }
@@ -284,7 +284,7 @@ const FormEditData = () => {
       jenis_data: data.jenis_data,
       produsen_data: data.produsen_data,
       pj_data: data.pj_data,
-      kode_opd: data.kode_opd,
+      kode_opd: "5.01.5.05.0.00.02.0000",
       informasi_terkait_input: data.informasi_terkait_input,
       informasi_terkait_output: data.informasi_terkait_output,
       interoprabilitas: data.interoprabilitas,
@@ -494,7 +494,7 @@ const FormEditData = () => {
                   className="border px-4 py-2 rounded"
                   id="kode_opd"
                   type="text"
-                  value={field.value || kode_opd}
+                  value={field.value}
                   onChange={(e) => {
                     field.onChange(e);
                     set_kode_opd(e.target.value);

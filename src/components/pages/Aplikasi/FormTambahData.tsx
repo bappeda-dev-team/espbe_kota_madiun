@@ -26,7 +26,6 @@ interface FormValues {
   raa_level_1_id : OptionType | null,
   raa_level_2_id : OptionType | null,
   raa_level_3_id : OptionType | null,
-  raa_level_4_id : OptionType | null,
   strategic_id : OptionType | null,
   tactical_id : OptionType | null,
   operational_id : OptionType | null;
@@ -68,7 +67,7 @@ const FormTambahData = () => {
         jenis_aplikasi : "",
         produsen_aplikasi : "",
         pj_aplikasi : "",
-        kode_opd : "7.01.0.00.0.00.02.0005",
+        kode_opd : "5.01.5.05.0.00.02.0000",
         informasi_terkait_input : "",
         informasi_terkait_output : "",
         interoprabilitas : "",
@@ -76,7 +75,6 @@ const FormTambahData = () => {
         raa_level_1_id : null,
         raa_level_2_id : null,
         raa_level_3_id : null,
-        raa_level_4_id : null,
         strategic_id :  null,
         tactical_id : null,
         operational_id : null
@@ -93,7 +91,7 @@ const FormTambahData = () => {
       const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
       const data = await response.json();
       const filteredData = data.data.filter(
-        (referensi: any) => referensi.level_referensi === level,
+        (referensi: any) => referensi.level_referensi === level && referensi.jenis_referensi === "Aplikasi",
       );
       const result = filteredData.map((referensi: any) => ({
         value: referensi.Id,
@@ -135,7 +133,7 @@ const FormTambahData = () => {
         jenis_aplikasi : data.jenis_aplikasi,
         produsen_aplikasi : data.produsen_aplikasi,
         pj_aplikasi : data.pj_aplikasi,
-        kode_opd : "7.01.0.00.0.00.02.0005",
+        kode_opd : "5.01.5.05.0.00.02.0000",
         informasi_terkait_input : data.informasi_terkait_input,
         informasi_terkait_output : data.informasi_terkait_output,
         interoprabilitas : data.interoprabilitas,
@@ -143,7 +141,6 @@ const FormTambahData = () => {
         raa_level_1_id : data.raa_level_1_id?.value,
         raa_level_2_id : data.raa_level_2_id?.value,
         raa_level_3_id : data.raa_level_3_id?.value,
-        raa_level_4_id : data.raa_level_4_id?.value,
         strategic_id :  data.strategic_id?.value,
         tactical_id : data.tactical_id?.value,
         operational_id : data.operational_id?.value,
@@ -329,7 +326,7 @@ const FormTambahData = () => {
                   {...field}
                   type="text"
                   id="kode_opd"
-                  value="7.01.0.00.0.00.02.0005"
+                  value="5.01.5.05.0.00.02.0000"
                   placeholder="masukkan Kode OPD"
                 />
                 {errors.kode_opd &&
@@ -553,40 +550,6 @@ const FormTambahData = () => {
                       }}
                     />
                     {errors.raa_level_3_id && <h1 className="text-red-500">{errors.raa_level_3_id.message}</h1>}
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="raa_level_4_id"
-              >
-                RAA Level 4:
-              </label>
-              <Controller
-                name="raa_level_4_id"
-                control={control}
-                rules={{required: "RAA Level 4 Harus Terisi"}}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      placeholder="Masukkan RAD Level 4"
-                      options={raa_level_1_4_option}
-                      isLoading={isLoading}
-                      isSearchable
-                      isClearable
-                      onMenuOpen={() => {
-                        if (raa_level_1_4_option.length === 0) {
-                          fetchRaaLevel1_4(4);
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_raa_level_1_4_option([]);
-                      }}
-                    />
-                    {errors.raa_level_4_id && <h1 className="text-red-500">{errors.raa_level_4_id.message}</h1>}
                   </>
                 )}
               />

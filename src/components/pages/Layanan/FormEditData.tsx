@@ -192,11 +192,11 @@ const FormEditData = () => {
       const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
       const data = await response.json();
       const filteredData = data.data.filter(
-        (item: any) => item.level_referensi === level,
+        (item: any) => item.level_referensi === level && item.jenis_referensi === "Layanan",
       );
       const result = filteredData.map((item: any) => ({
         value: item.Id,
-        label: item.kode_referensi,
+        label: `${item.kode_referensi} ${item.nama_referensi}`,
       }));
       set_ral_1_4(result);
     } catch (err) {
@@ -259,7 +259,7 @@ const FormEditData = () => {
       tujuan_layanan_id: data.tujuan_layanan_id?.value,
       fungsi_layanan: data.fungsi_layanan,
       tahun: data.tahun?.value,
-      kode_opd: data.kode_opd,
+      kode_opd: "5.01.5.05.0.00.02.0000",
       kementrian_terkait: data.kementrian_terkait,
       metode_layanan: data.metode_layanan,
       ral_level_1_id: data.ral_level_1_id?.value,
@@ -351,7 +351,7 @@ const FormEditData = () => {
                   className="border px-4 py-2 rounded"
                   id="kode_opd"
                   type="text"
-                  value={field.value || kode_opd}
+                  value={field.value}
                   onChange={(e) => {
                     field.onChange(e);
                     set_kode_opd(e.target.value);
