@@ -190,7 +190,13 @@ const FormTambahData = () => {
                   id="nama_data"
                   placeholder="masukkan nama data informasi"
                 />
-                {errors.nama_data && <h1 className="text-red-500">{errors.nama_data.message}</h1>}
+                {errors.nama_data ?
+                  <h1 className="text-red-500">
+                    {errors.nama_data.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Nama Data Informasi Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -215,10 +221,12 @@ const FormTambahData = () => {
                   id="sifat_data"
                   placeholder="masukkan Sifat Data"
                 />
-                {errors.sifat_data &&
+                {errors.sifat_data ?
                   <h1 className="text-red-500">
                     {errors.sifat_data.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Sifat Data Informasi Harus Terisi</h1>
                 }
               </>
             )}
@@ -244,10 +252,12 @@ const FormTambahData = () => {
                   id="jenis_data"
                   placeholder="masukkan Jenis Data"
                 />
-                {errors.jenis_data &&
+                {errors.jenis_data ?
                   <h1 className="text-red-500">
                     {errors.jenis_data.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Jenis Data Harus Terisi</h1>
                 }
               </>
             )}
@@ -273,10 +283,12 @@ const FormTambahData = () => {
                   id="produsen_data"
                   placeholder="masukkan Produsen Data"
                 />
-                {errors.produsen_data &&
+                {errors.produsen_data ?
                   <h1 className="text-red-500">
                     {errors.produsen_data.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Produsen Data Harus Terisi</h1>
                 }
               </>
             )}
@@ -302,40 +314,12 @@ const FormTambahData = () => {
                   id="pj_data"
                   placeholder="masukkan Pengngguan Jawab Data"
                 />
-                {errors.pj_data &&
+                {errors.pj_data ?
                   <h1 className="text-red-500">
                     {errors.pj_data.message}
                   </h1>
-                }
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="kode_opd"
-          >
-            Kode OPD:
-          </label>
-          <Controller
-            name="kode_opd"
-            control={control}
-            rules={{ required: "Kode OPD Harus Terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded"
-                  {...field}
-                  type="text"
-                  id="kode_opd"
-                  value="5.01.5.05.0.00.02.0000"
-                  placeholder="masukkan Kode OPD"
-                />
-                {errors.kode_opd &&
-                  <h1 className="text-red-500">
-                    {errors.kode_opd.message}
-                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Penangguna Jawab Data Harus Terisi</h1>
                 }
               </>
             )}
@@ -361,10 +345,12 @@ const FormTambahData = () => {
                   id="informasi_terkait_input"
                   placeholder="masukkan Informasi Terkait Input"
                 />
-                {errors.informasi_terkait_input &&
+                {errors.informasi_terkait_input ?
                   <h1 className="text-red-500">
                     {errors.informasi_terkait_input.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Informasi Terkait Input Harus Terisi</h1>
                 }
               </>
             )}
@@ -390,10 +376,12 @@ const FormTambahData = () => {
                   id="informasi_terkait_output"
                   placeholder="masukkan Informasi Terkait Output"
                 />
-                {errors.informasi_terkait_output &&
+                {errors.informasi_terkait_output ?
                   <h1 className="text-red-500">
                     {errors.informasi_terkait_output.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Informasi Terkait Output Harus Terisi</h1>
                 }
               </>
             )}
@@ -419,10 +407,12 @@ const FormTambahData = () => {
                   id="interoprabilitas"
                   placeholder="masukkan Interoprabilitas"
                 />
-                {errors.interoprabilitas &&
+                {errors.interoprabilitas ?
                   <h1 className="text-red-500">
                     {errors.interoprabilitas.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Interoprabilitas Harus Terisi</h1>
                 }
               </>
             )}
@@ -446,11 +436,13 @@ const FormTambahData = () => {
                       isClearable
                       placeholder="Pilih Tahun"
                     />
-                    {errors.tahun &&
-                      <h1 className="text-red-500">
-                        {errors.tahun.message}
-                      </h1>
-                    }
+                    {errors.tahun ?
+                  <h1 className="text-red-500">
+                    {errors.tahun.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Tahun Harus Terisi</h1>
+                }
                   </>
                 )}
               />
@@ -484,7 +476,13 @@ const FormTambahData = () => {
                         set_rad_level_1_4_option([]);
                       }}
                     />
-                    {errors.rad_level_1_id && <h1 className="text-red-500">{errors.rad_level_1_id.message}</h1>}
+                    {errors.rad_level_1_id ?
+                      <h1 className="text-red-500">
+                        {errors.rad_level_1_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAD Level 1 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -518,7 +516,13 @@ const FormTambahData = () => {
                         set_rad_level_1_4_option([]);
                       }}
                     />
-                    {errors.rad_level_2_id && <h1 className="text-red-500">{errors.rad_level_2_id.message}</h1>}
+                    {errors.rad_level_2_id ?
+                      <h1 className="text-red-500">
+                        {errors.rad_level_2_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAD Level 2 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -552,7 +556,13 @@ const FormTambahData = () => {
                         set_rad_level_1_4_option([]);
                       }}
                     />
-                    {errors.rad_level_3_id && <h1 className="text-red-500">{errors.rad_level_3_id.message}</h1>}
+                    {errors.rad_level_3_id ?
+                      <h1 className="text-red-500">
+                        {errors.rad_level_3_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAD Level 3 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -586,7 +596,13 @@ const FormTambahData = () => {
                         set_rad_level_1_4_option([]);
                       }}
                     />
-                    {errors.rad_level_4_id && <h1 className="text-red-500">{errors.rad_level_4_id.message}</h1>}
+                    {errors.rad_level_4_id ?
+                      <h1 className="text-red-500">
+                        {errors.rad_level_4_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAD Level 4 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -620,7 +636,13 @@ const FormTambahData = () => {
                         set_rad_level_5_7_option([]);
                       }}
                     />
-                    {errors.strategic_id && <h1 className="text-red-500">{errors.strategic_id.message}</h1>}
+                    {errors.strategic_id ?
+                      <h1 className="text-red-500">
+                        {errors.strategic_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Strategic Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -654,7 +676,13 @@ const FormTambahData = () => {
                         set_rad_level_5_7_option([]);
                       }}
                     />
-                    {errors.tactical_id && <h1 className="text-red-500">{errors.tactical_id.message}</h1>}
+                    {errors.tactical_id ?
+                      <h1 className="text-red-500">
+                        {errors.tactical_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tactical Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -688,7 +716,13 @@ const FormTambahData = () => {
                         set_rad_level_5_7_option([]);
                       }}
                     />
-                    {errors.operational_id && <h1 className="text-red-500">{errors.operational_id.message}</h1>}
+                    {errors.operational_id ?
+                      <h1 className="text-red-500">
+                        {errors.operational_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Operational Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -697,6 +731,9 @@ const FormTambahData = () => {
         )}
         <Button typee="submit" className="mt-5">
           Simpan
+        </Button>
+        <Button typee="button" className="mt-5 bg-red-500" halaman_url="/DataInformasi">
+          Batal
         </Button>
       </form>
       <PopUp isOpen={popup} onClose={() => {setPopup(false); setIsAdded(false);}}>

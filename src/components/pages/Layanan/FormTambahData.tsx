@@ -232,38 +232,6 @@ const FormTambahData = () => {
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="kode_opd"
-          >
-            Kode OPD:
-          </label>
-          <Controller
-            name="kode_opd"
-            control={control}
-            rules={{ required: "Kode OPD Harus Terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded"
-                  {...field}
-                  type="text"
-                  id="kode_opd"
-                  value="5.01.5.05.0.00.02.0000"
-                  placeholder="masukkan Kode OPD"
-                />
-                {errors.kode_opd ?
-                  <h1 className="text-red-500">
-                    {errors.kode_opd.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Kode OPD Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
             htmlFor="kementrian_terkait"
           >
             Kementrian Terkait:
@@ -271,6 +239,7 @@ const FormTambahData = () => {
           <Controller
             name="kementrian_terkait"
             control={control}
+            rules={{required : "Kementrian Terkait Harus Terisi"}}
             render={({ field }) => (
               <>
                 <input
@@ -280,6 +249,13 @@ const FormTambahData = () => {
                   id="kementrian_terkait"
                   placeholder="masukkan Kementrian Terkait"
                 />
+                {errors.kementrian_terkait ?
+                  <h1 className="text-red-500">
+                    {errors.kementrian_terkait.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Kementrian Terkait Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -294,6 +270,7 @@ const FormTambahData = () => {
           <Controller
             name="metode_layanan"
             control={control}
+            rules={{required: "Metode Layanan Harus Terisi"}}
             render={({ field }) => (
               <>
                 <input
@@ -303,6 +280,13 @@ const FormTambahData = () => {
                   id="metode_layanan"
                   placeholder="masukkan Metode Layanan"
                 />
+                {errors.metode_layanan ?
+                  <h1 className="text-red-500">
+                    {errors.metode_layanan.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Metode Layanan Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -315,6 +299,7 @@ const FormTambahData = () => {
               <Controller
                 name="tujuan_layanan_id"
                 control={control}
+                rules={{required: "Tujuan Layanan Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -332,6 +317,13 @@ const FormTambahData = () => {
                         set_ral_level_5_7_option([]);
                       }}
                     />
+                    {errors.tujuan_layanan_id ?
+                      <h1 className="text-red-500">
+                        {errors.tujuan_layanan_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tujuan Layanan Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -372,11 +364,12 @@ const FormTambahData = () => {
               <Controller
                 name="ral_level_1_id"
                 control={control}
+                rules={{required: "RAL Level 1 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      placeholder="Masukkan RAB Level 1"
+                      placeholder="Masukkan RAL Level 1"
                       options={ral_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
@@ -390,6 +383,13 @@ const FormTambahData = () => {
                         set_ral_level_1_4_option([]);
                       }}
                     />
+                    {errors.ral_level_1_id ?
+                      <h1 className="text-red-500">
+                        {errors.ral_level_1_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAL Level 1 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -404,6 +404,7 @@ const FormTambahData = () => {
               <Controller
                 name="ral_level_2_id"
                 control={control}
+                rules={{required: "RAL Level 2 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -422,6 +423,13 @@ const FormTambahData = () => {
                         set_ral_level_1_4_option([]);
                       }}
                     />
+                    {errors.ral_level_2_id ?
+                      <h1 className="text-red-500">
+                        {errors.ral_level_2_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAL Level 2 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -436,6 +444,7 @@ const FormTambahData = () => {
               <Controller
                 name="ral_level_3_id"
                 control={control}
+                rules={{required: "RAL Level 3 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -454,6 +463,13 @@ const FormTambahData = () => {
                         set_ral_level_1_4_option([]);
                       }}
                     />
+                    {errors.ral_level_3_id ?
+                      <h1 className="text-red-500">
+                        {errors.ral_level_3_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAL Level 3 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -468,6 +484,7 @@ const FormTambahData = () => {
               <Controller
                 name="ral_level_4_id"
                 control={control}
+                rules={{required: "RAL Level 4 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -486,6 +503,13 @@ const FormTambahData = () => {
                         set_ral_level_1_4_option([]);
                       }}
                     />
+                    {errors.ral_level_4_id ?
+                      <h1 className="text-red-500">
+                        {errors.ral_level_4_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAL Level 4 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -500,6 +524,7 @@ const FormTambahData = () => {
               <Controller
                 name="strategic_id"
                 control={control}
+                rules={{required: "Strategic Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -518,6 +543,13 @@ const FormTambahData = () => {
                         set_ral_level_5_7_option([]);
                       }}
                     />
+                    {errors.strategic_id ?
+                      <h1 className="text-red-500">
+                        {errors.strategic_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Strategic Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -532,6 +564,7 @@ const FormTambahData = () => {
               <Controller
                 name="tactical_id"
                 control={control}
+                rules={{required: "Tactical Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -550,6 +583,13 @@ const FormTambahData = () => {
                         set_ral_level_5_7_option([]);
                       }}
                     />
+                    {errors.tactical_id ?
+                      <h1 className="text-red-500">
+                        {errors.tactical_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tactical Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -564,6 +604,7 @@ const FormTambahData = () => {
               <Controller
                 name="operational_id"
                 control={control}
+                rules={{required: "Operational Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -582,6 +623,13 @@ const FormTambahData = () => {
                         set_ral_level_5_7_option([]);
                       }}
                     />
+                    {errors.operational_id ?
+                      <h1 className="text-red-500">
+                        {errors.operational_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Operational Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -590,6 +638,9 @@ const FormTambahData = () => {
         )}
         <Button typee="submit" className="mt-5">
           Simpan
+        </Button>
+        <Button typee="button" className="mt-5 bg-red-500" halaman_url="/Layanan/LayananSPBE">
+          Batal
         </Button>
       </form>
       <PopUp isOpen={popup} onClose={() => {setPopup(false); setIsAdded(false);}}>

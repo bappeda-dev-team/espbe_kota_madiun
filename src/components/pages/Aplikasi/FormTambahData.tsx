@@ -187,7 +187,13 @@ const FormTambahData = () => {
                   id="nama_aplikasi"
                   placeholder="masukkan nama aplikasi"
                 />
-                {errors.nama_aplikasi && <h1 className="text-red-500">{errors.nama_aplikasi.message}</h1>}
+                {errors.nama_aplikasi ?
+                  <h1 className="text-red-500">
+                    {errors.nama_aplikasi.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Nama Aplikasi Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -212,10 +218,12 @@ const FormTambahData = () => {
                   id="fungsi_aplikasi"
                   placeholder="masukkan Fungsi Aplikasi"
                 />
-                {errors.fungsi_aplikasi &&
+                {errors.fungsi_aplikasi ?
                   <h1 className="text-red-500">
                     {errors.fungsi_aplikasi.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Fungsi Aplikasi Harus Terisi</h1>
                 }
               </>
             )}
@@ -241,10 +249,12 @@ const FormTambahData = () => {
                   id="jenis_aplikasi"
                   placeholder="masukkan Jenis Aplikasi"
                 />
-                {errors.jenis_aplikasi &&
+                {errors.jenis_aplikasi ?
                   <h1 className="text-red-500">
                     {errors.jenis_aplikasi.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Jenis Aplikasi Harus Terisi</h1>
                 }
               </>
             )}
@@ -270,10 +280,12 @@ const FormTambahData = () => {
                   id="produsen_aplikasi"
                   placeholder="masukkan Produsen Aplikasi"
                 />
-                {errors.produsen_aplikasi &&
+                {errors.produsen_aplikasi ?
                   <h1 className="text-red-500">
                     {errors.produsen_aplikasi.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Produsen Aplikasi Harus Terisi</h1>
                 }
               </>
             )}
@@ -299,40 +311,12 @@ const FormTambahData = () => {
                   id="pj_aplikasi"
                   placeholder="masukkan Pengngguan Jawab Aplikasi"
                 />
-                {errors.pj_aplikasi &&
+                {errors.pj_aplikasi ?
                   <h1 className="text-red-500">
                     {errors.pj_aplikasi.message}
                   </h1>
-                }
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="kode_opd"
-          >
-            Kode OPD:
-          </label>
-          <Controller
-            name="kode_opd"
-            control={control}
-            rules={{ required: "Kode OPD Harus Terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded"
-                  {...field}
-                  type="text"
-                  id="kode_opd"
-                  value="5.01.5.05.0.00.02.0000"
-                  placeholder="masukkan Kode OPD"
-                />
-                {errors.kode_opd &&
-                  <h1 className="text-red-500">
-                    {errors.kode_opd.message}
-                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Penanggung Jawab Aplikasi Harus Terisi</h1>
                 }
               </>
             )}
@@ -358,10 +342,12 @@ const FormTambahData = () => {
                   id="informasi_terkait_input"
                   placeholder="masukkan Informasi Terkait Input"
                 />
-                {errors.informasi_terkait_input &&
+                {errors.informasi_terkait_input ?
                   <h1 className="text-red-500">
                     {errors.informasi_terkait_input.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Informasi Terkait Input Harus Terisi</h1>
                 }
               </>
             )}
@@ -387,10 +373,12 @@ const FormTambahData = () => {
                   id="informasi_terkait_output"
                   placeholder="masukkan Informasi Terkait Output"
                 />
-                {errors.informasi_terkait_output &&
+                {errors.informasi_terkait_output ?
                   <h1 className="text-red-500">
                     {errors.informasi_terkait_output.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Informasi Terkait Output Harus Terisi</h1>
                 }
               </>
             )}
@@ -416,10 +404,12 @@ const FormTambahData = () => {
                   id="interoprabilitas"
                   placeholder="masukkan Interoprabilitas"
                 />
-                {errors.interoprabilitas &&
+                {errors.interoprabilitas ?
                   <h1 className="text-red-500">
                     {errors.interoprabilitas.message}
                   </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Interoprabilitas Harus Terisi</h1>
                 }
               </>
             )}
@@ -443,10 +433,12 @@ const FormTambahData = () => {
                       isClearable
                       placeholder="Pilih Tahun"
                     />
-                    {errors.tahun &&
+                    {errors.tahun ?
                       <h1 className="text-red-500">
                         {errors.tahun.message}
                       </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tahun Harus Terisi</h1>
                     }
                   </>
                 )}
@@ -481,7 +473,13 @@ const FormTambahData = () => {
                         set_raa_level_1_4_option([]);
                       }}
                     />
-                    {errors.raa_level_1_id && <h1 className="text-red-500">{errors.raa_level_1_id.message}</h1>}
+                    {errors.raa_level_1_id ?
+                      <h1 className="text-red-500">
+                        {errors.raa_level_1_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAA Level 1 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -515,7 +513,13 @@ const FormTambahData = () => {
                         set_raa_level_1_4_option([]);
                       }}
                     />
-                    {errors.raa_level_2_id && <h1 className="text-red-500">{errors.raa_level_2_id.message}</h1>}
+                    {errors.raa_level_2_id ?
+                      <h1 className="text-red-500">
+                        {errors.raa_level_2_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAA Level 2 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -549,7 +553,13 @@ const FormTambahData = () => {
                         set_raa_level_1_4_option([]);
                       }}
                     />
-                    {errors.raa_level_3_id && <h1 className="text-red-500">{errors.raa_level_3_id.message}</h1>}
+                    {errors.raa_level_3_id ?
+                      <h1 className="text-red-500">
+                        {errors.raa_level_3_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAA Level 3 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -583,7 +593,13 @@ const FormTambahData = () => {
                         set_raa_level_5_7_option([]);
                       }}
                     />
-                    {errors.strategic_id && <h1 className="text-red-500">{errors.strategic_id.message}</h1>}
+                    {errors.strategic_id ?
+                      <h1 className="text-red-500">
+                        {errors.strategic_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Strategic Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -617,7 +633,13 @@ const FormTambahData = () => {
                         set_raa_level_5_7_option([]);
                       }}
                     />
-                    {errors.tactical_id && <h1 className="text-red-500">{errors.tactical_id.message}</h1>}
+                    {errors.tactical_id ?
+                      <h1 className="text-red-500">
+                        {errors.tactical_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tactical Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -651,7 +673,13 @@ const FormTambahData = () => {
                         set_raa_level_5_7_option([]);
                       }}
                     />
-                    {errors.operational_id && <h1 className="text-red-500">{errors.operational_id.message}</h1>}
+                    {errors.operational_id ?
+                      <h1 className="text-red-500">
+                        {errors.operational_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Operational Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -660,6 +688,9 @@ const FormTambahData = () => {
         )}
         <Button typee="submit" className="mt-5">
           Simpan
+        </Button>
+        <Button typee="button" className="mt-5 bg-red-500" halaman_url="/Aplikasi">
+          Batal
         </Button>
       </form>
       <PopUp isOpen={popup} onClose={() => {setPopup(false); setIsAdded(false);}}>

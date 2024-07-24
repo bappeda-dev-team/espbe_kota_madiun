@@ -230,30 +230,6 @@ const FormTambahData = () => {
             )}
           />
         </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="kode_opd"
-          >
-            Kode OPD:
-          </label>
-          <Controller
-            name="kode_opd"
-            control={control}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded"
-                  {...field}
-                  type="text"
-                  id="kode_opd"
-                  value="5.01.5.05.0.00.02.0000"
-                  placeholder="masukkan Kode OPD"
-                />
-              </>
-            )}
-          />
-        </div>
 
         {isClient && (
           <>
@@ -293,6 +269,7 @@ const FormTambahData = () => {
               <Controller
                 name="bidang_urusan_id"
                 control={control}
+                rules={{required: "Bidang Urusan Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -309,6 +286,13 @@ const FormTambahData = () => {
                         }
                       }}
                     />
+                    {errors.bidang_urusan_id ?
+                      <h1 className="text-red-500">
+                        {errors.bidang_urusan_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Bidang Urusan Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -323,6 +307,7 @@ const FormTambahData = () => {
               <Controller
                 name="sasaran_kota_id"
                 control={control}
+                rules= {{required: "Sasaran Kota Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -338,6 +323,13 @@ const FormTambahData = () => {
                         }
                       }}
                     />
+                    {errors.sasaran_kota_id ?
+                      <h1 className="text-red-500">
+                        {errors.sasaran_kota_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Sasaran Kota Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -352,6 +344,7 @@ const FormTambahData = () => {
               <Controller
                 name="rab_level_1_id"
                 control={control}
+                rules={{required : "RAB Level 1 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -370,6 +363,13 @@ const FormTambahData = () => {
                         set_rab_level_1_3_option([]);
                       }}
                     />
+                    {errors.rab_level_1_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_1_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 1 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -384,6 +384,7 @@ const FormTambahData = () => {
               <Controller
                 name="rab_level_2_id"
                 control={control}
+                rules={{required : "RAB Level 2 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -402,6 +403,13 @@ const FormTambahData = () => {
                         set_rab_level_1_3_option([]);
                       }}
                     />
+                    {errors.rab_level_2_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_2_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 2 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -416,6 +424,7 @@ const FormTambahData = () => {
               <Controller
                 name="rab_level_3_id"
                 control={control}
+                rules={{required : "RAB Level 3 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -434,6 +443,13 @@ const FormTambahData = () => {
                         set_rab_level_1_3_option([]);
                       }}
                     />
+                    {errors.rab_level_3_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_3_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 3 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -448,6 +464,7 @@ const FormTambahData = () => {
               <Controller
                 name="rab_level_4_id"
                 control={control}
+                rules={{required : "RAB Level 4 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -466,6 +483,13 @@ const FormTambahData = () => {
                         set_rab_level_4_6_option([]);
                       }}
                     />
+                    {errors.rab_level_4_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_4_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 4 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -480,6 +504,7 @@ const FormTambahData = () => {
               <Controller
                 name="rab_level_5_id"
                 control={control}
+                rules={{required : "RAB Level 5 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -498,6 +523,13 @@ const FormTambahData = () => {
                         set_rab_level_4_6_option([]);
                       }}
                     />
+                    {errors.rab_level_5_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_5_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 5 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -512,6 +544,7 @@ const FormTambahData = () => {
               <Controller
                 name="rab_level_6_id"
                 control={control}
+                rules={{required : "RAB Level 6 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -530,6 +563,13 @@ const FormTambahData = () => {
                         set_rab_level_4_6_option([]);
                       }}
                     />
+                    {errors.rab_level_6_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_6_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 6 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -538,6 +578,9 @@ const FormTambahData = () => {
         )}
         <Button typee="submit" className="mt-5">
           Simpan
+        </Button>
+        <Button typee="button" halaman_url="/ProsesBisnis" className="mt-5 bg-red-500">
+          Batal
         </Button>
       </form>
       <PopUp isOpen={popup} onClose={() => {setPopup(false); setIsAdded(false);}}>

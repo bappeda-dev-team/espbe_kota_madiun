@@ -354,42 +354,13 @@ const FormEditData = () => {
                     setNamaProsesBisnis(e.target.value);
                   }}
                 />
-                {errors.nama_proses_bisnis && (
+                {errors.nama_proses_bisnis ?
                   <h1 className="text-red-500">
                     {errors.nama_proses_bisnis.message}
                   </h1>
-                )}
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="kode_opd"
-          >
-            Kode OPD:
-          </label>
-          <Controller
-            name="kode_opd"
-            control={control}
-            rules={{ required: "Kode OPD harus terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded"
-                  id="kode_opd"
-                  type="text"
-                  value={field.value}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    set_kode_opd(e.target.value);
-                  }}
-                />
-                {errors.kode_opd && (
-                  <h1 className="text-red-500">{errors.kode_opd.message}</h1>
-                )}
+                  :
+                  <h1 className="text-slate-300 text-xs">*Nama Proses Bisnis Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -418,11 +389,13 @@ const FormEditData = () => {
                     setNamaProsesBisnis(e.target.value);
                   }}
                 />
-                {errors.kode_proses_bisnis && (
+                {errors.kode_proses_bisnis ?
                   <h1 className="text-red-500">
                     {errors.kode_proses_bisnis.message}
                   </h1>
-                )}
+                  :
+                  <h1 className="text-slate-300 text-xs">*Kode Proses Bisnis Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -454,9 +427,13 @@ const FormEditData = () => {
                       }}
                       isClearable={true}
                     />
-                    {errors.tahun && (
-                      <h1 className="text-red-500">{errors.tahun.message}</h1>
-                    )}
+                    {errors.tahun ?
+                      <h1 className="text-red-500">
+                        {errors.tahun.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tahun Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -471,6 +448,7 @@ const FormEditData = () => {
               <Controller
                 name="sasaran_kota_id"
                 control={control}
+                rules= {{required: "Sasaran Kota Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -491,6 +469,13 @@ const FormEditData = () => {
                         }
                       }}
                     />
+                    {errors.sasaran_kota_id ?
+                      <h1 className="text-red-500">
+                        {errors.sasaran_kota_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Sasaran Kota Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -505,6 +490,7 @@ const FormEditData = () => {
               <Controller
                 name="bidang_urusan_id"
                 control={control}
+                rules= {{required: "Bidang Urusan Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -525,6 +511,13 @@ const FormEditData = () => {
                         }
                       }}
                     />
+                    {errors.bidang_urusan_id ?
+                      <h1 className="text-red-500">
+                        {errors.bidang_urusan_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Bidang Urusan Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -539,6 +532,7 @@ const FormEditData = () => {
               <Controller
                 name="rab_level_1_id"
                 control={control}
+                rules={{required: "RAB Level 1 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -562,6 +556,13 @@ const FormEditData = () => {
                         set_rab_1_3([]);
                       }}
                     />
+                    {errors.rab_level_1_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_1_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 1 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -576,6 +577,7 @@ const FormEditData = () => {
               <Controller
                 name="rab_level_2_id"
                 control={control}
+                rules={{required: "RAB Level 2 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -599,6 +601,13 @@ const FormEditData = () => {
                         set_rab_1_3([]);
                       }}
                     />
+                    {errors.rab_level_2_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_2_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 2 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -613,6 +622,7 @@ const FormEditData = () => {
               <Controller
                 name="rab_level_3_id"
                 control={control}
+                rules={{required: "RAB Level 3 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -636,6 +646,13 @@ const FormEditData = () => {
                         set_rab_1_3([]);
                       }}
                     />
+                    {errors.rab_level_3_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_3_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 3 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -650,6 +667,7 @@ const FormEditData = () => {
               <Controller
                 name="rab_level_4_id"
                 control={control}
+                rules={{required: "RAB Level 4 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -673,6 +691,13 @@ const FormEditData = () => {
                         set_rab_4_6([]);
                       }}
                     />
+                    {errors.rab_level_4_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_4_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 4 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -687,6 +712,7 @@ const FormEditData = () => {
               <Controller
                 name="rab_level_5_id"
                 control={control}
+                rules={{required: "RAB Level 5 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -710,6 +736,13 @@ const FormEditData = () => {
                         set_rab_4_6([]);
                       }}
                     />
+                    {errors.rab_level_5_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_5_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 5 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -724,6 +757,7 @@ const FormEditData = () => {
               <Controller
                 name="rab_level_6_id"
                 control={control}
+                rules={{required: "RAB Level 6 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -747,13 +781,21 @@ const FormEditData = () => {
                         set_rab_4_6([]);
                       }}
                     />
+                    {errors.rab_level_6_id ?
+                      <h1 className="text-red-500">
+                        {errors.rab_level_6_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAB Level 6 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
             </div>
           </>
         )}
-        <Button typee="submit">Simpan</Button>
+        <Button typee="submit" className="mt-5">Simpan</Button>
+        <Button typee="button" className="mt-5 bg-red-500" halaman_url="/ProsesBisnis">Batal</Button>
         <PopUp isOpen={popup} onClose={() => {setPopup(false); setEdited(false); router.push("/ProsesBisnis")}}>
           <div className="flex flex-col justify-center">
             {edited ? 

@@ -314,12 +314,12 @@ const FormEditData = () => {
             className="uppercase text-xs font-bold text-gray-700 my-2"
             htmlFor="nama_aplikasi"
           >
-            Nama Data Informasi :
+            Nama Aplikasi :
           </label>
           <Controller
             name="nama_aplikasi"
             control={control}
-            rules={{ required: "Nama Data Informasi harus terisi" }}
+            rules={{ required: "Nama Aplikasi harus terisi" }}
             render={({ field }) => (
               <>
                 <input
@@ -333,11 +333,13 @@ const FormEditData = () => {
                     setNamaAplikasi(e.target.value);
                   }}
                 />
-                {errors.nama_aplikasi && (
+                {errors.nama_aplikasi ?
                   <h1 className="text-red-500">
                     {errors.nama_aplikasi.message}
                   </h1>
-                )}
+                  :
+                  <h1 className="text-slate-300 text-xs">*Nama Aplikasi Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -366,7 +368,13 @@ const FormEditData = () => {
                     setSelectedFungsiAplikasi(e.target.value);
                   }}
                 />
-                {errors.fungsi_aplikasi && <h1 className="text-red-500">{errors.fungsi_aplikasi.message}</h1>}
+                {errors.fungsi_aplikasi ?
+                  <h1 className="text-red-500">
+                    {errors.fungsi_aplikasi.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Fungsi Aplikasi Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -395,7 +403,13 @@ const FormEditData = () => {
                     setSelectedJenisAplikasi(e.target.value);
                   }}
                 />
-                {errors.jenis_aplikasi && <h1 className="text-red-500">{errors.jenis_aplikasi.message}</h1>}
+                {errors.jenis_aplikasi ?
+                  <h1 className="text-red-500">
+                    {errors.jenis_aplikasi.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Jenis Aplikasi Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -424,7 +438,13 @@ const FormEditData = () => {
                     setSelectedProdusenAplikasi(e.target.value);
                   }}
                 />
-                {errors.produsen_aplikasi && <h1 className="text-red-500">{errors.produsen_aplikasi.message}</h1>}
+                {errors.produsen_aplikasi ?
+                  <h1 className="text-red-500">
+                    {errors.produsen_aplikasi.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Produsen Aplikasi Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -453,38 +473,13 @@ const FormEditData = () => {
                     setSelectedPjAplikasi(e.target.value);
                   }}
                 />
-                {errors.pj_aplikasi && <h1 className="text-red-500">{errors.pj_aplikasi.message}</h1>}
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="kode_opd"
-          >
-            Kode OPD:
-          </label>
-          <Controller
-            name="kode_opd"
-            control={control}
-            rules={{ required: "Kode OPD harus terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded"
-                  id="kode_opd"
-                  type="text"
-                  value={field.value}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    set_kode_opd(e.target.value);
-                  }}
-                />
-                {errors.kode_opd && (
-                  <h1 className="text-red-500">{errors.kode_opd.message}</h1>
-                )}
+                {errors.pj_aplikasi ?
+                  <h1 className="text-red-500">
+                    {errors.pj_aplikasi.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Penanggung Jawab Aplikasi Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -513,7 +508,13 @@ const FormEditData = () => {
                     setSelectedInformasiTerkaitInput(e.target.value);
                   }}
                 />
-                {errors.informasi_terkait_input && <h1 className="text-red-500">{errors.informasi_terkait_input.message}</h1>}
+                {errors.informasi_terkait_input ?
+                  <h1 className="text-red-500">
+                    {errors.informasi_terkait_input.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Informasi Terkait Input Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -542,7 +543,13 @@ const FormEditData = () => {
                     setSelectedInformasiTerkaitOutput(e.target.value);
                   }}
                 />
-                {errors.informasi_terkait_output && <h1 className="text-red-500">{errors.informasi_terkait_output.message}</h1>}
+                {errors.informasi_terkait_output ?
+                  <h1 className="text-red-500">
+                    {errors.informasi_terkait_output.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Informasi Terkait Output Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -571,7 +578,13 @@ const FormEditData = () => {
                     setSelectedInteroprabilitas(e.target.value);
                   }}
                 />
-                {errors.interoprabilitas && <h1 className="text-red-500">{errors.interoprabilitas.message}</h1>}
+                {errors.interoprabilitas ?
+                  <h1 className="text-red-500">
+                    {errors.interoprabilitas.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Interoprabilitas Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -604,9 +617,13 @@ const FormEditData = () => {
                       }}
                       isClearable={true}
                     />
-                    {errors.tahun && (
-                      <h1 className="text-red-500">{errors.tahun.message}</h1>
-                    )}
+                    {errors.tahun ?
+                      <h1 className="text-red-500">
+                        {errors.tahun.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tahun Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -645,7 +662,13 @@ const FormEditData = () => {
                         set_raa_1_4([]);
                       }}
                     />
-                    {errors.raa_level_1_id && (<h1 className="text-red-500">{errors.raa_level_1_id.message}</h1>)}
+                    {errors.raa_level_1_id ?
+                      <h1 className="text-red-500">
+                        {errors.raa_level_1_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAA Level 1 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -684,7 +707,13 @@ const FormEditData = () => {
                         set_raa_1_4([]);
                       }}
                     />
-                    {errors.raa_level_2_id && (<h1 className="text-red-500">{errors.raa_level_2_id.message}</h1>)}
+                    {errors.raa_level_2_id ?
+                      <h1 className="text-red-500">
+                        {errors.raa_level_2_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAA Level 2 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -723,7 +752,13 @@ const FormEditData = () => {
                         set_raa_1_4([]);
                       }}
                     />
-                    {errors.raa_level_3_id && (<h1 className="text-red-500">{errors.raa_level_3_id.message}</h1>)}
+                    {errors.raa_level_3_id ?
+                      <h1 className="text-red-500">
+                        {errors.raa_level_3_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAA Level 3 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -762,7 +797,13 @@ const FormEditData = () => {
                         set_raa_5_7([]);
                       }}
                     />
-                    {errors.strategic_id && (<h1 className="text-red-500">{errors.strategic_id.message}</h1>)}
+                    {errors.strategic_id ?
+                      <h1 className="text-red-500">
+                        {errors.strategic_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Strategic Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -801,7 +842,13 @@ const FormEditData = () => {
                         set_raa_5_7([]);
                       }}
                     />
-                    {errors.tactical_id && (<h1 className="text-red-500">{errors.tactical_id.message}</h1>)}
+                    {errors.tactical_id ?
+                      <h1 className="text-red-500">
+                        {errors.tactical_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tactical Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -840,7 +887,13 @@ const FormEditData = () => {
                         set_raa_5_7([]);
                       }}
                     />
-                    {errors.operational_id && (<h1 className="text-red-500">{errors.operational_id.message}</h1>)}
+                    {errors.operational_id ?
+                      <h1 className="text-red-500">
+                        {errors.operational_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Operational Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -848,6 +901,9 @@ const FormEditData = () => {
           </>
         )}
         <Button typee="submit">Simpan</Button>
+        <Button typee="button" className="mt-5 bg-red-500" halaman_url="/Aplikasi">
+          Batal
+        </Button>
       </form>
       <PopUp isOpen={popup} onClose={() => setPopup(false)}>
         <div className="flex flex-col justify-around">

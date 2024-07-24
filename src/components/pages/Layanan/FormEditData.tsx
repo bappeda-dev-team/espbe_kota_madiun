@@ -310,7 +310,7 @@ const FormEditData = () => {
           <Controller
             name="nama_layanan"
             control={control}
-            rules={{ required: "Nama Proses Bisnis harus terisi" }}
+            rules={{ required: "Nama Layanan harus terisi" }}
             render={({ field }) => (
               <>
                 <input
@@ -324,42 +324,13 @@ const FormEditData = () => {
                     setNamaLayanan(e.target.value);
                   }}
                 />
-                {errors.nama_layanan && (
+                {errors.nama_layanan ?
                   <h1 className="text-red-500">
                     {errors.nama_layanan.message}
                   </h1>
-                )}
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="kode_opd"
-          >
-            Kode OPD:
-          </label>
-          <Controller
-            name="kode_opd"
-            control={control}
-            rules={{ required: "Kode OPD harus terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded"
-                  id="kode_opd"
-                  type="text"
-                  value={field.value}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    set_kode_opd(e.target.value);
-                  }}
-                />
-                {errors.kode_opd && (
-                  <h1 className="text-red-500">{errors.kode_opd.message}</h1>
-                )}
+                  :
+                  <h1 className="text-slate-300 text-xs">*Nama Layanan Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -374,6 +345,7 @@ const FormEditData = () => {
           <Controller
             name="fungsi_layanan"
             control={control}
+            rules={{required: "Fungsi Layanan Harus Terisi"}}
             render={({ field }) => (
               <>
                 <input
@@ -387,6 +359,13 @@ const FormEditData = () => {
                     setSelectedFungsiLayanan(e.target.value);
                   }}
                 />
+                {errors.fungsi_layanan ?
+                  <h1 className="text-red-500">
+                    {errors.fungsi_layanan.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Fungsi Layanan Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -401,6 +380,7 @@ const FormEditData = () => {
           <Controller
             name="kementrian_terkait"
             control={control}
+            rules={{required: "Kementrian Terkait Harus Terisi"}}
             render={({ field }) => (
               <>
                 <input
@@ -414,6 +394,13 @@ const FormEditData = () => {
                     setSelectedKementrianTerkait(e.target.value);
                   }}
                 />
+                {errors.kementrian_terkait ?
+                  <h1 className="text-red-500">
+                    {errors.kementrian_terkait.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Kementrian Terkait Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -428,6 +415,7 @@ const FormEditData = () => {
           <Controller
             name="metode_layanan"
             control={control}
+            rules={{required: "Metode Layanan Harus Terisi"}}
             render={({ field }) => (
               <>
                 <input
@@ -441,6 +429,13 @@ const FormEditData = () => {
                     setSelectedMetodeLayanan(e.target.value);
                   }}
                 />
+                {errors.metode_layanan ?
+                  <h1 className="text-red-500">
+                    {errors.metode_layanan.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Metode Layanan Harus Terisi</h1>
+                }
               </>
             )}
           />
@@ -458,6 +453,7 @@ const FormEditData = () => {
               <Controller
                 name="tujuan_layanan_id"
                 control={control}
+                rules={{required: "Tujuan Layanan Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -481,6 +477,13 @@ const FormEditData = () => {
                         set_ral_5_7([])
                       }}
                     />
+                    {errors.tujuan_layanan_id ?
+                      <h1 className="text-red-500">
+                        {errors.tujuan_layanan_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tujuan Layanan Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -509,9 +512,13 @@ const FormEditData = () => {
                       }}
                       isClearable={true}
                     />
-                    {errors.tahun && (
-                      <h1 className="text-red-500">{errors.tahun.message}</h1>
-                    )}
+                    {errors.tahun ?
+                      <h1 className="text-red-500">
+                        {errors.tahun.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tahun Layanan Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -526,6 +533,7 @@ const FormEditData = () => {
               <Controller
                 name="ral_level_1_id"
                 control={control}
+                rules={{required:"RAL Level 1 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -549,6 +557,13 @@ const FormEditData = () => {
                         set_ral_1_4([]);
                       }}
                     />
+                    {errors.ral_level_1_id ?
+                      <h1 className="text-red-500">
+                        {errors.ral_level_1_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAL Level 1 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -563,6 +578,7 @@ const FormEditData = () => {
               <Controller
                 name="ral_level_2_id"
                 control={control}
+                rules={{required:"RAL Level 2 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -586,6 +602,13 @@ const FormEditData = () => {
                         set_ral_1_4([]);
                       }}
                     />
+                    {errors.ral_level_2_id ?
+                      <h1 className="text-red-500">
+                        {errors.ral_level_2_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAL Level 2 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -600,6 +623,7 @@ const FormEditData = () => {
               <Controller
                 name="ral_level_3_id"
                 control={control}
+                rules={{required:"RAL Level 3 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -623,6 +647,13 @@ const FormEditData = () => {
                         set_ral_1_4([]);
                       }}
                     />
+                    {errors.ral_level_3_id ?
+                      <h1 className="text-red-500">
+                        {errors.ral_level_3_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAL Level 3 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -637,6 +668,7 @@ const FormEditData = () => {
               <Controller
                 name="ral_level_4_id"
                 control={control}
+                rules={{required:"RAL Level 4 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -660,6 +692,13 @@ const FormEditData = () => {
                         set_ral_1_4([]);
                       }}
                     />
+                    {errors.ral_level_4_id ?
+                      <h1 className="text-red-500">
+                        {errors.ral_level_4_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*RAL Level 4 Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -674,6 +713,7 @@ const FormEditData = () => {
               <Controller
                 name="strategic_id"
                 control={control}
+                rules={{required:"Stategic Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -697,6 +737,13 @@ const FormEditData = () => {
                         set_ral_5_7([]);
                       }}
                     />
+                    {errors.strategic_id ?
+                      <h1 className="text-red-500">
+                        {errors.strategic_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Strategic Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -711,6 +758,7 @@ const FormEditData = () => {
               <Controller
                 name="tactical_id"
                 control={control}
+                rules={{required:"Tactical Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -734,6 +782,13 @@ const FormEditData = () => {
                         set_ral_5_7([]);
                       }}
                     />
+                    {errors.tactical_id ?
+                      <h1 className="text-red-500">
+                        {errors.tactical_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tactical Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -748,6 +803,7 @@ const FormEditData = () => {
               <Controller
                 name="operational_id"
                 control={control}
+                rules={{required:"Operational Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -771,6 +827,13 @@ const FormEditData = () => {
                         set_ral_5_7([]);
                       }}
                     />
+                    {errors.operational_id ?
+                      <h1 className="text-red-500">
+                        {errors.operational_id.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Operational Harus Terisi</h1>
+                    }
                   </>
                 )}
               />
@@ -778,6 +841,9 @@ const FormEditData = () => {
           </>
         )}
         <Button typee="submit">Simpan</Button>
+        <Button typee="button" className="mt-5 bg-red-500" halaman_url="/Layanan/LayananSPBE">
+          Batal
+        </Button>
       </form>
       <PopUp isOpen={popup} onClose={() => setPopup(false)}>
         <div className="flex flex-col justify-around">
