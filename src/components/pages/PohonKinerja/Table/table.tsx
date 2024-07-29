@@ -17,6 +17,7 @@ const Table = () => {
     const [pohonKinerja, setPohonKinerja] = useState<PohonKinerja[]>([]);
     const [error, setError] = useState<string>();
     const [loading, setLoading] = useState<boolean>(true)
+    const [dataNull, setDataNull] = useState<boolean>(false);
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -58,7 +59,14 @@ const Table = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {pohonKinerja.map((data, index) => (
+                {dataNull ? (
+                <tr>
+                    <td className="px-6 py-3" colSpan={5}>
+                        Data Kosong / Belum Ditambahkan
+                    </td>
+                </tr>
+                ) : (
+                    pohonKinerja.map((data, index) => (
                     <tr key={data.id} className="border rounded-b-lg hover:bg-slate-50">
                         <td className="px-6 py-4 border sticky bg-white left-[-2px]">{index +1}</td>
                         <td className="px-6 py-4 border">{data.nama_pohon}</td>
@@ -66,7 +74,8 @@ const Table = () => {
                         <td className="px-6 py-4 border">{data.level_pohon}</td>
                         <td className="px-6 py-4 border">{data.kode_opd}</td>
                     </tr>
-                    ))}
+                    ))
+                )}
                 </tbody>
                 </table>
             </div>
