@@ -14,7 +14,6 @@ interface OptionType {
 }
 
 interface formValue {
-  nama_proses_bisnis: string;
   kode_proses_bisnis: string;
   kode_opd: string;
   bidang_urusan_id: OptionType | null;
@@ -64,7 +63,6 @@ const FormEditData = () => {
   const [selectedRab5, setSelectedRab5] = useState<OptionType | null>(null);
   const [selectedRab6, setSelectedRab6] = useState<OptionType | null>(null);
   const [selectedTahun, setSelectedTahun] = useState<OptionType | null>(null);
-  const [namaProsesBisnis, setNamaProsesBisnis] = useState<string>("");
   const [kode_opd, set_kode_opd] = useState<string>("");
   const [kode_proses_bisnis, set_kode_proses_bisnis] = useState<string>("");
 
@@ -157,14 +155,6 @@ const FormEditData = () => {
           };
           setSelectedTahun(selectedTahun);
           reset((prev) => ({ ...prev, tahun: selectedTahun }));
-        }
-
-        if (result.nama_proses_bisnis) {
-          setNamaProsesBisnis(result.nama_proses_bisnis);
-          reset((prev) => ({
-            ...prev,
-            nama_proses_bisnis: result.nama_proses_bisnis,
-          }));
         }
         if (result.kode_opd) {
           set_kode_opd(result.kode_opd);
@@ -288,7 +278,6 @@ const FormEditData = () => {
   const onSubmit: SubmitHandler<formValue> = async (data) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const formData = {
-      nama_proses_bisnis: data.nama_proses_bisnis,
       kode_opd: "5.01.5.05.0.00.02.0000",
       kode_proses_bisnis: data.kode_proses_bisnis,
       sasaran_kota_id: data.sasaran_kota_id?.value,
@@ -330,77 +319,6 @@ const FormEditData = () => {
         className="flex flex-col mx-5 py-5"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="nama_proses_bisnis"
-          >
-            Nama Proses Bisnis
-          </label>
-          <Controller
-            name="nama_proses_bisnis"
-            control={control}
-            rules={{ required: "Nama Proses Bisnis harus terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded"
-                  id="nama_proses_bisnis"
-                  type="text"
-                  value={field.value || namaProsesBisnis}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setNamaProsesBisnis(e.target.value);
-                  }}
-                />
-                {errors.nama_proses_bisnis ?
-                  <h1 className="text-red-500">
-                    {errors.nama_proses_bisnis.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Nama Proses Bisnis Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="kode_proses_bisnis"
-          >
-            Kode Proses Bisnis:
-          </label>
-          <Controller
-            name="kode_proses_bisnis"
-            control={control}
-            rules={{ required: "Kode Proses Bisnis harus terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded"
-                  id="kode_proses_bisnis"
-                  type="text"
-                  value={field.value || kode_proses_bisnis}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setNamaProsesBisnis(e.target.value);
-                  }}
-                />
-                {errors.kode_proses_bisnis ?
-                  <h1 className="text-red-500">
-                    {errors.kode_proses_bisnis.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Kode Proses Bisnis Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-
         {isClient && (
           <>
             <div className="flex flex-col py-3">

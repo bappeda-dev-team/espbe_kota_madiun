@@ -161,9 +161,9 @@ function Table() {
               <th className="px-6 py-3 min-w-[200px]">RAB Level 1</th>
               <th className="px-6 py-3 min-w-[200px]">RAB Level 2</th>
               <th className="px-6 py-3 min-w-[200px]">RAB Level 3</th>
-              <th className="px-6 py-3 min-w-[200px]">RAB Level 4</th>
-              <th className="px-6 py-3 min-w-[200px]">RAB Level 5</th>
-              <th className="px-6 py-3 min-w-[200px]">RAB Level 6</th>
+              <th className="px-6 py-3 min-w-[200px]">Strategic</th>
+              <th className="px-6 py-3 min-w-[200px]">Tactical</th>
+              <th className="px-6 py-3 min-w-[200px]">Operational</th>
               <th className="px-6 py-3 text-center">Aksi</th>
             </tr>
           </thead>

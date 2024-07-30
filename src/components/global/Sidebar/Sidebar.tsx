@@ -12,7 +12,10 @@ function Sidebar() {
   const [dahsboardActive, setDahsboardActive] = useState<boolean>(false);
   const [UserActive, setUserActive] = useState<boolean>(false);
   const [DataMasterActive, setDataMasterActive] = useState<boolean>(false);
-  const [pohonKinerja, setPohonKinerja] = useState<boolean>(false);
+  const [pohonKinerjaActive, setPohonKinerjaActive] = useState<boolean>(false);
+  const [referensiArsitekturActive, setReferensiArsitekturActive] = useState<boolean>(false);
+  const [sasaranKotaActive, setSasaranKotaActive] = useState<boolean>(false);
+  const [bidangUrusanActive, setBidangUrusanActive] = useState<boolean>(false);
 
   const [ProsesBisnisActive, setProsesBisnisActive] = useState<boolean>(false);
   const [LayananActive, setLayananActive] = useState<boolean>(false);
@@ -25,6 +28,14 @@ function Sidebar() {
   const [SdmInfrastrukturActive, setSdmInfrastrukturActive] = useState<boolean>(false);
   const [petaRencanaActive, setPetaRencanaActive] = useState<boolean>(false);
 
+  const breakDataMaster = () => {
+    if(DataMasterActive === false){
+      setDataMasterActive(true);
+    } else {
+      setDataMasterActive(false);
+    }
+  }
+  
   const breakLayanan = () => {
     if (LayananActive === false) {
       setLayananActive(true);
@@ -38,7 +49,7 @@ function Sidebar() {
       setDahsboardActive(true),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -53,7 +64,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(true),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -68,7 +79,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(true),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -83,7 +94,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(true),
+        setPohonKinerjaActive(true),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -102,7 +113,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(true),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -121,7 +132,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(true),
         setStandartPelayananActive(false),
@@ -136,7 +147,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(true),
         setStandartPelayananActive(true),
@@ -155,7 +166,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -174,7 +185,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -189,7 +200,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -204,7 +215,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -219,7 +230,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -234,7 +245,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -249,7 +260,7 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerja(false);
+        setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -276,7 +287,7 @@ function Sidebar() {
               height={30}
             />
           </div>
-          <h1 className="ml-3">Admin Kota</h1>
+          <h1 className="ml-3">BAPPEDA</h1>
         </div>
       </div>
 
@@ -353,68 +364,141 @@ function Sidebar() {
                 User
               </li>
             </Link>
-            <Link
-              className={DataMasterActive ? "text-white" : ""}
-              href="/DataMaster"
+            <li
+              onClick={breakDataMaster}
+              className={
+                DataMasterActive
+                  ? "flex py-1 pl-2 cursor-pointer rounded-lg bg-gray-200"
+                  : "flex py-1 pl-2 cursor-pointer rounded-lg hover:bg-gray-200"
+              }
             >
-              <li
-                className={
-                  DataMasterActive
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
-                }
-              >
-                {DataMasterActive ? (
-                  <Image
-                    className="pr-2"
-                    src="/iconLight/BookOpen.svg"
-                    alt="BookOpen"
-                    width={30}
-                    height={30}
-                  />
-                ) : (
-                  <Image
-                    className="pr-2"
-                    src="/iconDark/BookOpen.svg"
-                    alt="BookOpen"
-                    width={30}
-                    height={30}
-                  />
-                )}
-                Data Master
-              </li>
-            </Link>
-            <Link
-              className={pohonKinerja ? "text-white" : ""}
-              href="/PohonKinerja"
-            >
-              <li
-                className={
-                  pohonKinerja
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
-                }
-              >
-                {pohonKinerja ? (
-                  <Image
-                    className="pr-2"
-                    src="/iconLight/data.svg"
-                    alt="data"
-                    width={30}
-                    height={30}
-                  />
-                ) : (
-                  <Image
-                    className="pr-2"
-                    src="/iconDark/data.svg"
-                    alt="data"
-                    width={30}
-                    height={30}
-                  />
-                )}
-                Pohon Kinerja
-              </li>
-            </Link>
+              <Image
+                className="pr-2"
+                src="/iconDark/notebook.svg"
+                alt="ChatsTeardrop"
+                width={30}
+                height={30}
+              />
+              Data Master
+            </li>
+            {DataMasterActive ? (
+              <div className="py-1 pl-3 bg-slate-50">
+                <Link href="/PohonKinerja">
+                  <li
+                    className={
+                      pohonKinerjaActive
+                        ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg"
+                        : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
+                    }
+                  >
+                    {pohonKinerjaActive ? (
+                      <Image
+                        className="pr-2"
+                        src="/iconLight/data.svg"
+                        alt="Data"
+                        width={30}
+                        height={30}
+                      />
+                    ) : (
+                      <Image
+                        className="pr-2"
+                        src="/iconDark/data.svg"
+                        alt="Data"
+                        width={30}
+                        height={30}
+                      />
+                    )}
+                    Pohon Kinerja
+                  </li>
+                </Link>
+                <Link href="/ReferensiArsitektur">
+                  <li
+                    className={
+                      referensiArsitekturActive
+                        ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg"
+                        : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
+                    }
+                  >
+                    {referensiArsitekturActive ? (
+                      <Image
+                        className="pr-2"
+                        src="/iconLight/wallet.svg"
+                        alt="ListDashes"
+                        width={30}
+                        height={30}
+                      />
+                    ) : (
+                      <Image
+                        className="pr-2"
+                        src="/iconDark/wallet.svg"
+                        alt="ListDashes"
+                        width={30}
+                        height={30}
+                      />
+                    )}
+                    Referensi Arsitektur
+                  </li>
+                </Link>
+                <Link href="SasaranKota">
+                  <li
+                    className={
+                      sasaranKotaActive
+                        ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg"
+                        : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
+                    }
+                  >
+                    {sasaranKotaActive ? (
+                      <Image
+                        className="pr-2"
+                        src="/iconLight/lifebuoy.svg"
+                        alt="ListDashes"
+                        width={30}
+                        height={30}
+                      />
+                    ) : (
+                      <Image
+                        className="pr-2"
+                        src="/iconDark/lifebuoy.svg"
+                        alt="ListDashes"
+                        width={30}
+                        height={30}
+                      />
+                    )}
+                    Sasaran Kota
+                  </li>
+                </Link>
+                <Link href="/BidangUrusan">
+                  <li
+                    className={
+                      bidangUrusanActive
+                        ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg"
+                        : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
+                    }
+                  >
+                    {bidangUrusanActive ? (
+                      <Image
+                        className="pr-2"
+                        src="/iconLight/book.svg"
+                        alt="ListDashes"
+                        width={30}
+                        height={30}
+                      />
+                    ) : (
+                      <Image
+                        className="pr-2"
+                        src="/iconDark/book.svg"
+                        alt="ListDashes"
+                        width={30}
+                        height={30}
+                      />
+                    )}
+                    Bidang Urusan
+                  </li>
+                </Link>
+              </div>
+            ) : (
+              <></>
+            )}
           </ul>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import Table from "@/components/pages/PohonKinerja/Table/table";
+import Table from "@/components/pages/DataMaster/PohonKinerja/Table";
 
 const PohonKinerja  = () => {
     return(

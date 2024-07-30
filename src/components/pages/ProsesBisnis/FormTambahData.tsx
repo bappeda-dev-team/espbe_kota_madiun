@@ -13,7 +13,6 @@ interface OptionType {
 }
 
 interface FormValues {
-  nama_proses_bisnis: string;
   kode_opd: string;
   bidang_urusan_id: OptionType | null;
   tahun: OptionType | null;
@@ -64,7 +63,6 @@ const FormTambahData = () => {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      nama_proses_bisnis: "",
       kode_opd: "5.01.5.05.0.00.02.0000",
       bidang_urusan_id: null,
       tahun: null,
@@ -159,7 +157,6 @@ const FormTambahData = () => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const formData = {
       //key : value
-      nama_proses_bisnis: data.nama_proses_bisnis,
       kode_opd: "5.01.5.05.0.00.02.0000",
       bidang_urusan_id: data.bidang_urusan_id?.value,
       tahun: data.tahun?.value,
@@ -199,37 +196,6 @@ const FormTambahData = () => {
         className="flex flex-col mx-5 py-5"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="nama_proses_bisnis"
-          >
-            Nama Proses Bisnis:
-          </label>
-          <Controller
-            name="nama_proses_bisnis"
-            control={control}
-            rules={{ required: "Nama Proses Bisnis Harus Terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded"
-                  {...field}
-                  type="text"
-                  id="nama_proses_bisnis"
-                  placeholder="masukkan nama proses bisnis"
-                />
-                {errors.nama_proses_bisnis ? 
-                  <h1 className="text-red-500">
-                    {errors.nama_proses_bisnis.message}
-                  </h1>
-                :
-                  <h1 className="text-slate-300 text-xs">*Nama Proses Bisnis Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
 
         {isClient && (
           <>
