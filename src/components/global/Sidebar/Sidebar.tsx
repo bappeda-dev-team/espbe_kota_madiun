@@ -374,7 +374,7 @@ function Sidebar() {
             >
               <Image
                 className="pr-2"
-                src="/iconDark/notebook.svg"
+                src="/iconDark/Notebook.svg"
                 alt="ChatsTeardrop"
                 width={30}
                 height={30}
