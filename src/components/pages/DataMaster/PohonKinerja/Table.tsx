@@ -28,7 +28,13 @@ const Table = () => {
                     throw new Error("cant fetch data pohon kinerja");
                 }
                 const result = await response.json();
-                setPohonKinerja(result.data);
+                if(result.data === null){
+                    setPohonKinerja([]);
+                    setDataNull(true);
+                } else {
+                    setDataNull(false);
+                    setPohonKinerja(result.data);
+                }
             } catch(err){
                 setError("Gagal fetching data Pohon Kinerja, cek koneksi internet atau database server")
             } finally{

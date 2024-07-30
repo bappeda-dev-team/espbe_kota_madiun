@@ -25,7 +25,13 @@ const Table = () => {
                     throw new Error("cant fetch data Bidang Urusan");
                 }
                 const result = await response.json();
-                setBidangUrusan(result.data);
+                if(result.data ===  null){
+                    setBidangUrusan([]);
+                    setDataNull(true);
+                } else {
+                    setDataNull(false);
+                    setBidangUrusan(result.data);
+                }
             } catch(err){
                 setError("Gagal fetching data Bidang Urusan, cek koneksi internet atau database server")
             } finally{

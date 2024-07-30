@@ -28,7 +28,13 @@ const Table = () => {
                     throw new Error("cant fetch data Referensi Arsitektur");
                 }
                 const result = await response.json();
-                setReferensiArsitektur(result.data);
+                if(result.data === null){
+                    setReferensiArsitektur([]);
+                    setDataNull(true);
+                } else {
+                    setReferensiArsitektur(result.data);
+                    setDataNull(false);
+                }
             } catch(err){
                 setError("Gagal fetching data Referensi Arsitektur, cek koneksi internet atau database server")
             } finally{

@@ -27,7 +27,13 @@ const Table = () => {
                     throw new Error("cant fetch data Sasaran Kota");
                 }
                 const result = await response.json();
-                setSasaranKota(result.data);
+                if(result.data === null){
+                    setSasaranKota([]);
+                    setDataNull(true);
+                } else {
+                    setSasaranKota(result.data);
+                    setDataNull(false);
+                }
             } catch(err){
                 setError("Gagal fetching data Sasaran Kota, cek koneksi internet atau database server")
             } finally{
