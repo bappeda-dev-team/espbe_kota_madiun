@@ -12,37 +12,31 @@ interface OptionType {
   value: number;
   label: string;
 }
+interface OptionTypeString {
+  value: string;
+  label: string;
+}
 
 interface formValue {
-    nama_data : string,
-    sifat_data : string,
-    jenis_data : string,
-    produsen_data : string,
-    pj_data : string,
-    kode_opd : string,
-    informasi_terkait_input : string,
-    informasi_terkait_output : string,
-    interoprabilitas : string,
-    tahun : OptionType | null,
-    rad_level_1_id : OptionType | null,
-    rad_level_2_id : OptionType | null,
-    rad_level_3_id : OptionType | null,
-    rad_level_4_id : OptionType | null,
-    strategic_id : OptionType | null,
-    tactical_id : OptionType | null,
-    operational_id : OptionType | null;
-}
-
-interface rad_level_1_4 {
-  Id: number;
-  nama_referensi: string;
-  kode_referensi: string;
-  level_referensi: number;
-}
-interface rad_level_5_7 {
-  id: number;
-  nama_pohon: string;
-  level_pohon: string;
+  nama_data : string,
+  sifat_data : OptionTypeString | null,
+  uraian_data : string,
+  jenis_data : OptionTypeString | null,
+  produsen_data : string,
+  validitas_data : OptionTypeString | null,
+  pj_data : string,
+  kode_opd : string,
+  informasi_terkait_input : string,
+  informasi_terkait_output : string,
+  interoprabilitas : OptionTypeString | null,
+  tahun : OptionType | null,
+  rad_level_1_id : OptionType | null,
+  rad_level_2_id : OptionType | null,
+  rad_level_3_id : OptionType | null,
+  rad_level_4_id : OptionType | null,
+  strategic_id : OptionType | null,
+  tactical_id : OptionType | null,
+  operational_id : OptionType | null;
 }
 
 const FormEditData = () => {
@@ -64,15 +58,17 @@ const FormEditData = () => {
 
   //state untuk fetch default value data by id
   const [namaData, setNamaData] = useState<string>("");
-  const [selectedSifatData, setSelectedSifatData] = useState<string>("");
-  const [selectedJenisData, setSelectedJenisData] = useState<string>("");
+  const [uraianData, setUraianData] = useState<string>("");
   const [selectedProdusenData, setSelectedProdusenData] = useState<string>("");
   const [selectedPjData, setSelectedPjData] = useState<string>("");
   const [kode_opd, set_kode_opd] = useState<string>("");
   const [selectedInformasiTerkaitInput, setSelectedInformasiTerkaitInput] = useState<string>("");
   const [selectedInformasiTerkaitOutput, setSelectedInformasiTerkaitOutput] = useState<string>("");
-  const [selectedInteroprabilitas, setSelectedInteroprabilitas] = useState<string>("");
   
+  const [selectedSifatData, setSelectedSifatData] = useState<OptionTypeString | null>(null);
+  const [selectedJenisData, setSelectedJenisData] = useState<OptionTypeString | null>(null);
+  const [selectedValiditasData, setSelectedValiditasData] = useState<OptionTypeString | null>(null);
+  const [selectedInteroprabilitas, setSelectedInteroprabilitas] = useState<OptionTypeString | null>(null);
   const [selectedTahun, setSelectedTahun] = useState<OptionType | null>(null);
   const [selectedRad1, setSelectedRad1] = useState<OptionType | null>(null);
   const [selectedRad2, setSelectedRad2] = useState<OptionType | null>(null);
@@ -91,6 +87,35 @@ const FormEditData = () => {
     { value: 2029, label: "2029" },
     { value: 2030, label: "2030" },
   ];
+  const JenisData : OptionTypeString[] = [
+    { value: "Data Statistik", label: "Data Statistik" },
+    { value: "Data Geopasial", label: "Data Geopasial" },
+    { value: "Data Keuangan", label: "Data Keuangan" },
+    { value: "Data Lainya", label: "Data Lainya" }
+  ]
+
+  const SifatData : OptionTypeString[] = [
+    { value: "Terbuka", label: "Terbuka" },
+    { value: "Terbatas", label: "Terbatas" },
+    { value: "Tertutup", label: "Tertutup" }
+  ]
+  const Interoprabilitas : OptionTypeString[] = [
+    { value: "Ya", label: "Ya" },
+    { value: "Tidak", label: "Tidak" }
+  ]
+  const ValiditasData : OptionTypeString[] = [
+    { value: "RealTime", label: "RealTime" },
+    { value: "Harian", label: "Harian" },
+    { value: "Mingguan", label: "Mingguan" },
+    { value: "Bulanan", label: "Bulanan" },
+    { value: "Tiga Bulanan", label: "Tiga Bulanan" },
+    { value: "Enam Bulanan", label: "Enam Bulanan" },
+    { value: "Tahunan", label: "Tahunan" },
+    { value: "Dua Tahunan", label: "Dua Tahunan" },
+    { value: "Tiga Tahunan", label: "Tiga Tahunan" },
+    { value: "Lima Tahunan", label: "Lima Tahunan" },
+    { value: "Lainya", label: "Lainya" }
+  ]
 
   useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -104,15 +129,11 @@ const FormEditData = () => {
           setNamaData(result.NamaData);
           reset((prev) => ({...prev, nama_data: result.NamaData,}));
         }
-        if (result.SifatData) {
-          setSelectedSifatData(result.SifatData);
-          reset((prev) => ({...prev, sifat_data: result.SifatData,}));
+        if (result.UraianData) {
+          setUraianData(result.UraianData);
+          reset((prev) => ({...prev, uraian_data: result.UraianData,}));
         }
-        if (result.JenisData) {
-          setSelectedJenisData(result.JenisData);
-          reset((prev) => ({...prev, jenis_data: result.JenisData,}));
-        }
-        if (result.SifatData) {
+        if (result.ProdusenData) {
           setSelectedProdusenData(result.ProdusenData);
           reset((prev) => ({...prev, produsen_data: result.ProdusenData,}));
         }
@@ -132,11 +153,39 @@ const FormEditData = () => {
           setSelectedInformasiTerkaitOutput(result.InformasiTerkaitOutput);
           reset((prev) => ({ ...prev, informasi_terkait_output: result.InformasiTerkaitOutput }));
         }
-        if (result.Interoprabilitas) {
-          setSelectedInteroprabilitas(result.Interoprabilitas);
-          reset((prev) => ({ ...prev, interoprabilitas: result.Interoprabilitas }));
+        
+        if (result.SifatData) {
+          const selectedSifatData = {
+            value: result.SifatData,
+            label: result.SifatData,
+          };
+          setSelectedSifatData(selectedSifatData);
+          reset((prev) => ({ ...prev, sifat_data: selectedSifatData }));
         }
-
+        if (result.JenisData) {
+          const selectedJenisData = {
+            value: result.JenisData,
+            label: result.JenisData,
+          };
+          setSelectedJenisData(selectedJenisData);
+          reset((prev) => ({ ...prev, jenis_data: selectedJenisData }));
+        }
+        if (result.ValiditasData) {
+          const selectedValiditasData = {
+            value: result.ValiditasData,
+            label: result.ValiditasData,
+          };
+          setSelectedValiditasData(selectedValiditasData);
+          reset((prev) => ({ ...prev, validitas_data: selectedValiditasData }));
+        }
+        if (result.Interoprabilitas) {
+          const selectedInteroprabilitas = {
+            value: result.Interoprabilitas,
+            label: result.Interoprabilitas,
+          };
+          setSelectedInteroprabilitas(selectedInteroprabilitas);
+          reset((prev) => ({ ...prev, interoprabilitas: selectedInteroprabilitas }));
+        }
         if (result.Tahun) {
           const selectedTahun = {
             value: result.Tahun,
@@ -270,8 +319,14 @@ const FormEditData = () => {
       setSelectedTactical(option);
     } else if (actionMeta.name === "operational_id") {
       setSelectedOperational(option);
-    } else if (actionMeta.name === "tahun") {
-      setSelectedTahun(option);
+    } else if (actionMeta.name === "sifat_data") {
+      setSelectedSifatData(option);
+    } else if (actionMeta.name === "jenis_data") {
+      setSelectedJenisData(option);
+    } else if (actionMeta.name === "validitas_data") {
+      setSelectedValiditasData(option);
+    } else if (actionMeta.name === "interoprabilitas") {
+      setSelectedInteroprabilitas(option);
     }
   };
 
@@ -279,23 +334,25 @@ const FormEditData = () => {
   const onSubmit: SubmitHandler<formValue> = async (data) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const formData = {
-      nama_data: data.nama_data,
-      sifat_data: data.sifat_data,
-      jenis_data: data.jenis_data,
-      produsen_data: data.produsen_data,
-      pj_data: data.pj_data,
-      kode_opd: "5.01.5.05.0.00.02.0000",
-      informasi_terkait_input: data.informasi_terkait_input,
-      informasi_terkait_output: data.informasi_terkait_output,
-      interoprabilitas: data.interoprabilitas,
-      tahun: data.tahun?.value,
-      rad_level_1_id: data.rad_level_1_id?.value,
-      rad_level_2_id: data.rad_level_2_id?.value,
-      rad_level_3_id: data.rad_level_3_id?.value,
-      rad_level_4_id: data.rad_level_4_id?.value,
-      strategic_id: data.strategic_id?.value,
-      tactical_id: data.tactical_id?.value,
-      operational_id: data.operational_id?.value,
+      nama_data : data.nama_data,
+      uraian_data : data.uraian_data,
+      sifat_data : data.sifat_data?.value,
+      jenis_data : data.jenis_data?.value,
+      produsen_data : data.produsen_data,
+      validitas_data : data.validitas_data?.value,
+      pj_data : data.pj_data,
+      kode_opd : "5.01.5.05.0.00.02.0000",
+      informasi_terkait_input : data.informasi_terkait_input,
+      informasi_terkait_output : data.informasi_terkait_output,
+      interoprabilitas : data.interoprabilitas?.value,
+      tahun : data.tahun?.value,
+      rad_level_1_id : data.rad_level_1_id?.value,
+      rad_level_2_id : data.rad_level_2_id?.value,
+      rad_level_3_id : data.rad_level_3_id?.value,
+      rad_level_4_id : data.rad_level_4_id?.value,
+      strategic_id :  data.strategic_id?.value,
+      tactical_id : data.tactical_id?.value,
+      operational_id : data.operational_id?.value,
     };
     try {
       const response = await fetch(`${API_URL}/v1/updatedatainformasi/${Id}`, {
@@ -365,68 +422,33 @@ const FormEditData = () => {
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="sifat_data"
+            htmlFor="uraian_data"
           >
-            Sifat Data :
+            Uraian Data :
           </label>
           <Controller
-            name="sifat_data"
+            name="uraian_data"
             control={control}
-            rules={{required: "Sifat Data Harus Terisi"}}
+            rules={{ required: "Uraian Data harus terisi" }}
             render={({ field }) => (
               <>
                 <input
                   {...field}
                   className="border px-4 py-2 rounded"
-                  id="sifat_data"
+                  id="uraian_data"
                   type="text"
-                  value={field.value || selectedSifatData}
+                  value={field.value || uraianData}
                   onChange={(e) => {
                     field.onChange(e);
-                    setSelectedSifatData(e.target.value);
+                    setUraianData(e.target.value);
                   }}
                 />
-                {errors.sifat_data ?
+                {errors.uraian_data ?
                   <h1 className="text-red-500">
-                    {errors.sifat_data.message}
+                    {errors.uraian_data.message}
                   </h1>
                   :
-                  <h1 className="text-slate-300 text-xs">*Sifat Data Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="jenis_data"
-          >
-            Jenis Data :
-          </label>
-          <Controller
-            name="jenis_data"
-            control={control}
-            rules={{required: "Jenis Data Harus Terisi"}}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded"
-                  id="jenis_data"
-                  type="text"
-                  value={field.value || selectedJenisData}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setSelectedJenisData(e.target.value);
-                  }}
-                />
-                {errors.jenis_data ?
-                  <h1 className="text-red-500">
-                    {errors.jenis_data.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Jenis Data Harus Terisi</h1>
+                  <h1 className="text-slate-300 text-xs">*Uraian Data Harus Terisi</h1>
                 }
               </>
             )}
@@ -572,45 +594,114 @@ const FormEditData = () => {
             )}
           />
         </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="interoprabilitas"
-          >
-            Interoprabilitas :
-          </label>
-          <Controller
-            name="interoprabilitas"
-            control={control}
-            rules={{required: "Interoprabilitas Harus Terisi"}}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded"
-                  id="interoprabilitas"
-                  type="text"
-                  value={field.value || selectedInteroprabilitas}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setSelectedInteroprabilitas(e.target.value);
-                  }}
-                />
-                {errors.interoprabilitas ?
-                  <h1 className="text-red-500">
-                    {errors.interoprabilitas.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Interoprabilitas Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-
 
         {isClient && (
           <>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="sifat_data"
+              >
+                Sifat Data :
+              </label>
+              <Controller
+                name="sifat_data"
+                control={control}
+                rules={{ required: "Sifat Data harus terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      id="sifat_data"
+                      value={selectedSifatData}
+                      options={SifatData}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        handleChange(option, { name: "sifat_data" });
+                      }}
+                      isClearable={true}
+                    />
+                    {errors.sifat_data ?
+                      <h1 className="text-red-500">
+                        {errors.sifat_data.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Sifat Data Harus Terisi</h1>
+                    }
+                  </>
+                )}
+              />
+            </div>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="jenis_data"
+              >
+                Jenis Data :
+              </label>
+              <Controller
+                name="jenis_data"
+                control={control}
+                rules={{ required: "jenis data harus terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      id="jenis_data"
+                      value={selectedJenisData}
+                      options={JenisData}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        handleChange(option, { name: "jenis_data" });
+                      }}
+                      isClearable={true}
+                    />
+                    {errors.jenis_data ?
+                  <h1 className="text-red-500">
+                    {errors.jenis_data.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*jenis data Harus Terisi</h1>
+                }
+                  </>
+                )}
+              />
+            </div>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="validitas_data"
+              >
+                Validitas Data :
+              </label>
+              <Controller
+                name="validitas_data"
+                control={control}
+                rules={{ required: "Validitas data harus terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      id="validitas_data"
+                      value={selectedValiditasData}
+                      options={ValiditasData}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        handleChange(option, { name: "validitas_data" });
+                      }}
+                      isClearable={true}
+                    />
+                    {errors.validitas_data ?
+                  <h1 className="text-red-500">
+                    {errors.validitas_data.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Validitas data Harus Terisi</h1>
+                }
+                  </>
+                )}
+              />
+            </div>
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
@@ -641,6 +732,41 @@ const FormEditData = () => {
                   </h1>
                   :
                   <h1 className="text-slate-300 text-xs">*Tahun Harus Terisi</h1>
+                }
+                  </>
+                )}
+              />
+            </div>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="Interoprabilitas"
+              >
+                Interoprabilitas:
+              </label>
+              <Controller
+                name="interoprabilitas"
+                control={control}
+                rules={{ required: "Interoprabilitas harus terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      id="Interoprabilitas"
+                      value={selectedInteroprabilitas}
+                      options={Interoprabilitas}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        handleChange(option, { name: "interoprabilitas" });
+                      }}
+                      isClearable={true}
+                    />
+                    {errors.interoprabilitas ?
+                  <h1 className="text-red-500">
+                    {errors.interoprabilitas.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*Interoprabilitas Harus Terisi</h1>
                 }
                   </>
                 )}

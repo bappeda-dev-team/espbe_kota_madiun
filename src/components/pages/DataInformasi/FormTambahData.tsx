@@ -12,16 +12,23 @@ interface OptionType {
   label: string;
 }
 
+interface OptionTypeString {
+  value: string;
+  label: string;
+}
+
 interface FormValues {
   nama_data : string,
-  sifat_data : string,
-  jenis_data : string,
+  sifat_data : OptionTypeString | null,
+  uraian_data : string,
+  jenis_data : OptionTypeString | null,
   produsen_data : string,
+  validitas_data : OptionTypeString | null,
   pj_data : string,
   kode_opd : string,
   informasi_terkait_input : string,
   informasi_terkait_output : string,
-  interoprabilitas : string,
+  interoprabilitas : OptionTypeString | null,
   tahun : OptionType | null,
   rad_level_1_id : OptionType | null,
   rad_level_2_id : OptionType | null,
@@ -56,6 +63,36 @@ const FormTambahData = () => {
     { value: 2030, label: "2030" },
   ];
 
+  const JenisData : OptionTypeString[] = [
+    { value: "Data Statistik", label: "Data Statistik" },
+    { value: "Data Geopasial", label: "Data Geopasial" },
+    { value: "Data Keuangan", label: "Data Keuangan" },
+    { value: "Data Lainya", label: "Data Lainya" }
+  ]
+
+  const SifatData : OptionTypeString[] = [
+    { value: "Terbuka", label: "Terbuka" },
+    { value: "Terbatas", label: "Terbatas" },
+    { value: "Tertutup", label: "Tertutup" }
+  ]
+  const Interoprabilitas : OptionTypeString[] = [
+    { value: "Ya", label: "Ya" },
+    { value: "Tidak", label: "Tidak" }
+  ]
+  const ValiditasData : OptionTypeString[] = [
+    { value: "RealTime", label: "RealTime" },
+    { value: "Harian", label: "Harian" },
+    { value: "Mingguan", label: "Mingguan" },
+    { value: "Bulanan", label: "Bulanan" },
+    { value: "Tiga Bulanan", label: "Tiga Bulanan" },
+    { value: "Enam Bulanan", label: "Enam Bulanan" },
+    { value: "Tahunan", label: "Tahunan" },
+    { value: "Dua Tahunan", label: "Dua Tahunan" },
+    { value: "Tiga Tahunan", label: "Tiga Tahunan" },
+    { value: "Lima Tahunan", label: "Lima Tahunan" },
+    { value: "Lainya", label: "Lainya" }
+  ]
+
   const {
     control,
     handleSubmit,
@@ -64,14 +101,14 @@ const FormTambahData = () => {
   } = useForm<FormValues>({
     defaultValues: {
         nama_data : "",
-        sifat_data : "",
-        jenis_data : "",
+        sifat_data : null,
+        jenis_data : null,
         produsen_data : "",
         pj_data : "",
         kode_opd : "5.01.5.05.0.00.02.0000",
         informasi_terkait_input : "",
         informasi_terkait_output : "",
-        interoprabilitas : "",
+        interoprabilitas : null,
         tahun : null,
         rad_level_1_id : null,
         rad_level_2_id : null,
@@ -131,14 +168,16 @@ const FormTambahData = () => {
     const formData = {
       //key : value
         nama_data : data.nama_data,
-        sifat_data : data.sifat_data,
-        jenis_data : data.jenis_data,
+        uraian_data : data.uraian_data,
+        sifat_data : data.sifat_data?.value,
+        jenis_data : data.jenis_data?.value,
         produsen_data : data.produsen_data,
+        validitas_data : data.validitas_data?.value,
         pj_data : data.pj_data,
         kode_opd : "5.01.5.05.0.00.02.0000",
         informasi_terkait_input : data.informasi_terkait_input,
         informasi_terkait_output : data.informasi_terkait_output,
-        interoprabilitas : data.interoprabilitas,
+        interoprabilitas : data.interoprabilitas?.value,
         tahun : data.tahun?.value,
         rad_level_1_id : data.rad_level_1_id?.value,
         rad_level_2_id : data.rad_level_2_id?.value,
@@ -202,67 +241,34 @@ const FormTambahData = () => {
           />
         </div>
         <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="sifat_data"
-          >
-            Sifat Data :
+          <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="nama_data">
+            Uraian Data :
           </label>
           <Controller
-            name="sifat_data"
+            name="uraian_data"
             control={control}
-            rules={{ required: "Sifat Data Harus Terisi" }}
+            rules={{ required: "Uraian Data Informasi Harus Terisi" }}
             render={({ field }) => (
               <>
                 <input
                   className="border px-4 py-2 rounded"
                   {...field}
                   type="text"
-                  id="sifat_data"
-                  placeholder="masukkan Sifat Data"
+                  id="uraian_data"
+                  placeholder="masukkan nama data informasi"
                 />
-                {errors.sifat_data ?
+                {errors.uraian_data ?
                   <h1 className="text-red-500">
-                    {errors.sifat_data.message}
+                    {errors.uraian_data.message}
                   </h1>
                   :
-                  <h1 className="text-slate-300 text-xs">*Sifat Data Informasi Harus Terisi</h1>
+                  <h1 className="text-slate-300 text-xs">*Uraian Data Harus Terisi</h1>
                 }
               </>
             )}
           />
         </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="jenis_data"
-          >
-            Jenis Data :
-          </label>
-          <Controller
-            name="jenis_data"
-            control={control}
-            rules={{ required: "Jenis Data Harus Terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded"
-                  {...field}
-                  type="text"
-                  id="jenis_data"
-                  placeholder="masukkan Jenis Data"
-                />
-                {errors.jenis_data ?
-                  <h1 className="text-red-500">
-                    {errors.jenis_data.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Jenis Data Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
+        
         <div className="flex flex-col py-3">
           <label
             className="uppercase text-xs font-bold text-gray-700 my-2"
@@ -299,7 +305,7 @@ const FormTambahData = () => {
             className="uppercase text-xs font-bold text-gray-700 my-2"
             htmlFor="pj_data"
           >
-            Pengngguan Jawab Data :
+            Penanggung Jawab Data :
           </label>
           <Controller
             name="pj_data"
@@ -312,14 +318,14 @@ const FormTambahData = () => {
                   {...field}
                   type="text"
                   id="pj_data"
-                  placeholder="masukkan Pengngguan Jawab Data"
+                  placeholder="masukkan Penanggung Jawab Data"
                 />
                 {errors.pj_data ?
                   <h1 className="text-red-500">
                     {errors.pj_data.message}
                   </h1>
                   :
-                  <h1 className="text-slate-300 text-xs">*Penangguna Jawab Data Harus Terisi</h1>
+                  <h1 className="text-slate-300 text-xs">*Penanggung Jawab Data Harus Terisi</h1>
                 }
               </>
             )}
@@ -387,40 +393,134 @@ const FormTambahData = () => {
             )}
           />
         </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="interoprabilitas"
-          >
-            Interoprabilitas :
-          </label>
-          <Controller
-            name="interoprabilitas"
-            control={control}
-            rules={{ required: "Interoprabilitas Harus Terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded"
-                  {...field}
-                  type="text"
-                  id="interoprabilitas"
-                  placeholder="masukkan Interoprabilitas"
-                />
-                {errors.interoprabilitas ?
-                  <h1 className="text-red-500">
-                    {errors.interoprabilitas.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Interoprabilitas Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
+        
 
         {isClient && (
           <>
+          <div className="flex flex-col py-3">
+            <label
+              className="uppercase text-xs font-bold text-gray-700 my-2"
+              htmlFor="sifat_data"
+            >
+              Sifat Data :
+            </label>
+            <Controller
+                name="sifat_data"
+                control={control}
+                rules={{ required: "sifat data Harus Terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      options={SifatData}
+                      isSearchable
+                      isClearable
+                      placeholder="Pilih sifat data"
+                    />
+                    {errors.sifat_data ?
+                      <h1 className="text-red-500">
+                        {errors.sifat_data.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*sifat data Harus Terisi</h1>
+                    }
+                  </>
+                )}
+              />
+          </div>
+          <div className="flex flex-col py-3">
+            <label
+              className="uppercase text-xs font-bold text-gray-700 my-2"
+              htmlFor="validitas_data"
+            >
+              Validitas Data :
+            </label>
+            <Controller
+                name="validitas_data"
+                control={control}
+                rules={{ required: "Validitas data Harus Terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      options={ValiditasData}
+                      isSearchable
+                      isClearable
+                      placeholder="Pilih validitas data"
+                    />
+                    {errors.validitas_data ?
+                      <h1 className="text-red-500">
+                        {errors.validitas_data.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Validitas data Harus Terisi</h1>
+                    }
+                  </>
+                )}
+              />
+          </div>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="jenis_data"
+              >
+                Jenis Data :
+              </label>
+              <Controller
+                name="jenis_data"
+                control={control}
+                rules={{ required: "Jenis Data Harus Terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      options={JenisData}
+                      isSearchable
+                      isClearable
+                      placeholder="Pilih Jenis Data"
+                    />
+                    {errors.jenis_data ?
+                  <h1 className="text-red-500">
+                    {errors.jenis_data.message}
+                  </h1>
+                  :
+                  <h1 className="text-slate-300 text-xs">*jenis_data Harus Terisi</h1>
+                }
+                  </>
+                )}
+              />
+            </div>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="interoprabilitas"
+              >
+                Interoprabilitas :
+              </label>
+              <Controller
+                name="interoprabilitas"
+                control={control}
+                rules={{ required: "Interoprabilitas Harus Terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      options={Interoprabilitas}
+                      isSearchable
+                      isClearable
+                      placeholder="Pilih Interoprabilitas"
+                    />
+                    {errors.interoprabilitas ?
+                      <h1 className="text-red-500">
+                        {errors.interoprabilitas.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Interoprabilitas Harus Terisi</h1>
+                    }
+                  </>
+                )}
+              />
+            </div>
             <div className="flex flex-col py-3">
               <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tahun:</label>
               <Controller
@@ -437,12 +537,12 @@ const FormTambahData = () => {
                       placeholder="Pilih Tahun"
                     />
                     {errors.tahun ?
-                  <h1 className="text-red-500">
-                    {errors.tahun.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Tahun Harus Terisi</h1>
-                }
+                      <h1 className="text-red-500">
+                        {errors.tahun.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Tahun Harus Terisi</h1>
+                    }
                   </>
                 )}
               />

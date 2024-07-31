@@ -4,7 +4,7 @@ const User = () => {
     return(
         <>
             <div className="w-auto">
-                <h1>ini halaman User</h1>
+                <h1>halaman User</h1>
                 <Perbaikan />
             </div>
         </>

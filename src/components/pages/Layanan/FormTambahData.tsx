@@ -11,6 +11,10 @@ interface OptionType {
   value: number;
   label: string;
 }
+interface OptionTypeString {
+  value: string;
+  label: string;
+}
 
 interface FormValues {
   nama_layanan: string;
@@ -19,7 +23,7 @@ interface FormValues {
   tahun: OptionType | null;
   kode_opd: string;
   kementrian_terkait: string;
-  metode_layanan: string;
+  metode_layanan: OptionTypeString | null;
   ral_level_1_id: OptionType | null;
   ral_level_2_id: OptionType | null;
   ral_level_3_id: OptionType | null;
@@ -53,6 +57,11 @@ const FormTambahData = () => {
     { value: 2030, label: "2030" },
   ];
 
+  const MetodeLayanan: OptionTypeString[] = [
+    {value: "Elektronik", label: "Elektronik"},
+    {value: "Non Elektronik", label: "Non Elektronik"}
+  ]
+
   const {
     control,
     handleSubmit,
@@ -66,7 +75,7 @@ const FormTambahData = () => {
       tahun: null,
       kode_opd: "5.01.5.05.0.00.02.0000",
       kementrian_terkait: "",
-      metode_layanan: "",
+      metode_layanan: null,
       ral_level_1_id: null,
       ral_level_2_id: null,
       ral_level_3_id: null,
@@ -95,7 +104,7 @@ const FormTambahData = () => {
       }));
       set_ral_level_1_4_option(result);
     } catch (error) {
-      console.error("gagal memuat data option RAB Level 1 - 4");
+      console.error("gagal memuat data option RAL Level 1 - 4");
     } finally {
       setIsLoading(false);
     }
@@ -115,7 +124,7 @@ const FormTambahData = () => {
       }));
       set_ral_level_5_7_option(result);
     } catch (err) {
-      console.log("gagal memuat data option RAB Level 5 - 7");
+      console.log("gagal memuat data option RAL Level 5 - 7");
     } finally {
       setIsLoading(false);
     }
@@ -260,40 +269,40 @@ const FormTambahData = () => {
             )}
           />
         </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="metode_layanan"
-          >
-            Metode Layanan:
-          </label>
-          <Controller
-            name="metode_layanan"
-            control={control}
-            rules={{required: "Metode Layanan Harus Terisi"}}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded"
-                  {...field}
-                  type="text"
-                  id="metode_layanan"
-                  placeholder="masukkan Metode Layanan"
-                />
-                {errors.metode_layanan ?
-                  <h1 className="text-red-500">
-                    {errors.metode_layanan.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Metode Layanan Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
 
         {isClient && (
           <>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="metode_layanan"
+              >
+                Metode Layanan:
+              </label>
+              <Controller
+                name="metode_layanan"
+                control={control}
+                rules={{required: "Metode Layanan Harus Terisi"}}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      placeholder="Pilih Metode Layanan"
+                      options={MetodeLayanan}
+                      isSearchable
+                      isClearable
+                    />
+                    {errors.metode_layanan ?
+                      <h1 className="text-red-500">
+                        {errors.metode_layanan.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Metode Layanan Harus Terisi</h1>
+                    }
+                  </>
+                )}
+              />
+            </div>
             <div className="flex flex-col py-3">
               <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tujuan Layanan:</label>
               <Controller

@@ -49,6 +49,11 @@ function Sidebar() {
       setDahsboardActive(true),
         setUserActive(false),
         setDataMasterActive(false),
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
+        setProsesBisnisActive(false),
         setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
@@ -64,21 +69,11 @@ function Sidebar() {
       setDahsboardActive(false),
         setUserActive(true),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(false),
-        setLayananActive(false),
-        setStandartPelayananActive(false),
-        setFormLayananActive(false),
-        setDataInformasiActive(false),
-        setAplikasiActive(false),
-        setGapArsitekturActive(false);
-        setArsitekturActive(false);
-        setSdmInfrastrukturActive(false);
-      setPetaRencanaActive(false);
-    } else if (url === "/DataMaster") {
-      setDahsboardActive(false),
-        setUserActive(false),
-        setDataMasterActive(true),
         setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
         setLayananActive(false),
@@ -93,8 +88,65 @@ function Sidebar() {
     } else if (url === "/PohonKinerja") {
       setDahsboardActive(false),
         setUserActive(false),
-        setDataMasterActive(false),
+        setDataMasterActive(true),
         setPohonKinerjaActive(true),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
+        setProsesBisnisActive(false),
+        setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
+      setPetaRencanaActive(false);
+    } else if (url === "/ReferensiArsitektur") {
+      setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(true),
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(true),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
+        setProsesBisnisActive(false),
+        setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
+      setPetaRencanaActive(false);
+    } else if (url === "/SasaranKota") {
+      setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(true),
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(true),
+        setBidangUrusanActive(false),
+        setProsesBisnisActive(false),
+        setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setSdmInfrastrukturActive(false);
+      setPetaRencanaActive(false);
+    } else if (url === "/BidangUrusan") {
+      setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(true),
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(true),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -374,7 +426,7 @@ function Sidebar() {
             >
               <Image
                 className="pr-2"
-                src="/iconDark/Notebook.svg"
+                src="/iconDark/BookOpen.svg"
                 alt="ChatsTeardrop"
                 width={30}
                 height={30}

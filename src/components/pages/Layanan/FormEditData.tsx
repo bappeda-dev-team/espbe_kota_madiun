@@ -12,6 +12,10 @@ interface OptionType {
   value: number;
   label: string;
 }
+interface OptionTypeString {
+  value: string;
+  label: string;
+}
 
 interface formValue {
   nama_layanan: string;
@@ -20,7 +24,7 @@ interface formValue {
   tahun: OptionType | null;
   kode_opd: string;
   kementrian_terkait: string;
-  metode_layanan: string;
+  metode_layanan: OptionTypeString;
   ral_level_1_id: OptionType | null;
   ral_level_2_id: OptionType | null;
   ral_level_3_id: OptionType | null;
@@ -52,8 +56,8 @@ const FormEditData = () => {
   const [selectedFungsiLayanan, setSelectedFungsiLayanan] = useState<string>("");
   const [kode_opd, set_kode_opd] = useState<string>("");
   const [selectedKementrianTerkait, setSelectedKementrianTerkait] = useState<string>("");
-  const [selectedMetodeLayanan, setSelectedMetodeLayanan] = useState<string>("");
   
+  const [selectedMetodeLayanan, setSelectedMetodeLayanan] = useState<OptionTypeString | null>(null);
   const [selectedTujuanLayanan, setSelectedTujuanLayanan] = useState<OptionType | null>(null);
   const [selectedTahun, setSelectedTahun] = useState<OptionType | null>(null);
   const [selectedRal1, setSelectedRal1] = useState<OptionType | null>(null);
@@ -73,6 +77,10 @@ const FormEditData = () => {
     { value: 2029, label: "2029" },
     { value: 2030, label: "2030" },
   ];
+  const MetodeLayanan: OptionTypeString[] = [
+    {value: "Elektronik", label: "Elektronik"},
+    {value: "Non Elektronik", label: "Non Elektronik"}
+  ]
 
   useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -98,11 +106,15 @@ const FormEditData = () => {
           setSelectedKementrianTerkait(result.KementrianTerkait);
           reset((prev) => ({ ...prev, kementrian_terkait: result.KementrianTerkait }));
         }
+        
         if (result.MetodeLayanan) {
-          setSelectedMetodeLayanan(result.MetodeLayanan);
+          const MetodeLayananOption = {
+            value: result.MetodeLayanan,
+            label: result.MetodeLayanan,
+          };
+          setSelectedMetodeLayanan(MetodeLayananOption);
           reset((prev) => ({ ...prev, metode_layanan: result.MetodeLayanan }));
         }
-
         if (result.TujuanLayananId) {
           const tujuanLayananOption = {
             value: result.TujuanLayananId.id,
@@ -200,7 +212,7 @@ const FormEditData = () => {
       }));
       set_ral_1_4(result);
     } catch (err) {
-      console.log("Gagal memuat data Option RAB Level 1 - 3", err);
+      console.log("Gagal memuat data Option RAL Level 1 - 3", err);
     } finally {
       setIsLoading(false);
     }
@@ -248,6 +260,8 @@ const FormEditData = () => {
       setSelectedOperational(option);
     } else if (actionMeta.name === "tahun") {
       setSelectedTahun(option);
+    } else if (actionMeta.name === "metode_layanan") {
+      setSelectedMetodeLayanan(option);
     }
   };
 
@@ -261,7 +275,7 @@ const FormEditData = () => {
       tahun: data.tahun?.value,
       kode_opd: "5.01.5.05.0.00.02.0000",
       kementrian_terkait: data.kementrian_terkait,
-      metode_layanan: data.metode_layanan,
+      metode_layanan: data.metode_layanan?.value,
       ral_level_1_id: data.ral_level_1_id?.value,
       ral_level_2_id: data.ral_level_2_id?.value,
       ral_level_3_id: data.ral_level_3_id?.value,
@@ -405,44 +419,44 @@ const FormEditData = () => {
             )}
           />
         </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="metode_layanan"
-          >
-            Metode Layanan :
-          </label>
-          <Controller
-            name="metode_layanan"
-            control={control}
-            rules={{required: "Metode Layanan Harus Terisi"}}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded"
-                  id="metode_layanan"
-                  type="text"
-                  value={field.value || selectedMetodeLayanan}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setSelectedMetodeLayanan(e.target.value);
-                  }}
-                />
-                {errors.metode_layanan ?
-                  <h1 className="text-red-500">
-                    {errors.metode_layanan.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Metode Layanan Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
 
         {isClient && (
           <>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="metode_layanan"
+              >
+                Metode Layanan :
+              </label>
+              <Controller
+                name="metode_layanan"
+                control={control}
+                rules={{ required: "Metode Layanan harus terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      id="tahun"
+                      value={selectedMetodeLayanan}
+                      options={MetodeLayanan}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        handleChange(option, { name: "metode_layanan" });
+                      }}
+                      isClearable={true}
+                    />
+                    {errors.metode_layanan ?
+                      <h1 className="text-red-500">
+                        {errors.metode_layanan.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Metode Layanan Layanan Harus Terisi</h1>
+                    }
+                  </>
+                )}
+              />
+            </div>
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"

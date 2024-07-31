@@ -8,9 +8,11 @@ import PopUp from "@/components/common/PopUp/PopUp";
 interface dataInformasi {
     Id: number
     NamaData : string,
+    UraianData : string,
     SifatData : string,
     JenisData : string,
     ProdusenData : string,
+    ValiditasData: string,
     PjData : string,
     KodeOPD : string,
     InformasiTerkaitInput : string,
@@ -107,8 +109,10 @@ const Table = () => {
                     <tr>
                         <th className="px-6 py-3 max-w-[20px] sticky bg-white left-[-2px]">No.</th>
                         <th className="px-6 py-3 min-w-[200px]">Nama Data</th>
+                        <th className="px-6 py-3 min-w-[200px]">Uraian Data</th>
                         <th className="px-6 py-3 min-w-[200px]">Sifat Data</th>
                         <th className="px-6 py-3 min-w-[200px]">Jenis Data</th>
+                        <th className="px-6 py-3 min-w-[200px]">Validitas Data</th>
                         <th className="px-6 py-3 min-w-[200px]">Produsen Data</th>
                         <th className="px-6 py-3 min-w-[200px]">Penanggung Jawab Data</th>
                         <th className="px-6 py-3 min-w-[200px]">Informasi Terkait Input</th>
@@ -138,8 +142,10 @@ const Table = () => {
                         <tr key={data.Id} className="border rounded-b-lg hover:bg-slate-50">
                             <td className="px-6 py-4 sticky bg-white left-[-2px]">{index + 1}</td>
                             <td className="px-6 py-4">{data.NamaData? `${data.NamaData}` : "N/A"}</td>
+                            <td className="px-6 py-4">{data.UraianData? `${data.UraianData}` : "N/A"}</td>
                             <td className="px-6 py-4">{data.SifatData? `${data.SifatData}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.JenisData? `${data.JenisData}`: "N/A"}</td>
+                            <td className="px-6 py-4">{data.ValiditasData? `${data.ValiditasData}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.ProdusenData? `${data.ProdusenData}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.PjData? `${data.PjData}` : "N/A"}</td>
                             <td className="px-6 py-4">{data.InformasiTerkaitInput ? `${data.InformasiTerkaitInput}`: "N/A"}</td>

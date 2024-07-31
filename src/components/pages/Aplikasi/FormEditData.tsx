@@ -13,16 +13,21 @@ interface OptionType {
   label: string;
 }
 
+interface OptionTypeString {
+  value: string;
+  label: string;
+}
+
 interface formValue {
     nama_aplikasi : string,
     fungsi_aplikasi : string,
-    jenis_aplikasi : string,
+    jenis_aplikasi : OptionTypeString | null,
     produsen_aplikasi : string,
     pj_aplikasi : string,
     kode_opd : string,
     informasi_terkait_input : string,
     informasi_terkait_output : string,
-    interoprabilitas : string,
+    interoprabilitas : OptionTypeString | null,
     tahun : OptionType | null,
     raa_level_1_id : OptionType | null,
     raa_level_2_id : OptionType | null,
@@ -52,14 +57,14 @@ const FormEditData = () => {
   //state untuk fetch default value data by id
   const [namaAplikasi, setNamaAplikasi] = useState<string>("");
   const [selectedFungsiAplikasi, setSelectedFungsiAplikasi] = useState<string>("");
-  const [selectedJenisAplikasi, setSelectedJenisAplikasi] = useState<string>("");
   const [selectedProdusenAplikasi, setSelectedProdusenAplikasi] = useState<string>("");
   const [selectedPjAplikasi, setSelectedPjAplikasi] = useState<string>("");
   const [kode_opd, set_kode_opd] = useState<string>("");
   const [selectedInformasiTerkaitInput, setSelectedInformasiTerkaitInput] = useState<string>("");
   const [selectedInformasiTerkaitOutput, setSelectedInformasiTerkaitOutput] = useState<string>("");
-  const [selectedInteroprabilitas, setSelectedInteroprabilitas] = useState<string>("");
   
+  const [selectedJenisAplikasi, setSelectedJenisAplikasi] = useState<OptionTypeString | null>(null);
+  const [selectedInteroprabilitas, setSelectedInteroprabilitas] = useState<OptionTypeString | null>(null);
   const [selectedTahun, setSelectedTahun] = useState<OptionType | null>(null);
   const [selectedRaa1, setSelectedRaa1] = useState<OptionType | null>(null);
   const [selectedRaa2, setSelectedRaa2] = useState<OptionType | null>(null);
@@ -78,6 +83,16 @@ const FormEditData = () => {
     { value: 2029, label: "2029" },
     { value: 2030, label: "2030" },
   ];
+  const interoprabilitas: OptionTypeString[] = [
+    { value: "Ya", label: "Ya"},
+    { value: "Tidak", label: "Tidak"}
+  ]
+  const JenisAplikasi: OptionTypeString[] = [
+    { value: "Statistik", label: "Statistik"},
+    { value: "Geospasial", label: "Geospasial"},
+    { value: "Keuangan", label: "Keuangan"},
+    { value: "Lainnya", label: "Lainnya"}
+  ]
 
   useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -94,10 +109,6 @@ const FormEditData = () => {
         if (result.FungsiAplikasi) {
           setSelectedFungsiAplikasi(result.FungsiAplikasi);
           reset((prev) => ({...prev, fungsi_aplikasi: result.FungsiAplikasi,}));
-        }
-        if (result.JenisAplikasi) {
-          setSelectedJenisAplikasi(result.JenisAplikasi);
-          reset((prev) => ({...prev, jenis_aplikasi: result.JenisAplikasi,}));
         }
         if (result.SifatAplikasi) {
           setSelectedProdusenAplikasi(result.ProdusenAplikasi);
@@ -123,11 +134,24 @@ const FormEditData = () => {
           setSelectedInformasiTerkaitOutput(result.InformasiTerkaitOutput);
           reset((prev) => ({ ...prev, informasi_terkait_output: result.InformasiTerkaitOutput }));
         }
+        
+        //default dropdown
         if (result.Interoprabilitas) {
-          setSelectedInteroprabilitas(result.Interoprabilitas);
-          reset((prev) => ({ ...prev, interoprabilitas: result.Interoprabilitas }));
+          const selectedInteroprabilitas = {
+            value: result.Interoprabilitas,
+            label: result.Interoprabilitas,
+          };
+          setSelectedInteroprabilitas(selectedInteroprabilitas);
+          reset((prev) => ({ ...prev, interoprabilitas: result.selectedInteroprabilitas }));
         }
-
+        if (result.JenisAplikasi) {
+          const selectedJenisAplikasi = {
+            value: result.JenisAplikasi,
+            label: result.JenisAplikasi,
+          };
+          setSelectedJenisAplikasi(selectedJenisAplikasi);
+          reset((prev) => ({...prev, jenis_aplikasi: result.selectedJenisAplikasi,}));
+        }
         if (result.Tahun) {
           const selectedTahun = {
             value: result.Tahun,
@@ -255,6 +279,10 @@ const FormEditData = () => {
       setSelectedOperational(option);
     } else if (actionMeta.name === "tahun") {
       setSelectedTahun(option);
+    } else if (actionMeta.name === "jenis_aplikasi") {
+      setSelectedJenisAplikasi(option);
+    } else if (actionMeta.name === "interoprabilitas") {
+      setSelectedInteroprabilitas(option);
     }
   };
 
@@ -264,13 +292,13 @@ const FormEditData = () => {
     const formData = {
       nama_aplikasi: data.nama_aplikasi,
       fungsi_aplikasi: data.fungsi_aplikasi,
-      jenis_aplikasi: data.jenis_aplikasi,
+      jenis_aplikasi: data.jenis_aplikasi?.value,
       produsen_aplikasi: data.produsen_aplikasi,
       pj_aplikasi: data.pj_aplikasi,
       kode_opd: "5.01.5.05.0.00.02.0000",
       informasi_terkait_input: data.informasi_terkait_input,
       informasi_terkait_output: data.informasi_terkait_output,
-      interoprabilitas: data.interoprabilitas,
+      interoprabilitas: data.interoprabilitas?.value,
       tahun: data.tahun?.value,
       raa_level_1_id: data.raa_level_1_id?.value,
       raa_level_2_id: data.raa_level_2_id?.value,
@@ -374,41 +402,6 @@ const FormEditData = () => {
                   </h1>
                   :
                   <h1 className="text-slate-300 text-xs">*Fungsi Aplikasi Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="jenis_aplikasi"
-          >
-            Jenis Aplikasi :
-          </label>
-          <Controller
-            name="jenis_aplikasi"
-            control={control}
-            rules={{required: "Jenis Aplikasi Harus Terisi"}}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded"
-                  id="jenis_aplikasi"
-                  type="text"
-                  value={field.value || selectedJenisAplikasi}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setSelectedJenisAplikasi(e.target.value);
-                  }}
-                />
-                {errors.jenis_aplikasi ?
-                  <h1 className="text-red-500">
-                    {errors.jenis_aplikasi.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Jenis Aplikasi Harus Terisi</h1>
                 }
               </>
             )}
@@ -554,45 +547,80 @@ const FormEditData = () => {
             )}
           />
         </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="interoprabilitas"
-          >
-            Interoprabilitas :
-          </label>
-          <Controller
-            name="interoprabilitas"
-            control={control}
-            rules={{required: "Interoprabilitas Harus Terisi"}}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded"
-                  id="interoprabilitas"
-                  type="text"
-                  value={field.value || selectedInteroprabilitas}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setSelectedInteroprabilitas(e.target.value);
-                  }}
-                />
-                {errors.interoprabilitas ?
-                  <h1 className="text-red-500">
-                    {errors.interoprabilitas.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Interoprabilitas Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
 
 
         {isClient && (
           <>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="jenis_aplikasi"
+              >
+                Jenis Aplikasi :
+              </label>
+              <Controller
+                name="jenis_aplikasi"
+                control={control}
+                rules={{ required: "Jenis Aplikasi harus terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      id="jenis_aplikasi"
+                      value={selectedJenisAplikasi}
+                      options={JenisAplikasi}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        handleChange(option, { name: "jenis_aplikasi" });
+                      }}
+                      isClearable={true}
+                    />
+                    {errors.jenis_aplikasi ?
+                      <h1 className="text-red-500">
+                        {errors.jenis_aplikasi.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Jenis Aplikasi Harus Terisi</h1>
+                    }
+                  </>
+                )}
+              />
+            </div>
+            <div className="flex flex-col py-3">
+              <label
+                className="uppercase text-xs font-bold text-gray-700 my-2"
+                htmlFor="interoprabilitas"
+              >
+                Interoprabilitas :
+              </label>
+              <Controller
+                name="interoprabilitas"
+                control={control}
+                rules={{ required: "Interoprabilitas harus terisi" }}
+                render={({ field }) => (
+                  <>
+                    <Select
+                      {...field}
+                      id="tahun"
+                      value={selectedInteroprabilitas}
+                      options={interoprabilitas}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        handleChange(option, { name: "interoprabilitas" });
+                      }}
+                      isClearable={true}
+                    />
+                    {errors.interoprabilitas ?
+                      <h1 className="text-red-500">
+                        {errors.interoprabilitas.message}
+                      </h1>
+                      :
+                      <h1 className="text-slate-300 text-xs">*Interoprabilitas Harus Terisi</h1>
+                    }
+                  </>
+                )}
+              />
+            </div>
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"
