@@ -5,7 +5,7 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import Button from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useRouter } from "next/navigation";
-import PopUp from "@/components/common/PopUp/PopUp";
+import { AlertNotification } from "@/components/common/Alert/Alert";
 
 interface OptionType {
   value: number;
@@ -42,9 +42,6 @@ const FormTambahData = () => {
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  //state validasi & popup
-  const [popup, setPopup] = useState<boolean>(false);
-  const [isAdded, setIsAdded] = useState<boolean>(false);
 
   const tahun: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -177,15 +174,13 @@ const FormTambahData = () => {
         body: JSON.stringify(formData),
       });
       if(response.ok){
-        setPopup(true);
-        setIsAdded(true);
+        AlertNotification("Berhasil", "Berhasil menambahkan data proses bisnis", "success", 1000);
+        router.push("/ProsesBisnis")
       } else {
-        setPopup(true);
-        setIsAdded(false);
+        AlertNotification("Gagal", "cek koneksi interet atau database server", "error", 2000);
       }
     } catch(err){
-        setPopup(true);
-        setIsAdded(false);
+        AlertNotification("Gagal", "cek koneksi interet atau database server", "error", 2000);
     }
   };
 
@@ -549,25 +544,6 @@ const FormTambahData = () => {
           Batal
         </Button>
       </form>
-      <PopUp isOpen={popup} onClose={() => {setPopup(false); setIsAdded(false);}}>
-        <div className="flex flex-col justify-center">
-          {isAdded ? 
-            <h1>Berhasil menambahkan data proses bisnis</h1>
-            :
-            <h1>Gagal menambahkan data proses bisnis, silakan cek koneksi internet atau database server</h1>
-          }
-          <Button
-            className="mt-5"
-            onClick={() => {
-              setPopup(false);
-              setIsAdded(false);
-              router.push("/ProsesBisnis");
-            }}
-          >
-            Tutup
-          </Button>
-        </div>
-      </PopUp>
     </div>
   );
 };

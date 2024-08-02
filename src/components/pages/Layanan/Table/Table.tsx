@@ -3,7 +3,7 @@
 import Button from "@/components/common/Button/Button";
 import Loading from "@/components/global/Loading/Loading";
 import { useState, useEffect } from "react";
-import PopUp from "@/components/common/PopUp/PopUp";
+import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 
 interface layanan {
     Id: number;
@@ -50,11 +50,6 @@ const Table = () => {
     const [dataNull, setDataNull] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
-    //state validasi & popup
-    const [popup, setPopup] = useState<boolean>(false);
-    const [terhapus, setTerhapus] = useState<boolean>(false);
-    const [hapus, setHapus] = useState<boolean>(false);
-    const [getId, setId] = useState<number | null>(null);
     
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -91,11 +86,9 @@ const Table = () => {
                 throw new Error("gagal terhubung dengan database server")
             }
             setLayanan(layanan.filter((item) => item.Id !== Id));
-            setHapus(true);
-            setTerhapus(true);
+            AlertNotification("Berhasil", "Berhasil hapus data layanan", "success", 1000);
         } catch(err){
-            setHapus(true);
-            setTerhapus(false);
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
         }
     }
 
@@ -170,64 +163,15 @@ const Table = () => {
                                         typee="button" 
                                         className="bg-red-500 my-1"
                                         onClick={() => {
-                                            setPopup(true);
-                                            setId(data.Id);
+                                            AlertQuestion("Hapus?", "hapus layanan yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                                if(result.isConfirmed){
+                                                    hapusDataLayanan(data.Id);
+                                                }
+                                              })
                                         }}
                                     >
                                         Hapus
                                     </Button>
-                                    <PopUp 
-                                        isOpen={popup} 
-                                        onClose={() => {
-                                            setPopup(false);
-                                            setId(null);
-                                            setHapus(false);
-                                            setTerhapus(false);
-                                            }}
-                                        >
-                                        {hapus ? 
-                                       <>
-                                           <div className="flex flex-col justify-center">
-                                            {terhapus ?
-                                                <h1>data berhasil terhapus</h1>
-                                                :
-                                                <h1>data gagal terhapus</h1>
-                                            }
-                                                <Button className="mt-5" 
-                                                    onClick={() => {
-                                                        setPopup(false);
-                                                        setId(null);
-                                                        setHapus(false);
-                                                        setTerhapus(false);
-                                                    }}
-                                                >
-                                                    Tutup
-                                                </Button>
-                                           </div>
-                                       </>
-                                        :
-                                       <>
-                                            <h1>Hapus data Layanan yang dipilih?</h1>
-                                            <div className="flex justify-around mt-5">
-                                                <Button 
-                                                    onClick={() => {
-                                                        setPopup(false);
-                                                        setId(null)
-                                                    }}
-                                                >
-                                                    Batal
-                                                </Button>
-                                                <Button className="bg-red-500 hover:bg-red-700" 
-                                                    onClick={() => {
-                                                        hapusDataLayanan(getId);
-                                                    }}
-                                                >
-                                                    Hapus
-                                                </Button>
-                                            </div>
-                                       </>
-                                        }
-                                    </PopUp>
                                 </td>
                             </tr>
                             ))

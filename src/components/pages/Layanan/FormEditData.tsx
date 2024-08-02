@@ -6,7 +6,7 @@ import Button from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import PopUp from "@/components/common/PopUp/PopUp";
+import { AlertNotification } from "@/components/common/Alert/Alert";
 
 interface OptionType {
   value: number;
@@ -45,8 +45,6 @@ const FormEditData = () => {
   } = useForm<formValue>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
-  const [popup, setPopup] = useState<boolean>(false);
-  const [edited, setEdited] = useState<boolean>(false);
 
   const [ral_1_4, set_ral_1_4] = useState<OptionType[]>([]);
   const [ral_5_7, set_ral_5_7] = useState<OptionType[]>([]);
@@ -294,16 +292,13 @@ const FormEditData = () => {
       });
 
       if (response.ok) {
-        setPopup(true);
-        setEdited(true)
-        reset();
+        AlertNotification("Berhasil", "Berhasil edit data layanan", "success", 1000);
+        router.push("/Layanan/LayananSPBE")
       } else {
-        setPopup(true);
-        setEdited(false);
+        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
       }
     } catch (error) {
-        setPopup(true);
-        setEdited(false);
+        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
     }
   };
 
@@ -859,25 +854,6 @@ const FormEditData = () => {
           Batal
         </Button>
       </form>
-      <PopUp isOpen={popup} onClose={() => setPopup(false)}>
-        <div className="flex flex-col justify-around">
-          {edited ?
-            <h1>Berhasil edit data layanan</h1>
-            :
-            <h1>Gagal edit data layanan, periksa koneksi internet atau database server</h1>
-          }
-          <Button 
-            className="mt-5"
-            onClick={() => {
-              setPopup(false);
-              setEdited(false);
-              router.push("/Layanan/LayananSPBE")
-            }}
-          >
-            Tutup
-          </Button>
-        </div>
-      </PopUp>
     </div>
   );
 };

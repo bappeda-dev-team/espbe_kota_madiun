@@ -6,7 +6,7 @@ import Button from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import PopUp from "@/components/common/PopUp/PopUp";
+import { AlertNotification } from "@/components/common/Alert/Alert";
 
 interface OptionType {
   value: number;
@@ -48,8 +48,6 @@ const FormEditData = () => {
   } = useForm<formValue>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
-  const [popup, setPopup] = useState<boolean>(false);
-  const [edited, setEdited] = useState<boolean>(false);
 
   const [raa_1_4, set_raa_1_4] = useState<OptionType[]>([]);
   const [raa_5_7, set_raa_5_7] = useState<OptionType[]>([]);
@@ -142,7 +140,7 @@ const FormEditData = () => {
             label: result.Interoprabilitas,
           };
           setSelectedInteroprabilitas(selectedInteroprabilitas);
-          reset((prev) => ({ ...prev, interoprabilitas: result.selectedInteroprabilitas }));
+          reset((prev) => ({ ...prev, interoprabilitas: selectedInteroprabilitas }));
         }
         if (result.JenisAplikasi) {
           const selectedJenisAplikasi = {
@@ -150,7 +148,7 @@ const FormEditData = () => {
             label: result.JenisAplikasi,
           };
           setSelectedJenisAplikasi(selectedJenisAplikasi);
-          reset((prev) => ({...prev, jenis_aplikasi: result.selectedJenisAplikasi,}));
+          reset((prev) => ({...prev, jenis_aplikasi: selectedJenisAplikasi,}));
         }
         if (result.Tahun) {
           const selectedTahun = {
@@ -317,16 +315,14 @@ const FormEditData = () => {
         });
   
         if (response.ok) {
-          setPopup(true);
-          setEdited(true)
+          AlertNotification("Berhasil", "Data Aplikasi Berhasil Diubah", "success", 1000);
+          router.push("/Aplikasi");
           reset();
         } else {
-          setPopup(true);
-          setEdited(false);
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
         }
       } catch (error) {
-          setPopup(true);
-          setEdited(false);
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
       }
   };
 
@@ -933,25 +929,6 @@ const FormEditData = () => {
           Batal
         </Button>
       </form>
-      <PopUp isOpen={popup} onClose={() => setPopup(false)}>
-        <div className="flex flex-col justify-around">
-          {edited ?
-            <h1>Berhasil edit data informasi</h1>
-            :
-            <h1>Gagal edit data informasi, periksa koneksi internet atau database server</h1>
-          }
-          <Button 
-            className="mt-5"
-            onClick={() => {
-              setPopup(false);
-              setEdited(false);
-              router.push("/Aplikasi")
-            }}
-          >
-            Tutup
-          </Button>
-        </div>
-      </PopUp>
     </div>
   );
 };

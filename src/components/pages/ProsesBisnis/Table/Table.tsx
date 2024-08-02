@@ -5,7 +5,7 @@ import Loading from "../../../global/Loading/Loading";
 import Button from "@/components/common/Button/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import PopUp from "@/components/common/PopUp/PopUp";
+import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 
 interface rabLevel1_3 {
   Id: number;
@@ -58,11 +58,6 @@ function Table() {
   const [loading, setLoading] = useState<boolean>(true);
   const [dataNull, setDataNull] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
-  //state validasi & popup
-  const [popUp, setPopUp] = useState<boolean>(false);
-  const [deleted, setDeleted] = useState<boolean>(false);
-  const [isDeleted, setIsDeleted] = useState<boolean>(false);
-  const [getId, setId] = useState<number | null>(null);
 
   //fetch data proses bisnis
   useEffect(() => {
@@ -86,8 +81,6 @@ function Table() {
           setError(
             "Gagal memuat data, silakan cek koneksi internet atau database server",
           );
-        } finally {
-          setLoading(false);
         }
       };
       fetchingData();
@@ -129,11 +122,9 @@ function Table() {
         throw new Error("cant fetch data");
       }
       setDataProsesBisnis(dataProsesBisnis.filter((item) => item.id !== id));
-      setDeleted(true);
-      setIsDeleted(true);
+      AlertNotification("Berhasil", "Berhasil hapus data proses bisnis", "success", 1000);
     } catch (err) {
-      setDeleted(true);
-      setIsDeleted(false);
+      AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
     }
   };
 
@@ -237,59 +228,15 @@ function Table() {
                       typee="button"
                       className="bg-red-500 hover:bg-red-700 my-1"
                       onClick={() => {
-                        setPopUp(true);
-                        setId(data.id)
+                        AlertQuestion("Hapus?", "hapus proses bisnis yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                          if(result.isConfirmed){
+                              hapusProsesBisnis(data.id);
+                          }
+                        })
                       }}
                     >
                       Hapus
                     </Button>
-                    <PopUp 
-                      isOpen={popUp} 
-                      onClose={() => {
-                        setPopUp(false);
-                        setId(null);
-                        setDeleted(false); 
-                        setIsDeleted(false);
-                        }}
-                    >
-                        {deleted? 
-                        <>
-                          {isDeleted? 
-                            <h1>Data berhasil dihapus</h1>
-                          :
-                            <h1>Data gagal dihapus, periksa koneksi internet/database server</h1>
-                          }
-                          <div className="flex justify-around mt-3">
-                            <Button 
-                              onClick={() => {
-                                setPopUp(false); 
-                                setId(null);
-                                setDeleted(false); 
-                                setIsDeleted(false);
-                              }}
-                            >
-                              tutup
-                            </Button>
-                          </div>
-                        </>
-                        :
-                        <>
-                          <h1>Hapus data yang dipilih?</h1>
-                          <div className="flex justify-around mt-3">
-                            <Button onClick={() => {
-                              setPopUp(false);
-                              setId(null);
-                              }}
-                            >
-                              Batal
-                            </Button>
-                            <Button className="bg-red-500 hover:bg-red-700" onClick={() => hapusProsesBisnis(getId)}>
-                              Hapus
-                            </Button>
-                          </div>
-                        </>
-                        }
-                    </PopUp>
                   </td>
                 </tr>
               ))

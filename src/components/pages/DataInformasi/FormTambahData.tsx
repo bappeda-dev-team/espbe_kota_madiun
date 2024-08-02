@@ -5,7 +5,7 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import Button from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useRouter } from "next/navigation";
-import PopUp from "@/components/common/PopUp/PopUp";
+import { AlertNotification } from "@/components/common/Alert/Alert";
 
 interface OptionType {
   value: number;
@@ -50,8 +50,6 @@ const FormTambahData = () => {
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const [popup, setPopup] = useState<boolean>(false);
-  const [isAdded, setIsAdded] = useState<boolean>(false);
 
   const tahun: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -196,15 +194,13 @@ const FormTambahData = () => {
         body: JSON.stringify(formData),
       });
       if(response.ok){
-        setPopup(true);
-        setIsAdded(true);
+        AlertNotification("Berhasil", "Data Informasi Berhasil Ditambahkan", "success", 1000);
+        router.push("/DataInformasi");
       } else {
-        setPopup(true);
-        setIsAdded(false);
+        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
       }
     } catch(err){
-        setPopup(true);
-        setIsAdded(false);
+        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
     }
   };
 
@@ -836,25 +832,6 @@ const FormTambahData = () => {
           Batal
         </Button>
       </form>
-      <PopUp isOpen={popup} onClose={() => {setPopup(false); setIsAdded(false);}}>
-        <div className="flex flex-col justify-center">
-          {isAdded ? 
-            <h1>Berhasil menambahkan Data Informasi</h1>
-            :
-            <h1>Gagal menambahkan Data Informasi, silakan cek koneksi internet atau database server</h1>
-          }
-          <Button
-            className="mt-5"
-            onClick={() => {
-              setPopup(false);
-              setIsAdded(false);
-              router.push("/DataInformasi");
-            }}
-          >
-            Tutup
-          </Button>
-        </div>
-      </PopUp>
     </div>
   );
 };

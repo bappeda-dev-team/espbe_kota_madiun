@@ -2,8 +2,8 @@
 
 import Button from "@/components/common/Button/Button";
 import { useEffect, useState } from "react";
-import PopUp from "@/components/common/PopUp/PopUp";
 import Loading from "@/components/global/Loading/Loading";
+import { AlertNotification, AlertQuestion} from "@/components/common/Alert/Alert";
 
 interface aplikasi {
     Id: number;
@@ -43,11 +43,6 @@ const Table = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null)
     const [dataNull, setDataNull] = useState<boolean>(false);
-    //state validasi & popup
-    const [hapus, setHapus] = useState<boolean>(false);
-    const [terhapus, setTerhapus] = useState<boolean>(false);
-    const [getId, setId] = useState<number | null>(null);
-    const [popup, setPopup] = useState<boolean>(false);
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -83,12 +78,10 @@ const Table = () => {
             if(!response.ok){
                 alert("cant fetch data")
             }
-            setHapus(true);
-            setTerhapus(true);
             setAplikasi(aplikasi.filter((data) => (data.Id !== Id)))
+            AlertNotification("Berhasil", "Data Aplikasi Berhasil Dihapus", "success", 1000);
         } catch(err){
-            setHapus(true);
-            setTerhapus(false);
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
         }
     }
 
@@ -159,66 +152,15 @@ const Table = () => {
                                     typee="button"
                                     className="bg-red-500 my-1"
                                     onClick={() => {
-                                        setId(data.Id);
-                                        setPopup(true);
+                                        AlertQuestion("Hapus?", "hapus Aplikasi yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                            if(result.isConfirmed){
+                                                hapusAplikasi(data.Id);
+                                            }
+                                        });
                                     }}
                                 >
                                     Hapus
                                 </Button>
-                                <PopUp 
-                                    isOpen={popup}
-                                    onClose={() => {
-                                        setPopup(false);
-                                        setId(null);
-                                        setHapus(false);
-                                        setTerhapus(false);
-                                    }}
-                                >
-                                    {hapus? 
-                                    <>
-                                        <div className="flex flex-col justify-center">
-                                        {terhapus ? 
-                                            <h1>Berhasil menghapus Data Aplikasi</h1>
-                                        :
-                                            <h1>Gagal menghapus Data Aplikasi, cek koneksi internet atau database server</h1>
-                                        }
-                                            <Button
-                                                className="mt-5"
-                                                onClick={() => {
-                                                    setPopup(false);
-                                                    setId(null);
-                                                    setHapus(false);
-                                                    setTerhapus(false);
-                                                }}
-                                            >
-                                                Tutup
-                                            </Button>
-                                        </div>
-                                    </>
-                                    :
-                                    <>
-                                        <h1>Hapus Data Aplikasi yang dipilih?</h1>
-                                        <div className="flex justify-around mt-5">
-                                            <Button
-                                                onClick={() => {
-                                                    setPopup(false);
-                                                    setId(null);
-                                                }}
-                                                >
-                                                Batal
-                                            </Button>
-                                            <Button 
-                                                className="bg-red-500 hover:bg-red-700"
-                                                onClick={() => {
-                                                    hapusAplikasi(getId);
-                                                }}
-                                                >
-                                                Hapus
-                                            </Button>
-                                        </div>
-                                    </>
-                                    }
-                                </PopUp>
                             </td>
                         </tr>
                         ))

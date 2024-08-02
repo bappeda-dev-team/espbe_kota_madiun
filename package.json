@@ -18,7 +18,8 @@
     "react-hook-form": "^7.51.5",
     "react-redux": "^9.1.2",
     "react-select": "^5.8.0",
-    "select2": "^4.1.0-rc.0"
+    "select2": "^4.1.0-rc.0",
+    "sweetalert2": "^11.12.3"
   },
   "devDependencies": {
     "@types/node": "^20",
