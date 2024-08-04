@@ -10,7 +10,15 @@ function Header() {
   const url = usePathname();
 
   useEffect(() => {
-    if (url === "/" || url === "/User" || url === "/DataMaster" || url === "/PohonKinerja") {
+    if (
+        url === "/" || 
+        url === "/User" || 
+        url === "/DataMaster" ||
+        url === "/PohonKinerja" ||
+        url === "/ReferensiArsitektur" ||
+        url === "/SasaranKota" ||
+        url === "/BidangUrusan" 
+      ) {
       setTextPath("Kota");
     } else if (
       url === "/ProsesBisnis" ||
@@ -28,6 +36,8 @@ function Header() {
       url === `/Aplikasi/EditData/${Id}` ||
       url === "/GapArsitektur" ||
       url === "/Arsitektur" ||
+      url === "/KebutuhanSPBE" ||
+      url === "/KebutuhanSPBE/TambahKebutuhan" ||
       url === "/SdmInfrastruktur" ||
       url === "/PetaRencana"
     ) {

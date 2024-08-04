@@ -25,6 +25,7 @@ function Sidebar() {
   const [AplikasiActive, setAplikasiActive] = useState<boolean>(false);
   const [ArsiterturActive, setArsitekturActive] = useState<boolean>(false);
   const [GapArsiterturActive, setGapArsitekturActive] = useState<boolean>(false);
+  const [KebutuhanSPBEActive, setKebutuhanSPBEActive] = useState<boolean>(false);
   const [SdmInfrastrukturActive, setSdmInfrastrukturActive] = useState<boolean>(false);
   const [petaRencanaActive, setPetaRencanaActive] = useState<boolean>(false);
 
@@ -63,6 +64,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+        setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/User") {
@@ -84,7 +86,9 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
         setSdmInfrastrukturActive(false);
+        setKebutuhanSPBEActive(false);
       setPetaRencanaActive(false);
+    } else if (url === "/PohonKinerja") {
     } else if (url === "/PohonKinerja") {
       setDahsboardActive(false),
         setUserActive(false),
@@ -101,6 +105,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/ReferensiArsitektur") {
@@ -119,6 +124,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/SasaranKota") {
@@ -137,6 +143,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/BidangUrusan") {
@@ -155,6 +162,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
@@ -174,6 +182,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
@@ -193,6 +202,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/Layanan/StandartPelayanan") {
@@ -208,6 +218,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
@@ -227,6 +238,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
@@ -246,6 +258,7 @@ function Sidebar() {
         setAplikasiActive(true),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/GapArsitektur") {
@@ -261,6 +274,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(true);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/Arsitektur") {
@@ -278,6 +292,22 @@ function Sidebar() {
         setArsitekturActive(true);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
+    } else if (url === "/KebutuhanSPBE") {
+      setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(false),
+        setPohonKinerjaActive(false);
+        setProsesBisnisActive(false),
+        setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setKebutuhanSPBEActive(true);
+        setSdmInfrastrukturActive(false);
+      setPetaRencanaActive(false);
     } else if (url === "/SdmInfrastruktur") {
       setDahsboardActive(false),
         setUserActive(false),
@@ -291,6 +321,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(true);
       setPetaRencanaActive(false);
     } else if (url === "/PetaRencana") {
@@ -306,6 +337,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(true);
     } else {
@@ -321,6 +353,7 @@ function Sidebar() {
         setAplikasiActive(false),
         setGapArsitekturActive(false);
         setArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     }
@@ -794,6 +827,37 @@ function Sidebar() {
                   />
                 )}
                 Gap Arsitektur
+              </li>
+            </Link>
+            <Link
+              className={KebutuhanSPBEActive ? "text-white" : ""}
+              href="/KebutuhanSPBE"
+            >
+              <li
+                className={
+                  KebutuhanSPBEActive
+                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                }
+              >
+                {KebutuhanSPBEActive ? (
+                  <Image
+                    className="pr-2"
+                    src="/iconLight/clipboard-text.svg"
+                    alt="clipboard-text"
+                    width={30}
+                    height={30}
+                  />
+                ) : (
+                  <Image
+                    className="pr-2"
+                    src="/iconDark/clipboard-text.svg"
+                    alt="clipboard-text"
+                    width={30}
+                    height={30}
+                  />
+                )}
+                Kebutuhan SPBE
               </li>
             </Link>
             <Link

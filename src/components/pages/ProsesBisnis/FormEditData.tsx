@@ -6,7 +6,6 @@ import Button from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import PopUp from "@/components/common/PopUp/PopUp";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 
 interface OptionType {
