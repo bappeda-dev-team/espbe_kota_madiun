@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useForm, Controller, SubmitHandler, useFieldArray } from "react-hook-form";
 import Select from "react-select";
 import Button from "@/components/common/Button/Button";
 import { AlertNotification } from "@/components/common/Alert/Alert";
@@ -66,6 +66,11 @@ const FormTambahKebutuhan = () => {
     useEffect(() => {
         setIsClient(true);
     }, []);
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "jenis_kebutuhan",
+    });
 
     const fetchDomain = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -162,6 +167,13 @@ const FormTambahKebutuhan = () => {
                                             placeholder="Pilih nama domain"
                                             isLoading={isLoading}
                                             onMenuOpen={() => fetchDomain()}
+                                            styles={{
+                                                control: (baseStyles, state) => ({
+                                                  ...baseStyles,
+                                                  borderRadius: '8px', // This applies the rounded-full effect
+                                                  borderColor: state.isFocused ? 'your-focus-color' : 'your-normal-color',
+                                                }),
+                                              }}
                                         />
                                         {errors.nama_domain ? (
                                             <h1 className="text-red-500">
@@ -192,6 +204,13 @@ const FormTambahKebutuhan = () => {
                                             placeholder="Pilih Proses Bisnis"
                                             isLoading={isLoading}
                                             onMenuOpen={() => fetchProsesBisnis()}
+                                            styles={{
+                                                control: (baseStyles, state) => ({
+                                                  ...baseStyles,
+                                                  borderRadius: '8px', // This applies the rounded-full effect
+                                                  borderColor: state.isFocused ? 'your-focus-color' : 'your-normal-color',
+                                                }),
+                                              }}
                                         />
                                         {errors.id_prosesbisnis ? (
                                             <h1 className="text-red-500">
@@ -204,93 +223,82 @@ const FormTambahKebutuhan = () => {
                                 )}
                             />
                         </div>
-                        {/* jenis kebutuhan */}
-                        <div className="flex flex-col py-3">
-                            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="kebutuhan">
-                                Jenis Kebutuhan :
-                            </label>
-                            <Controller
-                                name="jenis_kebutuhan.0.kebutuhan"
-                                control={control}
-                                rules={{ required: "Jenis Kebutuhan Harus Terisi" }}
-                                render={({ field }) => (
-                                    <>
-                                        <input
-                                            className="border px-4 py-2 rounded"
-                                            {...field}
-                                            type="text"
-                                            id="kebutuhan"
-                                            placeholder="Masukkan jenis kebutuhan"
-                                        />
-                                        {errors.jenis_kebutuhan?.[0]?.kebutuhan ? (
-                                            <h1 className="text-red-500">
-                                                {errors.jenis_kebutuhan[0].kebutuhan?.message}
-                                            </h1>
-                                        ) : (
-                                            <h1 className="text-slate-300 text-xs">*Jenis Kebutuhan Harus Terisi</h1>
+                        {/* Jenis Kebutuhan */}
+                        {fields.map((item, index) => (
+                            <div className="bg-emerald-50 mb-3 mt-1 px-3 rounded-lg" key={item.id}>
+                                <div className="flex flex-col py-3">
+                                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor={`jenis_kebutuhan.${index}.kebutuhan`}>
+                                        Jenis Kebutuhan {index + 1}:
+                                    </label>
+                                    <Controller
+                                        name={`jenis_kebutuhan.${index}.kebutuhan`}
+                                        control={control}
+                                        rules={{ required: "Jenis Kebutuhan Harus Terisi" }}
+                                        render={({ field }) => (
+                                            <>
+                                                <input
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    {...field}
+                                                    type="text"
+                                                    id={`jenis_kebutuhan.${index}.kebutuhan`}
+                                                    placeholder="Masukkan jenis kebutuhan"
+                                                />
+                                                {errors.jenis_kebutuhan?.[index]?.kebutuhan ? (
+                                                    <h1 className="text-red-500">
+                                                        {errors.jenis_kebutuhan[index].kebutuhan?.message}
+                                                    </h1>
+                                                ) : (
+                                                    <h1 className="text-slate-300 text-xs">*Jenis Kebutuhan Harus Terisi</h1>
+                                                )}
+                                            </>
                                         )}
-                                    </>
-                                )}
-                            />
-                        </div>
-                        {/* kondisi awal */}
-                        <div className="flex flex-col py-3">
-                            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="kondisi_awal1">
-                                Kondisi Awal 1 :
-                            </label>
-                            <Controller
-                                name="jenis_kebutuhan.0.kondisi_awal.0.keterangan"
-                                control={control}
-                                rules={{ required: "Kondisi Awal 1 Harus Terisi" }}
-                                render={({ field }) => (
-                                    <>
-                                        <input
-                                            className="border px-4 py-2 rounded"
-                                            {...field}
-                                            type="textarea"
-                                            id="kondisi_awal1"
-                                            placeholder="Masukkan kondisi awal 1"
+                                    />
+                                </div>
+                                {/* Kondisi Awal */}
+                                {item.kondisi_awal.map((_, subIndex) => (
+                                    <div className="flex flex-col py-3" key={subIndex}>
+                                        <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor={`jenis_kebutuhan.${index}.kondisi_awal.${subIndex}.keterangan`}>
+                                            Kondisi Awal {subIndex + 1}:
+                                        </label>
+                                        <Controller
+                                            name={`jenis_kebutuhan.${index}.kondisi_awal.${subIndex}.keterangan`}
+                                            control={control}
+                                            rules={{ required: `Kondisi Awal ${subIndex + 1} Harus Terisi` }}
+                                            render={({ field }) => (
+                                                <>
+                                                    <input
+                                                        className="border px-4 py-2 rounded-lg"
+                                                        {...field}
+                                                        type="text"
+                                                        id={`jenis_kebutuhan.${index}.kondisi_awal.${subIndex}.keterangan`}
+                                                        placeholder={`Masukkan kondisi awal ${subIndex + 1}`}
+                                                    />
+                                                    {errors.jenis_kebutuhan?.[index]?.kondisi_awal?.[subIndex]?.keterangan ? (
+                                                        <h1 className="text-red-500">
+                                                            {errors.jenis_kebutuhan[index].kondisi_awal[subIndex].keterangan?.message}
+                                                        </h1>
+                                                    ) : (
+                                                        <h1 className="text-slate-300 text-xs">*Kondisi Awal {subIndex + 1} Harus Terisi</h1>
+                                                    )}
+                                                </>
+                                            )}
                                         />
-                                        {errors.jenis_kebutuhan?.[0]?.kondisi_awal?.[0]?.keterangan ? (
-                                            <h1 className="text-red-500">
-                                                {errors.jenis_kebutuhan[0].kondisi_awal[0].keterangan?.message}
-                                            </h1>
-                                        ) : (
-                                            <h1 className="text-slate-300 text-xs">*Kondisi Awal 1 Harus Terisi</h1>
-                                        )}
-                                    </>
-                                )}
-                            />
-                        </div>
-                        <div className="flex flex-col py-3">
-                            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="kondisi_awal2">
-                                Kondisi Awal 2 :
-                            </label>
-                            <Controller
-                                name="jenis_kebutuhan.0.kondisi_awal.1.keterangan"
-                                control={control}
-                                rules={{ required: "Kondisi Awal 2 Harus Terisi" }}
-                                render={({ field }) => (
-                                    <>
-                                        <input
-                                            className="border px-4 py-2 rounded"
-                                            {...field}
-                                            type="textarea"
-                                            id="kondisi_awal2"
-                                            placeholder="Masukkan kondisi awal 2"
-                                        />
-                                        {errors.jenis_kebutuhan?.[0]?.kondisi_awal?.[1]?.keterangan ? (
-                                            <h1 className="text-red-500">
-                                                {errors.jenis_kebutuhan[0].kondisi_awal[1].keterangan?.message}
-                                            </h1>
-                                        ) : (
-                                            <h1 className="text-slate-300 text-xs">*Kondisi Awal 2 Harus Terisi</h1>
-                                        )}
-                                    </>
-                                )}
-                            />
-                        </div>
-                        <Button typee="submit">Tambah Kebutuhan</Button>
+                                    </div>
+                                ))}
+
+                                {/* Button to remove a specific jenis kebutuhan */}
+                                <Button className="bg-red-500 hover:bg-red-700 mb-3" typee="button" onClick={() => remove(index)}>Hapus Jenis Kebutuhan</Button>
+                            </div>
+                        ))}
+                        {/* Button to add new jenis kebutuhan */}
+                        <Button
+                            className="bg-gradient-to-r from-[#071952] to-[#008DDA] text-white hover:from-[#256D85] hover:to-[#8FE3CF] mb-3"
+                            typee="button"
+                            onClick={() => append({ kebutuhan: "", kondisi_awal: [{ keterangan: "", tahun: 2023 }, { keterangan: "", tahun: 2024 }] })}
+                        >
+                            Tambah Jenis Kebutuhan
+                        </Button>
+                        <Button typee="submit">Simpan Data Kebutuhan SPBE</Button>
                         <Button className="bg-red-500 hover:bg-red-700 mt-3" halaman_url="/KebutuhanSPBE">Kembali</Button>
                     </form>
                 </div>

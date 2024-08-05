@@ -167,7 +167,12 @@ const Table = () => {
                                         </>
                                     )}
                                     <td className="px-6 py-4 flex flex-col gap-2">
-                                        <Button className="my-1">Edit</Button>
+                                        <Button 
+                                            className="my-1"
+                                            halaman_url={`/KebutuhanSPBE/EditKebutuhan/${data.id}`}
+                                        >
+                                            Edit
+                                        </Button>
                                         <Button
                                             className="my-1 bg-red-500 hover:bg-red-700"
                                             onClick={() => {

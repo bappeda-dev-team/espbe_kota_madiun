@@ -292,7 +292,10 @@ function Sidebar() {
         setArsitekturActive(true);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
-    } else if (url === "/KebutuhanSPBE") {
+    } else if (
+      url === "/KebutuhanSPBE" ||
+      url === "/KebutuhanSPBE/TambahKebutuhan"
+    ) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
