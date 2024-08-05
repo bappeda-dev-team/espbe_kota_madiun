@@ -145,7 +145,7 @@ const Table = () => {
                                                 <div className="flex flex-col">
                                                     {data.jenis_kebutuhan.map((info, idx) => (
                                                     <div key={info.id}>
-                                                        <div>{info.kebutuhan}</div>
+                                                        <div>{info.kebutuhan? info.kebutuhan : "N/A"}</div>
                                                     </div>
                                                 ))}
                                                 </div>

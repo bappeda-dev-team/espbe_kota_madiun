@@ -38,6 +38,7 @@ function Header() {
       url === "/Arsitektur" ||
       url === "/KebutuhanSPBE" ||
       url === "/KebutuhanSPBE/TambahKebutuhan" ||
+      url === `/KebutuhanSPBE/EditKebutuhan/${id}` ||
       url === "/SdmInfrastruktur" ||
       url === "/PetaRencana"
     ) {

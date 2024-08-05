@@ -294,7 +294,8 @@ function Sidebar() {
       setPetaRencanaActive(false);
     } else if (
       url === "/KebutuhanSPBE" ||
-      url === "/KebutuhanSPBE/TambahKebutuhan"
+      url === "/KebutuhanSPBE/TambahKebutuhan" ||
+      url === `/KebutuhanSPBE/EditKebutuhan/${id}`
     ) {
       setDahsboardActive(false),
         setUserActive(false),

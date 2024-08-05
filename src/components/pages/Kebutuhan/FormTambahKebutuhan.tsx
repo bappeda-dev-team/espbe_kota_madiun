@@ -94,7 +94,7 @@ const FormTambahKebutuhan = () => {
        const API_URL = process.env.NEXT_PUBLIC_API_URL;
        setIsLoading(true);
        try{
-            const response = await fetch(`${API_URL}/v1/prosesbisnis`);
+            const response = await fetch(`${API_URL}/v1/prosesbisnisnogap`);
             const data = await response.json();
             const result = data.data.map((item: any) => ({
                 label: item.nama_proses_bisnis,
@@ -245,7 +245,7 @@ const FormTambahKebutuhan = () => {
                                                 />
                                                 {errors.jenis_kebutuhan?.[index]?.kebutuhan ? (
                                                     <h1 className="text-red-500">
-                                                        {errors.jenis_kebutuhan[index].kebutuhan?.message}
+                                                        {errors.jenis_kebutuhan?.[index]?.kebutuhan?.message}
                                                     </h1>
                                                 ) : (
                                                     <h1 className="text-slate-300 text-xs">*Jenis Kebutuhan Harus Terisi</h1>
@@ -275,7 +275,7 @@ const FormTambahKebutuhan = () => {
                                                     />
                                                     {errors.jenis_kebutuhan?.[index]?.kondisi_awal?.[subIndex]?.keterangan ? (
                                                         <h1 className="text-red-500">
-                                                            {errors.jenis_kebutuhan[index].kondisi_awal[subIndex].keterangan?.message}
+                                                            {errors.jenis_kebutuhan?.[index]?.kondisi_awal?.[subIndex]?.keterangan?.message}
                                                         </h1>
                                                     ) : (
                                                         <h1 className="text-slate-300 text-xs">*Kondisi Awal {subIndex + 1} Harus Terisi</h1>

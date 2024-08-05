@@ -32,7 +32,7 @@ interface FormValues {
     tahun: number;
     nama_domain: OptionTypeString | null;
     jenis_kebutuhan: JenisKebutuhan[];
-    id_prosesbisnis: OptionType | null;
+    proses_bisnis: OptionType | null;
 }
 
 const FormEditKebutuhan = () => {
@@ -82,10 +82,10 @@ const FormEditKebutuhan = () => {
                 }
 
                 // Set id_prosesbisnis
-                if (result.id_prosesbisnis) {
+                if (result.proses_bisnis) {
                     const selectedProsesBisnis = {
-                        value: result.id_prosesbisnis,
-                        label: result.id_prosesbisnis.toString(),
+                        value: result.proses_bisnis.id,
+                        label: result.proses_bisnis.nama_proses_bisnis,
                     };
                     setSelectedNamaProsesBisnis(selectedProsesBisnis);
                 }
@@ -98,9 +98,9 @@ const FormEditKebutuhan = () => {
                         value: result.nama_domain,
                         label: result.nama_domain,
                     },
-                    id_prosesbisnis: {
-                        value: result.id_prosesbisnis,
-                        label: result.id_prosesbisnis.toString(),
+                    proses_bisnis: {
+                        value: result.proses_bisnis.id,
+                        label: result.proses_bisnis.nama_proses_bisnis,
                     },
                     jenis_kebutuhan: result.jenis_kebutuhan.map((kebutuhan: JenisKebutuhan) => ({
                         kebutuhan: kebutuhan.kebutuhan,
@@ -146,7 +146,7 @@ const FormEditKebutuhan = () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_URL}/v1/prosesbisnis`);
+            const response = await fetch(`${API_URL}/v1/prosesbisnisnogap`);
             const data = await response.json();
             const result = data.data.map((item: any) => ({
                 label: item.nama_proses_bisnis,
@@ -166,7 +166,7 @@ const FormEditKebutuhan = () => {
             kode_opd: data.kode_opd,
             tahun: data.tahun,
             nama_domain: data.nama_domain?.value,
-            id_prosesbisnis: data.id_prosesbisnis?.value,
+            id_prosesbisnis: data.proses_bisnis?.value,
             jenis_kebutuhan: data.jenis_kebutuhan.map((kebutuhan) => ({
                 kebutuhan: kebutuhan.kebutuhan,
                 kondisi_awal: kebutuhan.kondisi_awal.map((kondisi) => ({
@@ -239,27 +239,27 @@ const FormEditKebutuhan = () => {
                         Proses Bisnis:
                     </label>
                     <Controller
-                        name="id_prosesbisnis"
+                        name="proses_bisnis"
                         control={control}
                         rules={{ required: "Proses Bisnis Harus Terisi" }}
                         render={({ field }) => (
                             <>
                                 <Select
                                     {...field}
-                                    id="id_prosesbisnis"
+                                    id="proses_bisnis"
                                     value={selectedNamaProsesBisnis || null}
                                     placeholder="Pilih Proses Bisnis"
                                     isLoading={isLoading}
                                     options={optionProsesBisnis}
                                     onChange={(option) => {
                                         field.onChange(option);
-                                        handleChange(option, { name: "id_prosesbisnis" });
+                                        handleChange(option, { name: "proses_bisnis" });
                                     }}
                                     isClearable={true}
                                     onMenuOpen={fetchProsesBisnis}
                                 />
-                                {errors.id_prosesbisnis ? (
-                                    <h1 className="text-red-500">{errors.id_prosesbisnis.message}</h1>
+                                {errors.proses_bisnis ? (
+                                    <h1 className="text-red-500">{errors.proses_bisnis.message}</h1>
                                 ) : (
                                     <h1 className="text-slate-300 text-xs">*Proses Bisnis Harus Terisi</h1>
                                 )}
@@ -286,7 +286,7 @@ const FormEditKebutuhan = () => {
                                         type="text"
                                     />
                                     {errors.jenis_kebutuhan?.[index]?.kebutuhan ? (
-                                        <h1 className="text-red-500">{errors.jenis_kebutuhan[index].kebutuhan?.message}</h1>
+                                        <h1 className="text-red-500">{errors.jenis_kebutuhan[index]?.kebutuhan?.message}</h1>
                                     ) : (
                                         <h1 className="text-slate-300 text-xs">*Jenis Kebutuhan Harus Terisi</h1>
                                     )}
@@ -312,7 +312,7 @@ const FormEditKebutuhan = () => {
                                                 type="text"
                                             />
                                             {errors.jenis_kebutuhan?.[index]?.kondisi_awal?.[subIndex]?.keterangan ? (
-                                                <h1 className="text-red-500">{errors.jenis_kebutuhan[index].kondisi_awal[subIndex].keterangan?.message}</h1>
+                                                <h1 className="text-red-500">{errors.jenis_kebutuhan?.[index]?.kondisi_awal?.[subIndex]?.keterangan?.message}</h1>
                                             ) : (
                                                 <h1 className="text-slate-300 text-xs">*Kondisi Awal {subIndex + 1} Harus Terisi</h1>
                                             )}
