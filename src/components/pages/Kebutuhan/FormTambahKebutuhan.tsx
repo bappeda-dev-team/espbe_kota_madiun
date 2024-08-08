@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useForm, Controller, SubmitHandler, useFieldArray } from "react-hook-form";
 import Select from "react-select";
-import Button from "@/components/common/Button/Button";
+import {ButtonPr, ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { useRouter } from "next/navigation";
 
@@ -55,6 +55,7 @@ const FormTambahKebutuhan = () => {
                 {
                     kebutuhan: "",
                     kondisi_awal: [
+                        { keterangan: "", tahun: 2022 },
                         { keterangan: "", tahun: 2023 },
                         { keterangan: "", tahun: 2024 },
                     ],
@@ -287,19 +288,19 @@ const FormTambahKebutuhan = () => {
                                 ))}
 
                                 {/* Button to remove a specific jenis kebutuhan */}
-                                <Button className="bg-red-500 hover:bg-red-700 mb-3" typee="button" onClick={() => remove(index)}>Hapus Jenis Kebutuhan</Button>
+                                <ButtonTr className="mb-3" typee="button" onClick={() => remove(index)}>Hapus Jenis Kebutuhan</ButtonTr>
                             </div>
                         ))}
                         {/* Button to add new jenis kebutuhan */}
-                        <Button
-                            className="bg-gradient-to-r from-[#071952] to-[#008DDA] text-white hover:from-[#256D85] hover:to-[#8FE3CF] mb-3"
+                        <ButtonPr
+                            className="mb-3"
                             typee="button"
                             onClick={() => append({ kebutuhan: "", kondisi_awal: [{ keterangan: "", tahun: 2023 }, { keterangan: "", tahun: 2024 }] })}
                         >
                             Tambah Jenis Kebutuhan
-                        </Button>
-                        <Button typee="submit">Simpan Data Kebutuhan SPBE</Button>
-                        <Button className="bg-red-500 hover:bg-red-700 mt-3" halaman_url="/KebutuhanSPBE">Kembali</Button>
+                        </ButtonPr>
+                        <ButtonSc typee="submit">Simpan Data Kebutuhan SPBE</ButtonSc>
+                        <ButtonTr className="mt-3" halaman_url="/KebutuhanSPBE">Kembali</ButtonTr>
                     </form>
                 </div>
             )}

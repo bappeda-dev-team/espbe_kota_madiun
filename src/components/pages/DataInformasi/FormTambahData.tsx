@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import Button from "@/components/common/Button/Button";
+import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useRouter } from "next/navigation";
 import { AlertNotification } from "@/components/common/Alert/Alert";
@@ -825,12 +825,12 @@ const FormTambahData = () => {
             </div>
           </>
         )}
-        <Button typee="submit" className="mt-5">
+        <ButtonSc typee="submit" className="mt-5">
           Simpan
-        </Button>
-        <Button typee="button" className="mt-5 bg-red-500" halaman_url="/DataInformasi">
+        </ButtonSc>
+        <ButtonTr typee="button" className="mt-5" halaman_url="/DataInformasi">
           Batal
-        </Button>
+        </ButtonTr>
       </form>
     </div>
   );

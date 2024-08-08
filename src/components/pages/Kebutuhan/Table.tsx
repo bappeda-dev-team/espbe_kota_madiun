@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Loading from "@/components/global/Loading/Loading";
-import Button from "@/components/common/Button/Button";
+import { ButtonSc, ButtonTr } from "@/components/common/Button/Button";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 
 interface KebutuhanSPBE {
@@ -90,10 +90,11 @@ const Table = () => {
                             <th rowSpan={2} className="border px-6 py-3 max-w-[20px] sticky bg-white left-[-2px]">No.</th>
                             <th rowSpan={2} className="border px-6 py-3 min-w-[200px]">Nama Domain</th>
                             <th rowSpan={2} className="border px-6 py-3 min-w-[200px]">Jenis Kebutuhan</th>
-                            <th colSpan={2} className="border px-6 py-3 min-w-[200px] text-center">Kondisi Awal</th>
+                            <th colSpan={3} className="border px-6 py-3 min-w-[200px] text-center">Kondisi Awal</th>
                             <th rowSpan={2} className="border px-6 py-3 text-center">Aksi</th>
                         </tr>
                         <tr>
+                            <th className="border px-6 py-3 min-w-[200px] text-center">2022</th>
                             <th className="border px-6 py-3 min-w-[200px] text-center">2023</th>
                             <th className="border px-6 py-3 min-w-[200px] text-center">2024</th>
                         </tr>
@@ -153,6 +154,13 @@ const Table = () => {
                                             <td className="border px-6 py-4">
                                                 {data.jenis_kebutuhan.map((info, idx) => (
                                                     <div key={idx}>
+                                                        {info.kondisi_awal.find(ka => ka.tahun === 2022)?.keterangan || "N/A"}
+                                                    </div>
+                                                ))}
+                                            </td>
+                                            <td className="border px-6 py-4">
+                                                {data.jenis_kebutuhan.map((info, idx) => (
+                                                    <div key={idx}>
                                                         {info.kondisi_awal.find(ka => ka.tahun === 2023)?.keterangan || "N/A"}
                                                     </div>
                                                 ))}
@@ -167,14 +175,14 @@ const Table = () => {
                                         </>
                                     )}
                                     <td className="px-6 py-4 flex flex-col gap-2">
-                                        <Button 
+                                        <ButtonSc 
                                             className="my-1"
                                             halaman_url={`/KebutuhanSPBE/EditKebutuhan/${data.id}`}
                                         >
                                             Edit
-                                        </Button>
-                                        <Button
-                                            className="my-1 bg-red-500 hover:bg-red-700"
+                                        </ButtonSc>
+                                        <ButtonTr
+                                            className="my-1"
                                             onClick={() => {
                                                 AlertQuestion("Hapus?", "Hapus Kebutuhan SPBE yang dipilih?", "question", "Hapus", "Batal").then((result) => {
                                                     if(result.isConfirmed){
@@ -184,7 +192,7 @@ const Table = () => {
                                             }}
                                         >
                                             Hapus
-                                        </Button>
+                                        </ButtonTr>
                                     </td>
                                 </tr>
                             ))

@@ -401,7 +401,7 @@ function Sidebar() {
               <li
                 className={
                   dahsboardActive
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
                     : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 "
                 }
               >
@@ -429,7 +429,7 @@ function Sidebar() {
               <li
                 className={
                   UserActive
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
                     : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
                 }
               >
@@ -476,7 +476,7 @@ function Sidebar() {
                   <li
                     className={
                       pohonKinerjaActive
-                        ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg"
+                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
                         : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
                     }
                   >
@@ -504,7 +504,7 @@ function Sidebar() {
                   <li
                     className={
                       referensiArsitekturActive
-                        ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg"
+                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
                         : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
                     }
                   >
@@ -532,7 +532,7 @@ function Sidebar() {
                   <li
                     className={
                       sasaranKotaActive
-                        ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg"
+                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
                         : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
                     }
                   >
@@ -560,7 +560,7 @@ function Sidebar() {
                   <li
                     className={
                       bidangUrusanActive
-                        ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg"
+                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
                         : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
                     }
                   >
@@ -603,7 +603,7 @@ function Sidebar() {
               <li
                 className={
                   ProsesBisnisActive
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
                     : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
                 }
               >
@@ -652,7 +652,7 @@ function Sidebar() {
                   <li
                     className={
                       standartPelayananActive
-                        ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg"
+                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
                         : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
                     }
                   >
@@ -680,7 +680,7 @@ function Sidebar() {
                   <li
                     className={
                       formLayananActive
-                        ? "flex bg-emerald-300 text-white flex py-1 pl-2 rounded-lg"
+                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
                         : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
                     }
                   >
@@ -716,7 +716,7 @@ function Sidebar() {
               <li
                 className={
                   DataInformasiActive
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
                     : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
                 }
               >
@@ -747,7 +747,7 @@ function Sidebar() {
               <li
                 className={
                   AplikasiActive
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
                     : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
                 }
               >
@@ -778,7 +778,7 @@ function Sidebar() {
               <li
                 className={
                   ArsiterturActive
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
                     : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
                 }
               >
@@ -809,7 +809,7 @@ function Sidebar() {
               <li
                 className={
                   GapArsiterturActive
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
                     : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
                 }
               >
@@ -840,7 +840,7 @@ function Sidebar() {
               <li
                 className={
                   KebutuhanSPBEActive
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
                     : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
                 }
               >
@@ -871,7 +871,7 @@ function Sidebar() {
               <li
                 className={
                   SdmInfrastrukturActive
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
                     : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
                 }
               >
@@ -902,7 +902,7 @@ function Sidebar() {
               <li
                 className={
                   petaRencanaActive
-                    ? "bg-emerald-300 flex py-1 pl-2 rounded-lg"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
                     : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
                 }
               >

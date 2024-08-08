@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import Button from "@/components/common/Button/Button";
+import {ButtonPr, ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useForm, Controller, SubmitHandler, useFieldArray } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
@@ -322,20 +322,20 @@ const FormEditKebutuhan = () => {
                             </div>
                         ))}
                         {/* Button to remove a specific jenis kebutuhan */}
-                        <Button className="bg-red-500 hover:bg-red-700 mb-3" typee="button" onClick={() => remove(index)}>Hapus Jenis Kebutuhan</Button>
+                        <ButtonTr className="mb-3" typee="button" onClick={() => remove(index)}>Hapus Jenis Kebutuhan</ButtonTr>
                     </div>
                 ))}
-                <Button
-                    className="bg-gradient-to-r from-[#071952] to-[#008DDA] text-white hover:from-[#256D85] hover:to-[#8FE3CF] mb-3"
+                <ButtonPr
+                    className="mb-3"
                     typee="button"
-                    onClick={() => append({ kebutuhan: "", kondisi_awal: [{ keterangan: "", tahun: 2023 }, { keterangan: "", tahun: 2024 }] })}
+                    onClick={() => append({ kebutuhan: "", kondisi_awal: [{ keterangan: "", tahun: 2022 }, { keterangan: "", tahun: 2023 }, { keterangan: "", tahun: 2024 }] })}
                 >
                     Tambah Jenis Kebutuhan
-                </Button>
-                <Button typee="submit">Simpan Data Kebutuhan SPBE</Button>
-                <Button typee="button" className="mt-5 bg-red-500" halaman_url="/KebutuhanSPBE">
+                </ButtonPr>
+                <ButtonSc typee="submit">Simpan Data Kebutuhan SPBE</ButtonSc>
+                <ButtonTr typee="button" className="mt-5" halaman_url="/KebutuhanSPBE">
                     Kembali
-                </Button>
+                </ButtonTr>
             </form>
         </div>
     );

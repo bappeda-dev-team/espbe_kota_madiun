@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Loading from "../../../global/Loading/Loading";
-import Button from "@/components/common/Button/Button";
+import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
@@ -217,16 +217,16 @@ function Table() {
                       : "N/A"}
                   </td>
                   <td className="px-6 py-4 flex flex-col">
-                    <Button
+                    <ButtonSc
                       typee="button"
                       className="my-1"
                       halaman_url={`/ProsesBisnis/EditData/${data.id}`}
                     >
                       Edit
-                    </Button>
-                    <Button
+                    </ButtonSc>
+                    <ButtonTr
                       typee="button"
-                      className="bg-red-500 hover:bg-red-700 my-1"
+                      className="my-1"
                       onClick={() => {
                         AlertQuestion("Hapus?", "hapus proses bisnis yang dipilih?", "question", "Hapus", "Batal").then((result) => {
                           if(result.isConfirmed){
@@ -236,7 +236,7 @@ function Table() {
                       }}
                     >
                       Hapus
-                    </Button>
+                    </ButtonTr>
                   </td>
                 </tr>
               ))

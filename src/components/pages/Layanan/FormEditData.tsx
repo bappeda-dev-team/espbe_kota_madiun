@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@/components/common/Button/Button";
+import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
@@ -849,10 +849,10 @@ const FormEditData = () => {
             </div>
           </>
         )}
-        <Button typee="submit">Simpan</Button>
-        <Button typee="button" className="mt-5 bg-red-500" halaman_url="/Layanan/LayananSPBE">
+        <ButtonSc typee="submit">Simpan</ButtonSc>
+        <ButtonTr typee="button" className="mt-5" halaman_url="/Layanan/LayananSPBE">
           Batal
-        </Button>
+        </ButtonTr>
       </form>
     </div>
   );

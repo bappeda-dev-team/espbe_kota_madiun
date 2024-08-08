@@ -1,6 +1,6 @@
 "use client"
 
-import Button from "@/components/common/Button/Button";
+import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Loading from "@/components/global/Loading/Loading";
 import { useState, useEffect } from "react";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
@@ -152,14 +152,14 @@ const Table = () => {
                                 <td className="px-6 py-4">{data.TacticalId ? `${data.TacticalId.nama_pohon}` : "N/A"}</td>
                                 <td className="px-6 py-4">{data.OperationalId ? `${data.OperationalId.nama_pohon}` : "N/A"}</td>
                                 <td className="px-6 py-4 flex flex-col">
-                                    <Button 
+                                    <ButtonSc 
                                         typee="button" 
                                         className="my-1"
                                         halaman_url={`/Layanan/LayananSPBE/EditData/${data.Id}`}
                                     >
                                         Edit
-                                    </Button>
-                                    <Button 
+                                    </ButtonSc>
+                                    <ButtonTr 
                                         typee="button" 
                                         className="bg-red-500 my-1"
                                         onClick={() => {
@@ -171,7 +171,7 @@ const Table = () => {
                                         }}
                                     >
                                         Hapus
-                                    </Button>
+                                    </ButtonTr>
                                 </td>
                             </tr>
                             ))
