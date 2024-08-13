@@ -29,6 +29,7 @@ interface formValue {
   informasi_terkait_input : string,
   informasi_terkait_output : string,
   interoprabilitas : OptionTypeString | null,
+  keterangan : string | null,
   tahun : OptionType | null,
   rad_level_1_id : OptionType | null,
   rad_level_2_id : OptionType | null,
@@ -46,6 +47,7 @@ const FormEditData = () => {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<formValue>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -62,6 +64,7 @@ const FormEditData = () => {
   const [kode_opd, set_kode_opd] = useState<string>("");
   const [selectedInformasiTerkaitInput, setSelectedInformasiTerkaitInput] = useState<string>("");
   const [selectedInformasiTerkaitOutput, setSelectedInformasiTerkaitOutput] = useState<string>("");
+  const [selectedKeterangan, setSelectedKeterangan] = useState<string>("");
   
   const [selectedSifatData, setSelectedSifatData] = useState<OptionTypeString | null>(null);
   const [selectedJenisData, setSelectedJenisData] = useState<OptionTypeString | null>(null);
@@ -150,6 +153,10 @@ const FormEditData = () => {
         if (result.InformasiTerkaitOutput) {
           setSelectedInformasiTerkaitOutput(result.InformasiTerkaitOutput);
           reset((prev) => ({ ...prev, informasi_terkait_output: result.InformasiTerkaitOutput }));
+        }
+        if (result.Keterangan) {
+          setSelectedKeterangan(result.Keterangan);
+          reset((prev) => ({ ...prev, keterangan: result.Keterangan }));
         }
         
         if (result.SifatData) {
@@ -328,6 +335,8 @@ const FormEditData = () => {
     }
   };
 
+  const interoprabilitasValue = watch("interoprabilitas");
+
   //aski form di submit
   const onSubmit: SubmitHandler<formValue> = async (data) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -343,6 +352,7 @@ const FormEditData = () => {
       informasi_terkait_input : data.informasi_terkait_input,
       informasi_terkait_output : data.informasi_terkait_output,
       interoprabilitas : data.interoprabilitas?.value,
+      keterangan : data.interoprabilitas?.value === "Ya" ? data.keterangan : null,
       tahun : data.tahun?.value,
       rad_level_1_id : data.rad_level_1_id?.value,
       rad_level_2_id : data.rad_level_2_id?.value,
@@ -767,6 +777,27 @@ const FormEditData = () => {
                 )}
               />
             </div>
+            {interoprabilitasValue?.value === "Ya" && (
+              <div className="flex flex-col py-3">
+                <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="keterangan">
+                  Keterangan :
+                </label>
+                <Controller
+                  name="keterangan"
+                  control={control}
+                  render={({ field }) => (
+                      <input
+                        className="border px-4 py-2 rounded"
+                        {...field}
+                        value={selectedKeterangan || ""}
+                        type="text"
+                        id="keterangan"
+                        placeholder="Masukkan Keterangan"
+                      />
+                  )}
+                />
+              </div>
+            )}
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"

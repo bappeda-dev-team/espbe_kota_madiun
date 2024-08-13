@@ -5,8 +5,15 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import { ButtonTr, ButtonSc } from "@/components/common/Button/Button";
+import "@/app/globals.css";
 
-function Sidebar() {
+interface SidebarProps {
+  isCollapse: boolean;
+  toggleCollapse: () => void;
+}
+
+function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
   const url = usePathname();
   const { id, Id } = useParams();
   const [dahsboardActive, setDahsboardActive] = useState<boolean>(false);
@@ -26,6 +33,7 @@ function Sidebar() {
   const [ArsiterturActive, setArsitekturActive] = useState<boolean>(false);
   const [GapArsiterturActive, setGapArsitekturActive] = useState<boolean>(false);
   const [KebutuhanSPBEActive, setKebutuhanSPBEActive] = useState<boolean>(false);
+  const [PemenuhanKebutuhanActive, setPemenuhanKebutuhanActive] = useState<boolean>(false);
   const [SdmInfrastrukturActive, setSdmInfrastrukturActive] = useState<boolean>(false);
   const [petaRencanaActive, setPetaRencanaActive] = useState<boolean>(false);
 
@@ -65,6 +73,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
         setKebutuhanSPBEActive(false);
+        setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/User") {
@@ -87,8 +96,8 @@ function Sidebar() {
         setArsitekturActive(false);
         setSdmInfrastrukturActive(false);
         setKebutuhanSPBEActive(false);
+        setPemenuhanKebutuhanActive(false);
       setPetaRencanaActive(false);
-    } else if (url === "/PohonKinerja") {
     } else if (url === "/PohonKinerja") {
       setDahsboardActive(false),
         setUserActive(false),
@@ -106,6 +115,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/ReferensiArsitektur") {
@@ -125,6 +135,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/SasaranKota") {
@@ -144,6 +155,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/BidangUrusan") {
@@ -163,6 +175,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
@@ -183,6 +196,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
@@ -203,6 +217,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/Layanan/StandartPelayanan") {
@@ -219,6 +234,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
@@ -239,6 +255,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
@@ -259,6 +276,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/GapArsitektur") {
@@ -275,6 +293,7 @@ function Sidebar() {
         setGapArsitekturActive(true);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/Arsitektur") {
@@ -289,6 +308,7 @@ function Sidebar() {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
+        setKebutuhanSPBEActive(false);
         setArsitekturActive(true);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
@@ -310,6 +330,26 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
         setKebutuhanSPBEActive(true);
+        setPemenuhanKebutuhanActive(false);
+        setSdmInfrastrukturActive(false);
+      setPetaRencanaActive(false);
+    } else if (
+      url === "/PemenuhanKebutuhan"
+    ) {
+      setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(false),
+        setPohonKinerjaActive(false);
+        setProsesBisnisActive(false),
+        setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false);
+        setArsitekturActive(false);
+        setKebutuhanSPBEActive(false);
+        setPemenuhanKebutuhanActive(true);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (url === "/SdmInfrastruktur") {
@@ -326,6 +366,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(true);
       setPetaRencanaActive(false);
     } else if (url === "/PetaRencana") {
@@ -342,6 +383,7 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(true);
     } else {
@@ -358,51 +400,66 @@ function Sidebar() {
         setGapArsitekturActive(false);
         setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     }
   }, [url, id]);
 
   return (
-    <div className="fixed min-w-[270px] border-r h-screen overflow-scroll">
-      <div className="p-5 border-b border-stone-300">
-        <div className="flex items-center pb-2">
-          <div className="flex justify-center items-center bg-white rounded-full">
+    <div className={`fixed custom-scrollbar items-center border-r overflow-y-auto flex-col h-screen transition-all duration-300 ${isCollapse ? 'min-w-20' : 'min-w-[270px]'}`}>
+      <div className={`flex items-center mt-2 transition-all duration-300 ease-in-out text-center ${isCollapse ? 'justify-center mr-1' : 'absolute ml-[200px]'}`}>
+          <ButtonSc 
+            onClick={() => toggleCollapse()} 
+            className="'py-3 m-1 rounded-lg">
             <Image
-              className="w-7 h-7 rounded-full"
-              src="/avatar.png"
-              alt="avatar"
-              width={30}
-              height={30}
+            className="mr-1"
+              src="/iconLight/menu.svg"
+              alt="ChartPieSlice"
+              width={15}
+              height={15}
+            />
+          </ButtonSc>
+      </div>
+
+      {!isCollapse ? (  
+        <div className="p-5 border-b border-stone-300">
+          <div className="flex flex-col items-center text-center">
+            <Image
+              className="pr-2"
+              src="/logo.png"
+              alt="Logo"
+              width={80}
+              height={80}
+            />
+            <h1>E-SPBE-Kota Madiun</h1>
+          </div>
+        </div>
+      ) : (
+        <div className="p-5 border-b border-stone-300">
+          <div className="flex flex-col items-center text-center">
+            <Image
+              className="pr-2"
+              src="/logo.png"
+              alt="Logo"
+              width={40}
+              height={40}
             />
           </div>
-          <h1 className="ml-3">BAPPEDA</h1>
         </div>
-      </div>
+      ) 
+      }
 
-      <div className="p-5 overflow-y-auto border-b border-stone-300">
-        <div className="flex flex-col items-center text-center">
-          <Image
-            className="pr-2"
-            src="/logo.png"
-            alt="Logo"
-            width={80}
-            height={80}
-          />
-          <h1>E-SPBE-Kota Madiun</h1>
-        </div>
-      </div>
-
-      <div className="p-5 overflow-y-auto border-b border-stone-300">
+      <div className="p-5 border-b border-stone-300">
         <div className="text-base">
-          <p className="text-slate-300 text-xs">Kota</p>
+          {isCollapse ?  <></> : <p className="text-slate-300 text-xs">Kota</p>}
           <ul>
             <Link className={dahsboardActive ? "text-white" : ""} href="/">
               <li
                 className={
                   dahsboardActive
-                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 "
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
+                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200 "
                 }
               >
                 {dahsboardActive ? (
@@ -422,15 +479,15 @@ function Sidebar() {
                     height={30}
                   />
                 )}
-                Dashboard
+                {isCollapse ? "" : "Dashboard"}
               </li>
             </Link>
             <Link className={UserActive ? "text-white" : ""} href="/User">
               <li
                 className={
                   UserActive
-                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
+                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200"
                 }
               >
                 {UserActive ? (
@@ -450,16 +507,14 @@ function Sidebar() {
                     height={30}
                   />
                 )}
-                User
+                {isCollapse ? "" : "User"}
               </li>
             </Link>
             <li
               onClick={breakDataMaster}
-              className={
-                DataMasterActive
-                  ? "flex py-1 pl-2 cursor-pointer rounded-lg bg-gray-200"
-                  : "flex py-1 pl-2 cursor-pointer rounded-lg hover:bg-gray-200"
-              }
+              className={`flex py-1 pl-2 cursor-pointer rounded-lg transition-all duration-300 ease-in-out ${
+                DataMasterActive ? "bg-gray-200" : "hover:bg-gray-200"
+              }`}
             >
               <Image
                 className="pr-2"
@@ -468,133 +523,105 @@ function Sidebar() {
                 width={30}
                 height={30}
               />
-              Data Master
+              {isCollapse ? "" : "Data Master"}
             </li>
-            {DataMasterActive ? (
-              <div className="py-1 pl-3 bg-slate-50">
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                DataMasterActive ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+              }`}
+            >
+              <div className={`${isCollapse ? 'bg-slate-100' : 'bg-slate-50 pl-3'} py-1`}>
                 <Link href="/PohonKinerja">
                   <li
-                    className={
+                    className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
                       pohonKinerjaActive
-                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
-                        : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
-                    }
+                        ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
+                        : "hover:bg-gray-200 font-light"
+                    }`}
                   >
-                    {pohonKinerjaActive ? (
-                      <Image
-                        className="pr-2"
-                        src="/iconLight/data.svg"
-                        alt="Data"
-                        width={30}
-                        height={30}
-                      />
-                    ) : (
-                      <Image
-                        className="pr-2"
-                        src="/iconDark/data.svg"
-                        alt="Data"
-                        width={30}
-                        height={30}
-                      />
-                    )}
-                    Pohon Kinerja
+                    <Image
+                      className="pr-2"
+                      src={pohonKinerjaActive ? "/iconLight/data.svg" : "/iconDark/data.svg"}
+                      alt="Data"
+                      width={30}
+                      height={30}
+                    />
+                    {isCollapse ? "" : "Pohon Kinerja"}
                   </li>
                 </Link>
                 <Link href="/ReferensiArsitektur">
                   <li
-                    className={
+                    className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
                       referensiArsitekturActive
-                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
-                        : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
-                    }
+                        ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
+                        : "hover:bg-gray-200 font-light"
+                    }`}
                   >
-                    {referensiArsitekturActive ? (
-                      <Image
-                        className="pr-2"
-                        src="/iconLight/wallet.svg"
-                        alt="ListDashes"
-                        width={30}
-                        height={30}
-                      />
-                    ) : (
-                      <Image
-                        className="pr-2"
-                        src="/iconDark/wallet.svg"
-                        alt="ListDashes"
-                        width={30}
-                        height={30}
-                      />
-                    )}
-                    Referensi Arsitektur
+                    <Image
+                      className="pr-2"
+                      src={
+                        referensiArsitekturActive
+                          ? "/iconLight/wallet.svg"
+                          : "/iconDark/wallet.svg"
+                      }
+                      alt="ListDashes"
+                      width={30}
+                      height={30}
+                    />
+                    {isCollapse ? "" : "Referensi Arsitektur"}
                   </li>
                 </Link>
-                <Link href="SasaranKota">
+                <Link href="/SasaranKota">
                   <li
-                    className={
+                    className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
                       sasaranKotaActive
-                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
-                        : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
-                    }
+                        ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
+                        : "hover:bg-gray-200 font-light"
+                    }`}
                   >
-                    {sasaranKotaActive ? (
-                      <Image
-                        className="pr-2"
-                        src="/iconLight/lifebuoy.svg"
-                        alt="ListDashes"
-                        width={30}
-                        height={30}
-                      />
-                    ) : (
-                      <Image
-                        className="pr-2"
-                        src="/iconDark/lifebuoy.svg"
-                        alt="ListDashes"
-                        width={30}
-                        height={30}
-                      />
-                    )}
-                    Sasaran Kota
+                    <Image
+                      className="pr-2"
+                      src={
+                        sasaranKotaActive
+                          ? "/iconLight/lifebuoy.svg"
+                          : "/iconDark/lifebuoy.svg"
+                      }
+                      alt="ListDashes"
+                      width={30}
+                      height={30}
+                    />
+                    {isCollapse ? "" : "Sasaran Kota"}
                   </li>
                 </Link>
                 <Link href="/BidangUrusan">
                   <li
-                    className={
+                    className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
                       bidangUrusanActive
-                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
-                        : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
-                    }
+                        ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
+                        : "hover:bg-gray-200 font-light"
+                    }`}
                   >
-                    {bidangUrusanActive ? (
-                      <Image
-                        className="pr-2"
-                        src="/iconLight/book.svg"
-                        alt="ListDashes"
-                        width={30}
-                        height={30}
-                      />
-                    ) : (
-                      <Image
-                        className="pr-2"
-                        src="/iconDark/book.svg"
-                        alt="ListDashes"
-                        width={30}
-                        height={30}
-                      />
-                    )}
-                    Bidang Urusan
+                    <Image
+                      className="pr-2"
+                      src={
+                        bidangUrusanActive ? "/iconLight/book.svg" : "/iconDark/book.svg"
+                      }
+                      alt="ListDashes"
+                      width={30}
+                      height={30}
+                    />
+                    {isCollapse ? "" : "Bidang Urusan"}
                   </li>
                 </Link>
               </div>
-            ) : (
-              <></>
-            )}
+            </div>
           </ul>
         </div>
       </div>
 
-      <div className="p-5 overflow-y-auto border-b border-stone-300">
+      <div className="p-5 border-b border-stone-300">
         <div className="text-base">
-          <p className="text-slate-300 text-xs">Arsitektur SPBE</p>
+          {isCollapse ?  <></> : <p className="text-slate-300 text-xs">Arsitektur SPBE</p>}
           <ul>
             <Link
               className={ProsesBisnisActive ? "text-white" : ""}
@@ -603,8 +630,8 @@ function Sidebar() {
               <li
                 className={
                   ProsesBisnisActive
-                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
+                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200"
                 }
               >
                 {ProsesBisnisActive ? (
@@ -624,17 +651,15 @@ function Sidebar() {
                     height={30}
                   />
                 )}
-                Proses Bisnis
+                {isCollapse ? "" : "Proses Bisnis"}
               </li>
             </Link>
 
             <li
               onClick={breakLayanan}
-              className={
-                LayananActive
-                  ? "flex py-1 pl-2 cursor-pointer rounded-lg bg-gray-200"
-                  : "flex py-1 pl-2 cursor-pointer rounded-lg hover:bg-gray-200"
-              }
+              className={`flex py-1 pl-2 cursor-pointer rounded-lg transition-all duration-300 ease-in-out ${
+                LayananActive ? "bg-gray-200" : "hover:bg-gray-200"
+              }`}
             >
               <Image
                 className="pr-2"
@@ -643,71 +668,55 @@ function Sidebar() {
                 width={30}
                 height={30}
               />
-              Layanan
+              {isCollapse ? "" : "Layanan"}
             </li>
 
-            {LayananActive ? (
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                LayananActive ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+              }`}
+            >
               <div className="py-1 pl-3 bg-slate-50">
                 <Link href="/Layanan/StandartPelayanan">
                   <li
-                    className={
+                    className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
                       standartPelayananActive
-                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
-                        : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
-                    }
+                        ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
+                        : "hover:bg-gray-200 font-light"
+                    }`}
                   >
-                    {standartPelayananActive ? (
-                      <Image
-                        className="pr-2"
-                        src="/iconLight/Dot2.svg"
-                        alt="ListDashes"
-                        width={30}
-                        height={30}
-                      />
-                    ) : (
-                      <Image
-                        className="pr-2"
-                        src="/iconDark/Dot2.svg"
-                        alt="ListDashes"
-                        width={30}
-                        height={30}
-                      />
-                    )}
-                    Standart Pelayanan
+                    <Image
+                      className="pr-2"
+                      src={
+                        standartPelayananActive ? "/iconLight/Dot2.svg" : "/iconDark/Dot2.svg"
+                      }
+                      alt="ListDashes"
+                      width={30}
+                      height={30}
+                    />
+                    {isCollapse ? "" : "Standart Pelayanan"}
                   </li>
                 </Link>
                 <Link href="/Layanan/LayananSPBE">
                   <li
-                    className={
+                    className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
                       formLayananActive
-                        ? "flex bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white flex py-1 pl-2 rounded-lg"
-                        : "flex py-1 pl-2 rounded-lg hover:bg-gray-200 font-light"
-                    }
+                        ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
+                        : "hover:bg-gray-200 font-light"
+                    }`}
                   >
-                    {formLayananActive ? (
-                      <Image
-                        className="pr-2"
-                        src="/iconLight/Dot2.svg"
-                        alt="ListDashes"
-                        width={30}
-                        height={30}
-                      />
-                    ) : (
-                      <Image
-                        className="pr-2"
-                        src="/iconDark/Dot2.svg"
-                        alt="ListDashes"
-                        width={30}
-                        height={30}
-                      />
-                    )}
-                    Layanan SPBE
+                    <Image
+                      className="pr-2"
+                      src={formLayananActive ? "/iconLight/Dot2.svg" : "/iconDark/Dot2.svg"}
+                      alt="ListDashes"
+                      width={30}
+                      height={30}
+                    />
+                    {isCollapse ? "" : "Layanan SPBE"}
                   </li>
                 </Link>
               </div>
-            ) : (
-              <></>
-            )}
+            </div>
 
             <Link
               className={DataInformasiActive ? "text-white" : ""}
@@ -716,8 +725,8 @@ function Sidebar() {
               <li
                 className={
                   DataInformasiActive
-                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
+                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200"
                 }
               >
                 {DataInformasiActive ? (
@@ -737,7 +746,7 @@ function Sidebar() {
                     height={30}
                   />
                 )}
-                Data dan Informasi
+                {isCollapse ? "" : "Data dan Informasi"}
               </li>
             </Link>
             <Link
@@ -747,8 +756,8 @@ function Sidebar() {
               <li
                 className={
                   AplikasiActive
-                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
+                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200"
                 }
               >
                 {AplikasiActive ? (
@@ -768,7 +777,7 @@ function Sidebar() {
                     height={30}
                   />
                 )}
-                Aplikasi
+                {isCollapse ? "" : "Aplikasi"}
               </li>
             </Link>
             <Link
@@ -778,8 +787,8 @@ function Sidebar() {
               <li
                 className={
                   ArsiterturActive
-                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
+                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200"
                 }
               >
                 {ArsiterturActive ? (
@@ -799,7 +808,7 @@ function Sidebar() {
                     height={30}
                   />
                 )}
-                Arsitektur
+                {isCollapse ? "" : "Arsitektur"}
               </li>
             </Link>
             <Link
@@ -809,8 +818,8 @@ function Sidebar() {
               <li
                 className={
                   GapArsiterturActive
-                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
+                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200"
                 }
               >
                 {GapArsiterturActive ? (
@@ -830,7 +839,7 @@ function Sidebar() {
                     height={30}
                   />
                 )}
-                Gap Arsitektur
+                {isCollapse ? "" : "Gap Arsitektur"}
               </li>
             </Link>
             <Link
@@ -840,8 +849,8 @@ function Sidebar() {
               <li
                 className={
                   KebutuhanSPBEActive
-                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
+                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200"
                 }
               >
                 {KebutuhanSPBEActive ? (
@@ -861,7 +870,38 @@ function Sidebar() {
                     height={30}
                   />
                 )}
-                Kebutuhan SPBE
+                {isCollapse ? "" : "Kebutuhan SPBE"}
+              </li>
+            </Link>
+            <Link
+              className={PemenuhanKebutuhanActive ? "text-white" : ""}
+              href="/PemenuhanKebutuhan"
+            >
+              <li
+                className={
+                  PemenuhanKebutuhanActive
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
+                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200"
+                }
+              >
+                {PemenuhanKebutuhanActive ? (
+                  <Image
+                    className="pr-2"
+                    src="/iconLight/clipboard-tick.svg"
+                    alt="clipboard-tick"
+                    width={30}
+                    height={30}
+                  />
+                ) : (
+                  <Image
+                    className="pr-2"
+                    src="/iconDark/clipboard-tick.svg"
+                    alt="clipboard-tick"
+                    width={30}
+                    height={30}
+                  />
+                )}
+                {isCollapse ? "" : "Pemenuhan Kebutuhan"}
               </li>
             </Link>
             <Link
@@ -871,8 +911,8 @@ function Sidebar() {
               <li
                 className={
                   SdmInfrastrukturActive
-                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
+                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200"
                 }
               >
                 {SdmInfrastrukturActive ? (
@@ -892,7 +932,7 @@ function Sidebar() {
                     height={30}
                   />
                 )}
-                SDM Infrastruktur
+                {isCollapse ? "" : "SDM Infrastruktur"}
               </li>
             </Link>
             <Link
@@ -902,8 +942,8 @@ function Sidebar() {
               <li
                 className={
                   petaRencanaActive
-                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg"
-                    : "flex py-1 pl-2 rounded-lg hover:bg-gray-200"
+                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
+                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200"
                 }
               >
                 {petaRencanaActive ? (
@@ -923,12 +963,20 @@ function Sidebar() {
                     height={30}
                   />
                 )}
-                Peta Rencana
+                {isCollapse ? "" : "Peta Rencana"}
               </li>
             </Link>
           </ul>
         </div>
       </div>
+     <div className="p-5">
+      <ButtonTr 
+          halaman_url="/Login"
+          className="w-full"
+        >
+          {isCollapse ? "" : "Logout"}
+        </ButtonTr>
+     </div>
     </div>
   );
 }

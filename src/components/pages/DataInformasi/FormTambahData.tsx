@@ -29,6 +29,7 @@ interface FormValues {
   informasi_terkait_input : string,
   informasi_terkait_output : string,
   interoprabilitas : OptionTypeString | null,
+  keterangan : string | null,
   tahun : OptionType | null,
   rad_level_1_id : OptionType | null,
   rad_level_2_id : OptionType | null,
@@ -95,6 +96,7 @@ const FormTambahData = () => {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -107,6 +109,7 @@ const FormTambahData = () => {
         informasi_terkait_input : "",
         informasi_terkait_output : "",
         interoprabilitas : null,
+        keterangan : null,
         tahun : null,
         rad_level_1_id : null,
         rad_level_2_id : null,
@@ -162,6 +165,8 @@ const FormTambahData = () => {
     }
   };
 
+  const interoprabilitasValue = watch("interoprabilitas");
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const formData = {
       //key : value
@@ -176,6 +181,7 @@ const FormTambahData = () => {
         informasi_terkait_input : data.informasi_terkait_input,
         informasi_terkait_output : data.informasi_terkait_output,
         interoprabilitas : data.interoprabilitas?.value,
+        keterangan : data.interoprabilitas?.value === "Ya" ? data.keterangan : null,
         tahun : data.tahun?.value,
         rad_level_1_id : data.rad_level_1_id?.value,
         rad_level_2_id : data.rad_level_2_id?.value,
@@ -517,6 +523,27 @@ const FormTambahData = () => {
                 )}
               />
             </div>
+            {interoprabilitasValue?.value === "Ya" && (
+              <div className="flex flex-col py-3">
+                <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="keterangan">
+                  Keterangan :
+                </label>
+                <Controller
+                  name="keterangan"
+                  control={control}
+                  render={({ field }) => (
+                      <input
+                        className="border px-4 py-2 rounded"
+                        {...field}
+                        value={field.value || ""}
+                        type="text"
+                        id="keterangan"
+                        placeholder="Masukkan Keterangan"
+                      />
+                  )}
+                />
+              </div>
+            )}
             <div className="flex flex-col py-3">
               <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tahun:</label>
               <Controller

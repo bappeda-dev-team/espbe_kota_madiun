@@ -1,9 +1,13 @@
-import Perbaikan from "@/components/maintenance/perbaikan";
+import Table from "@/components/pages/Arsitektur/Table";
+import HeaderArsitektur from "@/components/pages/Arsitektur/HeaderArsitektur";
 
 const Arsitektur = () => {
     return(
         <>
-            <Perbaikan />
+            <div className="mb-5 mt-2">
+                <HeaderArsitektur />
+            </div>
+            <Table />
         </>
     );
 };

@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Loading from "../../../global/Loading/Loading";
-import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
+import {ButtonPr, ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
+import Image from "next/image";
 
 interface rabLevel1_3 {
   Id: number;
@@ -136,8 +137,34 @@ function Table() {
 
   return (
     <>
+      <div className="flex justify-between mb-5">
+        <ButtonSc typee="button">
+          <div className="flex">
+            <Image 
+              className="mr-1"
+              src="/iconLight/cetak.svg" 
+              alt="add" 
+              width={20} 
+              height={20} 
+            />
+            Cetak
+          </div>
+        </ButtonSc>
+        <ButtonPr halaman_url="/ProsesBisnis/TambahData" typee="button">
+          <div className="flex">
+            <Image 
+              className="mr-1"
+              src="/iconLight/add.svg" 
+              alt="add" 
+              width={20} 
+              height={20} 
+            />
+            Tambah Data
+          </div>
+        </ButtonPr>
+      </div>
       <div className="overflow-auto">
-        <table className="w-full text-sm text-left">
+        <table className="w-screen text-sm text-left">
           <thead className="text-xs text-gray-700 uppercase border">
             <tr>
               <th className="px-6 py-3 max-w-[20px] sticky bg-white left-[-2px]">
@@ -222,7 +249,16 @@ function Table() {
                       className="my-1"
                       halaman_url={`/ProsesBisnis/EditData/${data.id}`}
                     >
-                      Edit
+                      <div className="flex">
+                        <Image 
+                          className="mr-1"
+                          src="/iconLight/edit.svg" 
+                          alt="edit" 
+                          width={15} 
+                          height={15} 
+                        />
+                        Edit
+                      </div>
                     </ButtonSc>
                     <ButtonTr
                       typee="button"
@@ -235,7 +271,16 @@ function Table() {
                         })
                       }}
                     >
-                      Hapus
+                      <div className="flex items-center justify-center w-full">
+                        <Image 
+                          className="mr-1"
+                          src="/iconLight/trash.svg" 
+                          alt="trash" 
+                          width={15} 
+                          height={15} 
+                        />
+                        <span>Hapus</span>
+                      </div>
                     </ButtonTr>
                   </td>
                 </tr>

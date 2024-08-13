@@ -6,7 +6,8 @@ import Sidebar from "@/components/global/Sidebar/Sidebar";
 import Header from "@/components/global/Header/Header";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
-
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
@@ -14,6 +15,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+  const pathname = usePathname();
+  const isLoginPage = pathname === "/Login";
+  const [isCollapse, setIsCollapse] = useState(false);
+
+  const toggleCollapse = () => {
+    setIsCollapse(!isCollapse);
+  };
+
   return (
     <html lang="en">
         <Provider store={store}>
@@ -23,11 +33,13 @@ export default function RootLayout({
             <link rel="icon" href="/logo.png" />
           </head>
           <body className={`${inter.className} flex`}>
-            <Sidebar />
-            <div className="pl-[17rem] w-full">
-              <Header />
-              <main className="p-5">{children}</main>
-            </div>
+              {!isLoginPage && <Sidebar isCollapse={isCollapse} toggleCollapse={toggleCollapse} />}
+              <div className={`${!isLoginPage ? (isCollapse ? "pl-[6rem] w-full transition-all duration-300 ease-in-out" : "pl-[17rem] w-full transition-all duration-100") : "w-full"}`}>
+                {!isLoginPage && <Header />}
+                <main className="p-5">
+                  {children}
+                </main>
+              </div>
           </body>
         </Provider>
     </html>

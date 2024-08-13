@@ -1,9 +1,10 @@
 "use client"
 
-import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
+import {ButtonPr, ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Loading from "@/components/global/Loading/Loading";
 import { useState, useEffect } from "react";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
+import Image from "next/image";
 
 interface layanan {
     Id: number;
@@ -102,6 +103,32 @@ const Table = () => {
 
         return(
             <>
+            <div className="flex justify-between mb-5">
+                <ButtonSc typee="button">
+                <div className="flex">
+                    <Image 
+                    className="mr-1"
+                    src="/iconLight/cetak.svg" 
+                    alt="add" 
+                    width={20} 
+                    height={20} 
+                    />
+                    Cetak
+                </div>
+                </ButtonSc>
+                <ButtonPr halaman_url="/Layanan/LayananSPBE/TambahData" typee="button">
+                <div className="flex">
+                    <Image 
+                    className="mr-1"
+                    src="/iconLight/add.svg" 
+                    alt="add" 
+                    width={20} 
+                    height={20} 
+                    />
+                    Tambah Data
+                </div>
+                </ButtonPr>
+            </div>
                 <div className="overflow-auto">
                     <table className="w-full text-sm text-left">
                     <thead className="text-xs text-gray-700 uppercase border">
@@ -157,7 +184,16 @@ const Table = () => {
                                         className="my-1"
                                         halaman_url={`/Layanan/LayananSPBE/EditData/${data.Id}`}
                                     >
-                                        Edit
+                                        <div className="flex items-center justify-center w-full">
+                                            <Image 
+                                            className="mr-1"
+                                            src="/iconLight/edit.svg" 
+                                            alt="edit" 
+                                            width={15} 
+                                            height={15} 
+                                            />
+                                            <span>Edit</span>
+                                        </div>
                                     </ButtonSc>
                                     <ButtonTr 
                                         typee="button" 
@@ -170,7 +206,16 @@ const Table = () => {
                                               })
                                         }}
                                     >
-                                        Hapus
+                                       <div className="flex items-center justify-center w-full">
+                                            <Image 
+                                            className="mr-1"
+                                            src="/iconLight/trash.svg" 
+                                            alt="trash" 
+                                            width={15} 
+                                            height={15} 
+                                            />
+                                            <span>Hapus</span>
+                                        </div>
                                     </ButtonTr>
                                 </td>
                             </tr>

@@ -1,9 +1,10 @@
 "use client"
 
-import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
+import {ButtonPr, ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import { useState, useEffect } from "react";
 import Loading from "@/components/global/Loading/Loading";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
+import Image from "next/image";
 
 interface dataInformasi {
     Id: number
@@ -18,6 +19,7 @@ interface dataInformasi {
     InformasiTerkaitInput : string,
     InformasiTerkaitOutput : string,
     Interoprabilitas : string,
+    Keterangan: string,
     Tahun : number,
     RadLevel1id : rad_level_1_4,
     RadLevel2id : rad_level_1_4,
@@ -96,6 +98,32 @@ const Table = () => {
 
     return(
         <>
+            <div className="flex justify-between mb-5">
+                <ButtonSc typee="button">
+                <div className="flex">
+                    <Image 
+                    className="mr-1"
+                    src="/iconLight/cetak.svg" 
+                    alt="add" 
+                    width={20} 
+                    height={20} 
+                    />
+                    Cetak
+                </div>
+                </ButtonSc>
+                <ButtonPr halaman_url="/DataInformasi/TambahData" typee="button">
+                <div className="flex">
+                    <Image 
+                    className="mr-1"
+                    src="/iconLight/add.svg" 
+                    alt="add" 
+                    width={20} 
+                    height={20} 
+                    />
+                    Tambah Data
+                </div>
+                </ButtonPr>
+            </div>
             <div className="overflow-auto">
                 <table className="w-full text-sm text-left">
                 <thead className="text-xs text-gray-700 uppercase border">
@@ -111,6 +139,7 @@ const Table = () => {
                         <th className="px-6 py-3 min-w-[200px]">Informasi Terkait Input</th>
                         <th className="px-6 py-3 min-w-[200px]">Informasi Terkait Output</th>
                         <th className="px-6 py-3 min-w-[200px]">Interoperabilitas</th>
+                        <th className="px-6 py-3 min-w-[200px]">Keterangan</th>
                         <th className="px-6 py-3 min-w-[200px]">Kode OPD</th>
                         <th className="px-6 py-3 min-w-[200px]">Tahun</th>
                         <th className="px-6 py-3 min-w-[200px]">RAD Level 1</th>
@@ -144,6 +173,7 @@ const Table = () => {
                             <td className="px-6 py-4">{data.InformasiTerkaitInput ? `${data.InformasiTerkaitInput}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.InformasiTerkaitOutput ? `${data.InformasiTerkaitOutput}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.Interoprabilitas ? `${data.Interoprabilitas}`: "N/A"}</td>
+                            <td className="px-6 py-4">{data.Keterangan ? `${data.Keterangan}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.KodeOPD? `${data.Interoprabilitas}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.Tahun ? `${data.Tahun}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.RadLevel1id? `${data.RadLevel1id.kode_referensi} ${data.RadLevel1id.nama_referensi}`: "N/A"}</td>
@@ -159,7 +189,16 @@ const Table = () => {
                                     className="my-1"
                                     halaman_url={`/DataInformasi/EditData/${data.Id}`}
                                 >
-                                    Edit
+                                    <div className="flex items-center justify-center w-full">
+                                        <Image 
+                                        className="mr-1"
+                                        src="/iconLight/edit.svg" 
+                                        alt="edit" 
+                                        width={15} 
+                                        height={15} 
+                                        />
+                                        <span>Edit</span>
+                                    </div>
                                 </ButtonSc>
                                 <ButtonTr 
                                     typee="button"
@@ -172,7 +211,16 @@ const Table = () => {
                                           })
                                     }}
                                 >
-                                    Hapus
+                                    <div className="flex items-center justify-center w-full">
+                                        <Image 
+                                        className="mr-1"
+                                        src="/iconLight/trash.svg" 
+                                        alt="trash" 
+                                        width={15} 
+                                        height={15} 
+                                        />
+                                        <span>Hapus</span>
+                                    </div>
                                 </ButtonTr>
                             </td>
                         </tr>

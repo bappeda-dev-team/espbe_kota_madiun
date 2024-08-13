@@ -12,7 +12,7 @@ export const AlertNotification = (
       showConfirmButton: true,
       timer: timer,
       customClass: {
-        confirmButton: "bg-emerald-300 hover:bg-emerald-500 text-white font-bold"
+        confirmButton: "bg-gradient-to-r from-[#007F73] to-[#40DA97] hover:from-[#4AAF9B] hover:to-[#64B07B] text-white font-bold"
       }
     });
 }
@@ -34,8 +34,8 @@ export const AlertQuestion = (
       cancelButtonText: cancelButtonText,
       buttonsStyling: true,
       customClass: {
-        confirmButton: "bg-red-500 hover:bg-red-700 text-white font-bold",
-        cancelButton: "bg-emerald-300 hover:bg-emerald-500 text-white font-bold",
+        confirmButton: "bg-gradient-to-r from-[#BE1010] to-[#EA5353] hover:from-[#670505] hover:to-[#FF0000] text-white font-bold",
+        cancelButton: "bg-gradient-to-r from-[#007F73] to-[#40DA97] hover:from-[#4AAF9B] hover:to-[#64B07B] text-white font-bold",
       }
     });
 }

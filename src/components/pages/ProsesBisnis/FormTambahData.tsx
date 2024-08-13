@@ -420,17 +420,17 @@ const FormTambahData = () => {
                 className="uppercase text-xs font-bold text-gray-700 my-2"
                 htmlFor="rab_level_4_id"
               >
-                RAB Level 4:
+                Strategic :
               </label>
               <Controller
                 name="rab_level_4_id"
                 control={control}
-                rules={{required : "RAB Level 4 Harus Terisi"}}
+                rules={{required : "Strategic Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      placeholder="Masukkan RAB Level 4"
+                      placeholder="Masukkan Strategic"
                       options={rab_level_4_6_option}
                       isLoading={isLoading}
                       isClearable
@@ -449,7 +449,7 @@ const FormTambahData = () => {
                         {errors.rab_level_4_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*RAB Level 4 Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Strategic Harus Terisi</h1>
                     }
                   </>
                 )}
@@ -460,17 +460,17 @@ const FormTambahData = () => {
                 className="uppercase text-xs font-bold text-gray-700 my-2"
                 htmlFor="rab_level_5_id"
               >
-                RAB Level 5:
+                Tactical :
               </label>
               <Controller
                 name="rab_level_5_id"
                 control={control}
-                rules={{required : "RAB Level 5 Harus Terisi"}}
+                rules={{required : "Tactical Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      placeholder="Masukkan RAB Level 5"
+                      placeholder="Masukkan Tactical"
                       options={rab_level_4_6_option}
                       isLoading={isLoading}
                       isClearable
@@ -489,7 +489,7 @@ const FormTambahData = () => {
                         {errors.rab_level_5_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*RAB Level 5 Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Tactical Harus Terisi</h1>
                     }
                   </>
                 )}
@@ -500,17 +500,17 @@ const FormTambahData = () => {
                 className="uppercase text-xs font-bold text-gray-700 my-2"
                 htmlFor="rab_level_6_id"
               >
-                RAB Level 6:
+                Operational :
               </label>
               <Controller
                 name="rab_level_6_id"
                 control={control}
-                rules={{required : "RAB Level 6 Harus Terisi"}}
+                rules={{required : "Operational Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      placeholder="Masukkan RAB Level 6"
+                      placeholder="Masukkan Operational"
                       options={rab_level_4_6_option}
                       isLoading={isLoading}
                       isClearable
@@ -529,7 +529,7 @@ const FormTambahData = () => {
                         {errors.rab_level_6_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*RAB Level 6 Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Operational Harus Terisi</h1>
                     }
                   </>
                 )}
