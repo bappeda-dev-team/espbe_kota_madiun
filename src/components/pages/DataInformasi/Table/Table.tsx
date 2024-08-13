@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import Loading from "@/components/global/Loading/Loading";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface dataInformasi {
     Id: number
@@ -44,6 +46,7 @@ interface rad_level_5_7 {
 
 const Table = () => {
     //state fetch data informasi
+    const tahun = useSelector((state: RootState) => state.Tahun.tahun)
     const [datainformasi, setDatainformasi] = useState<dataInformasi[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>()
@@ -51,28 +54,52 @@ const Table = () => {
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchDataInformasi = async() => {
-            try{
-                const response = await fetch(`${API_URL}/v1/datainformasi`)
-                if(!response.ok){
-                    throw new Error("cant fetch data");
+        if(tahun === 0){
+            const fetchDataInformasi = async() => {
+                try{
+                    const response = await fetch(`${API_URL}/v1/datainformasi`)
+                    if(!response.ok){
+                        throw new Error("cant fetch data");
+                    }
+                    const result = await response.json();
+                    if (result.data === null) {
+                      setDatainformasi([]);
+                      setDataNull(true);
+                    } else {
+                      setDatainformasi(result.data);
+                      setDataNull(false);
+                    }
+                } catch(err){
+                    setError("Gagal memuat data, cek koneksi internet atau database server")
+                } finally{
+                    setLoading(false)
                 }
-                const result = await response.json();
-                if (result.data === null) {
-                  setDatainformasi([]);
-                  setDataNull(true);
-                } else {
-                  setDatainformasi(result.data);
-                  setDataNull(false);
-                }
-            } catch(err){
-                setError("Gagal memuat data, cek koneksi internet atau database server")
-            } finally{
-                setLoading(false)
             }
+            fetchDataInformasi();
+        } else if(tahun !== 0){
+            const fetchDataInformasi = async() => {
+                try{
+                    const response = await fetch(`${API_URL}/v1/datainformasibytahun/${tahun}`)
+                    if(!response.ok){
+                        throw new Error("cant fetch data");
+                    }
+                    const result = await response.json();
+                    if (result.data === null) {
+                      setDatainformasi([]);
+                      setDataNull(true);
+                    } else {
+                      setDatainformasi(result.data);
+                      setDataNull(false);
+                    }
+                } catch(err){
+                    setError("Gagal memuat data, cek koneksi internet atau database server")
+                } finally{
+                    setLoading(false)
+                }
+            }
+            fetchDataInformasi();
         }
-        fetchDataInformasi();
-    },[])
+    },[tahun])
 
     const hapusDataInformasi = async(Id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;

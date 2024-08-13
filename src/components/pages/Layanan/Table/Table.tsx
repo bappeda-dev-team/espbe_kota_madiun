@@ -5,6 +5,8 @@ import Loading from "@/components/global/Loading/Loading";
 import { useState, useEffect } from "react";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface layanan {
     Id: number;
@@ -45,37 +47,61 @@ interface ral_level_5_7{
 }
 
 const Table = () => {
-
     //state fetch data layanan
     const [layanan, setLayanan] = useState<layanan[]>([])
     const [dataNull, setDataNull] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
+    const tahun = useSelector((state: RootState) => state.Tahun.tahun)
     
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchLayanan = async () => {
-            try{
-                const response = await fetch(`${API_URL}/v1/layananspbe`)
-                if(!response.ok){
-                    throw new Error("cant fetch data");
+        if(tahun === 0){
+            const fetchLayanan = async () => {
+                try{
+                    const response = await fetch(`${API_URL}/v1/layananspbe`)
+                    if(!response.ok){
+                        throw new Error("cant fetch data");
+                    }
+                    const result = await response.json();
+                    if(result.data == null){
+                        setLayanan([]);
+                        setDataNull(true);
+                    } else {
+                        setLayanan(result.data);
+                        setDataNull(false);
+                    }
+                } catch(err){
+                    setError(true);
+                } finally {
+                    setLoading(false);
                 }
-                const result = await response.json();
-                if(result.data == null){
-                    setLayanan([]);
-                    setDataNull(true);
-                } else {
-                    setLayanan(result.data);
-                    setDataNull(false);
-                }
-            } catch(err){
-                setError(true);
-            } finally {
-                setLoading(false);
             }
+            fetchLayanan();
+        } else if(tahun !== 0){
+            const fetchLayanan = async () => {
+                try{
+                    const response = await fetch(`${API_URL}/v1/layananspbebytahun/${tahun}`)
+                    if(!response.ok){
+                        throw new Error("cant fetch data");
+                    }
+                    const result = await response.json();
+                    if(result.data == null){
+                        setLayanan([]);
+                        setDataNull(true);
+                    } else {
+                        setLayanan(result.data);
+                        setDataNull(false);
+                    }
+                } catch(err){
+                    setError(true);
+                } finally {
+                    setLoading(false);
+                }
+            }
+            fetchLayanan();
         }
-        fetchLayanan();
-    }, [])
+    }, [tahun])
 
     const hapusDataLayanan = async(Id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;

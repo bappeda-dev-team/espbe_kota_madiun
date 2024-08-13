@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import useReducer from "@/store/ProsesBisnisSlicer"
+import useReducer from "@/store/TahunSlicer"
 
 export const store = configureStore({
     reducer: {
-        tahunProsesBisnis: useReducer
+        Tahun: useReducer
     },
 });
 

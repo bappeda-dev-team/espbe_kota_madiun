@@ -4,7 +4,7 @@ import Image from "next/image";
 const FormLogin = () => {
   return(
     <>
-    <div className="flex items-center justify-center w-screen min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center w-full h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <div className="flex flex-col items-center">
           <Image src="/logo.png" alt="image" width={70} height={70} />

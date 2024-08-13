@@ -5,6 +5,8 @@ import Loading from "@/components/global/Loading/Loading";
 import {ButtonPr, ButtonSc, ButtonTr } from "@/components/common/Button/Button";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface KebutuhanSPBE {
     id: number;
@@ -30,6 +32,7 @@ interface KondisiAwal {
 }
 
 const Table = () => {
+    const tahun = useSelector((state: RootState) => state.Tahun.tahun)
     const [dataNull, setDataNull] = useState<boolean>(false);
     const [kebutuhan, setKebutuhan] = useState<KebutuhanSPBE[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -37,28 +40,52 @@ const Table = () => {
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchDataKebutuhan = async () => {
-            try {
-                const response = await fetch(`${API_URL}/v1/kebutuhanspbe`);
-                if (!response.ok) {
-                    throw new Error("Gagal fetch data kebutuhan SPBE");
+        if(tahun === 0){
+            const fetchDataKebutuhan = async () => {
+                try {
+                    const response = await fetch(`${API_URL}/v1/kebutuhanspbe`);
+                    if (!response.ok) {
+                        throw new Error("Gagal fetch data kebutuhan SPBE");
+                    }
+                    const data = await response.json();
+                    if (data.data === null) {
+                        setDataNull(true);
+                        setKebutuhan([]);
+                    } else {
+                        setKebutuhan(data.data);
+                        setDataNull(false);
+                    }
+                } catch (error) {
+                    setError("Gagal memuat data Kebutuhan SPBE, cek koneksi internet dan database server");
+                } finally {
+                    setLoading(false);
                 }
-                const data = await response.json();
-                if (data.data === null) {
-                    setDataNull(true);
-                    setKebutuhan([]);
-                } else {
-                    setKebutuhan(data.data);
-                    setDataNull(false);
+            };
+            fetchDataKebutuhan();
+        } else if(tahun != 0) {
+            const fetchDataKebutuhan = async () => {
+                try {
+                    const response = await fetch(`${API_URL}/v1/kebutuhanspbebytahun/${tahun}`);
+                    if (!response.ok) {
+                        throw new Error("Gagal fetch data kebutuhan SPBE");
+                    }
+                    const data = await response.json();
+                    if (data.data === null) {
+                        setDataNull(true);
+                        setKebutuhan([]);
+                    } else {
+                        setKebutuhan(data.data);
+                        setDataNull(false);
+                    }
+                } catch (error) {
+                    setError("Gagal memuat data Kebutuhan SPBE, cek koneksi internet dan database server");
+                } finally {
+                    setLoading(false);
                 }
-            } catch (error) {
-                setError("Gagal memuat data Kebutuhan SPBE, cek koneksi internet dan database server");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchDataKebutuhan();
-    }, []);
+            };
+            fetchDataKebutuhan();
+        }
+    }, [tahun]);
 
     const hapusKebutuhan = async (id: number) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;

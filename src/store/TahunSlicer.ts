@@ -9,8 +9,8 @@ const initialState: TahunState = {
   tahun: 0,
 };
 
-const ProsesBisnisSlicer = createSlice({
-  name: 'ProsesBisnisTahun',
+const TahunSlicer = createSlice({
+  name: 'Tahun',
   initialState,
   reducers: {
     setTahun: (state, action: PayloadAction<number>) => {
@@ -19,5 +19,5 @@ const ProsesBisnisSlicer = createSlice({
   },
 });
 
-export const { setTahun } = ProsesBisnisSlicer.actions;
-export default ProsesBisnisSlicer.reducer;
+export const { setTahun } = TahunSlicer.actions;
+export default TahunSlicer.reducer;

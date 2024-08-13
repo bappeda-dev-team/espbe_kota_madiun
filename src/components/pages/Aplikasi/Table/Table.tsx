@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import Loading from "@/components/global/Loading/Loading";
 import { AlertNotification, AlertQuestion} from "@/components/common/Alert/Alert";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface aplikasi {
     Id: number;
@@ -40,6 +42,7 @@ interface Raa_Level_5_7 {
 
 const Table = () => {
     //state fetch data Aplikasi
+    const tahun = useSelector((state: RootState) => state.Tahun.tahun)
     const [aplikasi, setAplikasi] = useState<aplikasi[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null)
@@ -47,28 +50,52 @@ const Table = () => {
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchAplikasi = async() => {
-            try{
-                const response = await fetch(`${API_URL}/v1/aplikasi`);
-                if(!response.ok){
-                    throw new Error("cant fetch data aplikasi")
+        if(tahun === 0){     
+            const fetchAplikasi = async() => {
+                try{
+                    const response = await fetch(`${API_URL}/v1/aplikasi`);
+                    if(!response.ok){
+                        throw new Error("cant fetch data aplikasi")
+                    }
+                    const result = await response.json();
+                    if (result.data === null) {
+                      setAplikasi([]);
+                      setDataNull(true);
+                    } else {
+                      setAplikasi(result.data);
+                      setDataNull(false);
+                    }
+                } catch(err){
+                    setError("gagal memuat data aplikasi, cek koneksi internet atau database server")
+                } finally {
+                    setLoading(false);
                 }
-                const result = await response.json();
-                if (result.data === null) {
-                  setAplikasi([]);
-                  setDataNull(true);
-                } else {
-                  setAplikasi(result.data);
-                  setDataNull(false);
-                }
-            } catch(err){
-                setError("gagal memuat data aplikasi, cek koneksi internet atau database server")
-            } finally {
-                setLoading(false);
             }
+            fetchAplikasi();
+        } else if(tahun !== 0) {
+            const fetchAplikasi = async() => {
+                try{
+                    const response = await fetch(`${API_URL}/v1/aplikasibytahun/${tahun}`);
+                    if(!response.ok){
+                        throw new Error("cant fetch data aplikasi")
+                    }
+                    const result = await response.json();
+                    if (result.data === null) {
+                      setAplikasi([]);
+                      setDataNull(true);
+                    } else {
+                      setAplikasi(result.data);
+                      setDataNull(false);
+                    }
+                } catch(err){
+                    setError("gagal memuat data aplikasi, cek koneksi internet atau database server")
+                } finally {
+                    setLoading(false);
+                }
+            }
+            fetchAplikasi();
         }
-        fetchAplikasi();
-    },[]);
+    }, [tahun]);
 
     const hapusAplikasi = async(Id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;

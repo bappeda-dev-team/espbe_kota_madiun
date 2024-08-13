@@ -36,7 +36,7 @@ export default function RootLayout({
               {!isLoginPage && <Sidebar isCollapse={isCollapse} toggleCollapse={toggleCollapse} />}
               <div className={`${!isLoginPage ? (isCollapse ? "pl-[6rem] w-full transition-all duration-300 ease-in-out" : "pl-[17rem] w-full transition-all duration-100") : "w-full"}`}>
                 {!isLoginPage && <Header />}
-                <main className="p-5">
+                <main className={`${isLoginPage ? "" :"p-5" }`}>
                   {children}
                 </main>
               </div>

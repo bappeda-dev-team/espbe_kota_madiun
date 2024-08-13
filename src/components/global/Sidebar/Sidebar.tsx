@@ -422,33 +422,19 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
           </ButtonSc>
       </div>
 
-      {!isCollapse ? (  
+       
         <div className="p-5 border-b border-stone-300">
           <div className="flex flex-col items-center text-center">
             <Image
-              className="pr-2"
+              className="pr-2 transition-all duration-300 ease-in-out"
               src="/logo.png"
               alt="Logo"
-              width={80}
-              height={80}
+              width={!isCollapse ? 80 : 40}
+              height={!isCollapse ? 80 : 40}
             />
-            <h1>E-SPBE-Kota Madiun</h1>
+            {!isCollapse ? <h1>E-SPBE-Kota Madiun</h1> : <></>}
           </div>
         </div>
-      ) : (
-        <div className="p-5 border-b border-stone-300">
-          <div className="flex flex-col items-center text-center">
-            <Image
-              className="pr-2"
-              src="/logo.png"
-              alt="Logo"
-              width={40}
-              height={40}
-            />
-          </div>
-        </div>
-      ) 
-      }
 
       <div className="p-5 border-b border-stone-300">
         <div className="text-base">

@@ -54,7 +54,7 @@ interface typeProsesBisnis {
 
 function Table() {
   //state fetch data proses bisnis
-  const tahun = useSelector((state: RootState) => state.tahunProsesBisnis.tahun) //tahunProsesBisnis diambil dari store.ts, tahun diambil dari ProsesBisnisSlicer.ts -> interface TahunState{ tahun: number }
+  const tahun = useSelector((state: RootState) => state.Tahun.tahun) //tahunProsesBisnis diambil dari store.ts, tahun diambil dari ProsesBisnisSlicer.ts -> interface TahunState{ tahun: number }
   const [dataProsesBisnis, setDataProsesBisnis] = useState<typeProsesBisnis[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [dataNull, setDataNull] = useState<boolean>(false);
@@ -82,6 +82,8 @@ function Table() {
           setError(
             "Gagal memuat data, silakan cek koneksi internet atau database server",
           );
+        } finally {
+          setLoading(false);
         }
       };
       fetchingData();
