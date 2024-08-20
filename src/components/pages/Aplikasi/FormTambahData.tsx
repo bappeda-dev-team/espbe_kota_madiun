@@ -6,6 +6,7 @@ import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useRouter } from "next/navigation";
 import { AlertNotification } from "@/components/common/Alert/Alert";
+import { getUser, getToken } from "@/app/Login/Auth/Auth";
 
 interface OptionType {
   value: number;
@@ -27,6 +28,7 @@ interface FormValues {
   informasi_terkait_input : string,
   informasi_terkait_output : string,
   interoprabilitas : OptionTypeString | null,
+  keterangan : string | null,
   tahun : OptionType | null,
   raa_level_1_id : OptionType | null,
   raa_level_2_id : OptionType | null,
@@ -37,16 +39,19 @@ interface FormValues {
 }
 
 const FormTambahData = () => {
-  const [raa_level_1_4_option, set_raa_level_1_4_option] = useState<
-    OptionType[]
-  >([]);
-  const [raa_level_5_7_option, set_raa_level_5_7_option] = useState<
-    OptionType[]
-  >([]);
+  const [raa_level_1_4_option, set_raa_level_1_4_option] = useState<OptionType[]>([]);
+  const [raa_level_5_7_option, set_raa_level_5_7_option] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const token = getToken();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUser = getUser();
+    setUser(fetchUser);
+  },[])
 
   const tahun: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -72,6 +77,7 @@ const FormTambahData = () => {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -80,10 +86,11 @@ const FormTambahData = () => {
         jenis_aplikasi : null,
         produsen_aplikasi : "",
         pj_aplikasi : "",
-        kode_opd : "5.01.5.05.0.00.02.0000",
+        kode_opd : user?.kode_opd,
         informasi_terkait_input : "",
         informasi_terkait_output : "",
         interoprabilitas : null,
+        keterangan : null,
         tahun : null,
         raa_level_1_id : null,
         raa_level_2_id : null,
@@ -101,7 +108,11 @@ const FormTambahData = () => {
   const fetchRaaLevel1_4 = async (level: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
+      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (referensi: any) => referensi.level_referensi === level && referensi.jenis_referensi === "Aplikasi",
@@ -121,7 +132,11 @@ const FormTambahData = () => {
   const fetchRaaLevel5_7 = async (jenis_pohon: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja`);
+      const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (pohon: any) => pohon.jenis_pohon === jenis_pohon,
@@ -138,6 +153,8 @@ const FormTambahData = () => {
     }
   };
 
+  const interoprabilitasValue = watch("interoprabilitas");
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const formData = {
       //key : value
@@ -146,10 +163,11 @@ const FormTambahData = () => {
         jenis_aplikasi : data.jenis_aplikasi,
         produsen_aplikasi : data.produsen_aplikasi,
         pj_aplikasi : data.pj_aplikasi,
-        kode_opd : "5.01.5.05.0.00.02.0000",
+        kode_opd : user?.kode_opd,
         informasi_terkait_input : data.informasi_terkait_input,
         informasi_terkait_output : data.informasi_terkait_output,
         interoprabilitas : data.interoprabilitas,
+        keterangan : data.interoprabilitas?.value === "Ya" ? data.keterangan : null,
         tahun : data.tahun?.value,
         raa_level_1_id : data.raa_level_1_id?.value,
         raa_level_2_id : data.raa_level_2_id?.value,
@@ -162,7 +180,8 @@ const FormTambahData = () => {
       const response = await fetch(`${API_URL}/v1/createaplikasi`, {
         method: "POST",
         headers: {
-          "Content-Type" : "application/json"
+          "Content-Type" : "application/json",
+          'Authorization': `${token}`,
         },
         body: JSON.stringify(formData),
       });
@@ -456,6 +475,27 @@ const FormTambahData = () => {
                 )}
               />
             </div>
+            {interoprabilitasValue?.value === "Ya" && (
+              <div className="flex flex-col py-3">
+                <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="keterangan">
+                  Keterangan :
+                </label>
+                <Controller
+                  name="keterangan"
+                  control={control}
+                  render={({ field }) => (
+                      <input
+                        className="border px-4 py-2 rounded"
+                        {...field}
+                        value={field.value || ""}
+                        type="text"
+                        id="keterangan"
+                        placeholder="Masukkan Keterangan"
+                      />
+                  )}
+                />
+              </div>
+            )}
             <div className="flex flex-col py-3">
               <label
                 className="uppercase text-xs font-bold text-gray-700 my-2"

@@ -7,6 +7,7 @@ import Select from "react-select";
 import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
+import { getUser, getToken } from "@/app/Login/Auth/Auth";
 
 interface OptionType {
   value: number;
@@ -36,6 +37,7 @@ interface formValue {
 
 const FormEditData = () => {
   const { Id } = useParams();
+  const token = getToken();
   const router = useRouter();
   const {
     control,
@@ -45,6 +47,7 @@ const FormEditData = () => {
   } = useForm<formValue>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
+  const [user, setUser] = useState<any>(null);
 
   const [ral_1_4, set_ral_1_4] = useState<OptionType[]>([]);
   const [ral_5_7, set_ral_5_7] = useState<OptionType[]>([]);
@@ -66,6 +69,11 @@ const FormEditData = () => {
   const [selectedTactical, setSelectedTactical] = useState<OptionType | null>(null);
   const [selectedOperational, setSelectedOperational] = useState<OptionType | null>(null);
 
+  useEffect(() => {
+    const fetchUser = getUser();
+    setUser(fetchUser);
+  },[])
+
   const tahun_option: OptionType[] = [
     { value: 2024, label: "2024" },
     { value: 2025, label: "2025" },
@@ -84,7 +92,11 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const fetchingDataId = async () => {
       try {
-        const response = await fetch(`${API_URL}/v1/layananspbebyid/${Id}`);
+        const response = await fetch(`${API_URL}/v1/layananspbebyid/${Id}`, {
+          headers: {
+            'Authorization': `${token}`,
+          },
+        });
         const data = await response.json();
         const result = data.data;
         
@@ -192,14 +204,18 @@ const FormEditData = () => {
     };
     fetchingDataId();
     setIsClient(true);
-  }, [reset, Id]);
+  }, [reset, Id, token]);
 
   //fetching data RAL 1 - 4
   const fetchRal_1_4 = async (level: number) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
+      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (item: any) => item.level_referensi === level && item.jenis_referensi === "Layanan",
@@ -221,7 +237,11 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja`);
+      const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (pohon: any) => pohon.jenis_pohon === pohon_kinerja,
@@ -271,7 +291,7 @@ const FormEditData = () => {
       tujuan_layanan_id: data.tujuan_layanan_id?.value,
       fungsi_layanan: data.fungsi_layanan,
       tahun: data.tahun?.value,
-      kode_opd: "5.01.5.05.0.00.02.0000",
+      kode_opd: user?.kode_opd,
       kementrian_terkait: data.kementrian_terkait,
       metode_layanan: data.metode_layanan?.value,
       ral_level_1_id: data.ral_level_1_id?.value,
@@ -287,6 +307,7 @@ const FormEditData = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `${token}`,
         },
         body: JSON.stringify(formData),
       });

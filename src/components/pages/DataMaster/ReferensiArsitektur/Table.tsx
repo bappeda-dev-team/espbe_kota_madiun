@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/global/Loading/Loading";
+import { getToken } from "@/app/Login/Auth/Auth";
 
 interface ReferensiArsitektur {
     Id : number,
@@ -18,12 +19,18 @@ const Table = () => {
     const [error, setError] = useState<string>();
     const [loading, setLoading] = useState<boolean>(true)
     const [dataNull, setDataNull] = useState<boolean>(false);
+    const token = getToken();
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchReferensiArsitektur = async() => {
             try{
-                const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
+                const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+                    headers: {
+                        'Authorization': `${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
                 if(!response.ok){
                     throw new Error("cant fetch data Referensi Arsitektur");
                 }
@@ -42,7 +49,7 @@ const Table = () => {
             }
         }
         fetchReferensiArsitektur();
-    },[])
+    },[token])
 
     if(error){
         return <h1>{error}</h1>

@@ -6,6 +6,7 @@ import {ButtonPr, ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useForm, Controller, SubmitHandler, useFieldArray } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
+import { getUser, getToken } from "@/app/Login/Auth/Auth";
 
 interface OptionType {
     value: number;
@@ -38,15 +39,22 @@ interface FormValues {
 const FormEditKebutuhan = () => {
     const { id } = useParams();
     const router = useRouter();
+    const token = getToken();
+    const [user, setUser] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [selectedNamaDomain, setSelectedNamaDomain] = useState<OptionTypeString | null>(null);
     const [selectedNamaProsesBisnis, setSelectedNamaProsesBisnis] = useState<OptionType | null>(null);
     const [optionDomain, setOptionDomain] = useState<OptionTypeString[]>([]);
     const [optionProsesBisnis, setOptionProsesBisnis] = useState<OptionType[]>([]);
 
+    useEffect(() => {
+        const fetchUser = getUser();
+        setUser(fetchUser);
+    },[])
+
     const { control, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
         defaultValues: {
-            kode_opd: "5.01.5.05.0.00.02.0000",
+            kode_opd: user?.kode_opd,
             tahun: 2024,
             nama_domain: null,
             jenis_kebutuhan: [],
@@ -68,7 +76,11 @@ const FormEditKebutuhan = () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchDataById = async () => {
             try {
-                const response = await fetch(`${API_URL}/v1/kebutuhanspbebyid/${id}`);
+                const response = await fetch(`${API_URL}/v1/kebutuhanspbebyid/${id}`, {
+                    headers: {
+                      'Authorization': `${token}`,
+                    },
+                  });
                 const data = await response.json();
                 const result = data.data;
 
@@ -92,7 +104,7 @@ const FormEditKebutuhan = () => {
 
                 // Reset form data with fetched data
                 reset({
-                    kode_opd: result.kode_opd,
+                    kode_opd: user?.kode_opd,
                     tahun: result.tahun,
                     nama_domain: {
                         value: result.nama_domain,
@@ -122,13 +134,17 @@ const FormEditKebutuhan = () => {
         };
 
         fetchDataById();
-    }, [reset, replace, id]);
+    }, [reset, replace, id, token, user]);
 
     const fetchDomain = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_URL}/v1/domainspbe`);
+            const response = await fetch(`${API_URL}/v1/domainspbe`, {
+                headers: {
+                  'Authorization': `${token}`,
+                },
+              });
             const data = await response.json();
             const result = data.data.map((item: any) => ({
                 label: item.nama_domain,
@@ -146,7 +162,11 @@ const FormEditKebutuhan = () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_URL}/v1/prosesbisnisnogap`);
+            const response = await fetch(`${API_URL}/v1/prosesbisnisnogap`, {
+                headers: {
+                  'Authorization': `${token}`,
+                },
+              });
             const data = await response.json();
             const result = data.data.map((item: any) => ({
                 label: item.nama_proses_bisnis,
@@ -163,7 +183,7 @@ const FormEditKebutuhan = () => {
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
-            kode_opd: data.kode_opd,
+            kode_opd: user?.kode_opd,
             tahun: data.tahun,
             nama_domain: data.nama_domain?.value,
             id_prosesbisnis: data.proses_bisnis?.value,
@@ -181,6 +201,7 @@ const FormEditKebutuhan = () => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    'Authorization': `${token}`,
                 },
                 body: JSON.stringify(formData),
             });

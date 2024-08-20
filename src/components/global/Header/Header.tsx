@@ -1,17 +1,79 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setTahun } from "@/store/TahunSlicer";
+import { setOpd } from "@/store/OpdSlicer";
+import { getToken, getUser } from "@/app/Login/Auth/Auth";
+import Select from "react-select"
+
+interface OptionTypeString {
+  value: string;
+  label: string;
+}
 
 function Header() {
   const { id, Id } = useParams();
   const [textPath, setTextPath] = useState<string>();
   const url = usePathname();
   const [valueTahun, setValueTahun] = useState<number | string>("");
+  const [selectedOpd, setSelectedOpd] = useState<OptionTypeString | null>(null);
+  const [opdOption, setOpdOption] = useState<OptionTypeString[]>([]);
   const dispatch = useDispatch();
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const token = getToken();
+
+  useEffect(() => {
+    const fetchUser = getUser();
+    setUser(fetchUser);
+  }, []);
+
+  const TahunOptions = [
+    { value: 0, label: 'Semua Tahun' },
+    { value: 2019, label: 'tahun 2019' },
+    { value: 2020, label: 'tahun 2020' },
+    { value: 2021, label: 'tahun 2021' },
+    { value: 2022, label: 'tahun 2022' },
+    { value: 2023, label: 'tahun 2023' },
+    { value: 2024, label: 'tahun 2024' },
+    { value: 2025, label: 'tahun 2025' },
+    { value: 2026, label: 'tahun 2026' },
+    { value: 2027, label: 'tahun 2027' },
+    { value: 2028, label: 'tahun 2028' },
+    { value: 2029, label: 'tahun 2029' },
+    { value: 2030, label: 'tahun 2030' },
+  ];
+
+  const semuaOPD = { value: 'all_opd', label: 'Semua OPD' };
+
+  const fetchOPD = async() => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    setIsLoading(true);
+    try{ 
+      const response = await fetch(`${API_URL}/v1/opd`,{
+        method: 'GET',
+        headers: {
+          'Authorization': `${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if(!response.ok){
+        throw new Error('cant fetch data opd');
+      }
+      const data = await response.json();
+      const opd = data.data.map((item: any) => ({
+        value : item.kode_opd,
+        label : item.nama_opd,
+      }));
+      setOpdOption([semuaOPD, ...opd]);
+    } catch (err){
+      console.log('gagal mendapatkan data opd dengan admin kota');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
 
   useEffect(() => {
@@ -52,15 +114,22 @@ function Header() {
     } else {
       setTextPath("-");
     }
-  }, [url, id]);
+  }, [url, id, Id]);
 
-  const handlerTahun = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const tahun = e.target.value === "" ? "" : Number(e.target.value);
+  const handlerTahun = (selectedOption: { value: number | string }) => {
+    const tahun = selectedOption.value === "" ? "" : Number(selectedOption.value);
     setValueTahun(tahun);
-    if(tahun !== ""){
-      dispatch(setTahun(tahun))
+    if (tahun !== "") {
+      dispatch(setTahun(tahun));
     }
-  }
+  };
+
+  const handlerOpd = (selectedOption: OptionTypeString | null) => {
+    setSelectedOpd(selectedOption);
+    if (selectedOption) {
+      dispatch(setOpd({ value: selectedOption.value, label: selectedOption.label }));
+    }
+  };
 
   return (
     <>
@@ -68,30 +137,46 @@ function Header() {
         <div className="flex justify-between items-center flex-row w-screen p-5">
           <div className="text-page flex flex-row">
             <h1 className="text-stone-300">{textPath}</h1>
+            <h1 className="text-stone-300 ml-1">{url}</h1>
           </div>
           <div className="flex">
-            <select 
-              onChange={handlerTahun} 
-              className="bg-white text-emerald-500 border border-emerald-500 rounded-lg px-3 mx-3" 
-              defaultValue={0}
-            >
-              <option value={0}>Semua Tahun</option>
-              <option value={2019}>tahun 2019</option>
-              <option value={2020}>tahun 2020</option>
-              <option value={2021}>tahun 2021</option>
-              <option value={2022}>tahun 2022</option>
-              <option value={2023}>tahun 2023</option>
-              <option value={2024}>tahun 2024</option>
-              <option value={2025}>tahun 2025</option>
-              <option value={2026}>tahun 2026</option>
-              <option value={2027}>tahun 2027</option>
-              <option value={2028}>tahun 2028</option>
-              <option value={2029}>tahun 2029</option>
-              <option value={2030}>tahun 2030</option>
-            </select>
+            {user?.roles == "admin_kota" && 
+              <Select
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: state.isFocused ? 'rgb(255 255 255' : 'rgb(255 255 255',
+                    textColor: 'rgb(255 255 255'
+                  }),
+                }}
+                placeholder="Semua OPD"
+                options={opdOption}
+                onChange={(selectedOption) => handlerOpd(selectedOption)}
+                isLoading={isLoading}
+                defaultValue={semuaOPD}
+                isSearchable
+                onMenuOpen={() => {fetchOPD()}}
+                onMenuClose={() => {setOpdOption([])}}
+              />
+            }
+            <Select
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  borderColor: state.isFocused ? 'rgb(255 255 255' : 'rgb(255 255 255',
+                  textColor: 'rgb(255 255 255'
+                }),
+              }}
+              options={TahunOptions}
+              onChange={(selectedOption) => handlerTahun(selectedOption as { value: number | string })}
+              defaultValue={TahunOptions[0]}
+              classNamePrefix="select"
+            />
             <button className="rounded-lg p-3 border border-emerald-500 text-emerald-500 font-bold text-sm hover:bg-emerald-500 hover:text-white">
               {/* ambil di local storage ketika sudah login */}
-              Admin Kota 
+              {user?.roles == "admin_kota" && <p>Admin Kota</p>}
+              {user?.roles == "admin_opd" && <p>Admin OPD</p>}
+              {user?.roles == "asn" && <p>ASN</p>}
             </button>
           </div>
           {/* <input type="text" className="bg-stone-300 rounded-lg px-5" placeholder="Search"/> */}

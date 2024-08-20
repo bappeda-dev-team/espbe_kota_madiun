@@ -4,7 +4,7 @@ import HeaderArsitektur from "@/components/pages/Arsitektur/HeaderArsitektur";
 const Arsitektur = () => {
     return(
         <>
-            <div className="mb-5 mt-2">
+            <div className="mb-3 mt-2">
                 <HeaderArsitektur />
             </div>
             <Table />

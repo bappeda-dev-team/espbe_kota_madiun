@@ -7,6 +7,8 @@ import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Aler
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { getToken } from "@/app/Login/Auth/Auth";
+import { getUser } from "@/app/Login/Auth/Auth";
 
 interface KebutuhanSPBE {
     id: number;
@@ -32,66 +34,141 @@ interface KondisiAwal {
 }
 
 const Table = () => {
-    const tahun = useSelector((state: RootState) => state.Tahun.tahun)
+    const tahun = useSelector((state: RootState) => state.Tahun.tahun);
+    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [dataNull, setDataNull] = useState<boolean>(false);
     const [kebutuhan, setKebutuhan] = useState<KebutuhanSPBE[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const token = getToken();
+    const [user, setUser] = useState<any>();
 
     useEffect(() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        if(tahun === 0){
-            const fetchDataKebutuhan = async () => {
-                try {
-                    const response = await fetch(`${API_URL}/v1/kebutuhanspbe`);
-                    if (!response.ok) {
-                        throw new Error("Gagal fetch data kebutuhan SPBE");
-                    }
-                    const data = await response.json();
-                    if (data.data === null) {
-                        setDataNull(true);
-                        setKebutuhan([]);
-                    } else {
-                        setKebutuhan(data.data);
-                        setDataNull(false);
-                    }
-                } catch (error) {
-                    setError("Gagal memuat data Kebutuhan SPBE, cek koneksi internet dan database server");
-                } finally {
-                    setLoading(false);
-                }
-            };
-            fetchDataKebutuhan();
-        } else if(tahun != 0) {
-            const fetchDataKebutuhan = async () => {
-                try {
-                    const response = await fetch(`${API_URL}/v1/kebutuhanspbebytahun/${tahun}`);
-                    if (!response.ok) {
-                        throw new Error("Gagal fetch data kebutuhan SPBE");
-                    }
-                    const data = await response.json();
-                    if (data.data === null) {
-                        setDataNull(true);
-                        setKebutuhan([]);
-                    } else {
-                        setKebutuhan(data.data);
-                        setDataNull(false);
-                    }
-                } catch (error) {
-                    setError("Gagal memuat data Kebutuhan SPBE, cek koneksi internet dan database server");
-                } finally {
-                    setLoading(false);
-                }
-            };
-            fetchDataKebutuhan();
-        }
-    }, [tahun]);
+        const fetchUser = getUser();
+        setUser(fetchUser);
+      }, []);
+
+    useEffect(() => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      if(tahun !== 0 && SelectedOpd !== "all_opd"){
+        const fetchingData = async () => {
+          try {
+            const response = await fetch(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
+              headers: {
+                'Authorization': `${token}`,
+                'Content-Type': 'application/json',
+              },
+            });
+            if (!response.ok) {
+              throw new Error("cant fetching data");
+            }
+            const data = await response.json();
+            if (data.data === null) {
+              setKebutuhan([]);
+              setDataNull(true);
+            } else {
+              setKebutuhan(data.data);
+              setDataNull(false);
+            }
+          } catch (err) {
+            setError("gagal mendapatkan data kebutuhan spbe, cek koneksi internet atau database server");
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchingData();
+      } else if(tahun == 0 && SelectedOpd != "all_opd"){
+        const fetchingData = async () => {
+          try {
+            const response = await fetch(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
+              headers: {
+                'Authorization': `${token}`,
+                'Content-Type': 'application/json',
+              },
+            });
+            if (!response.ok) {
+              throw new Error("cant fetching data");
+            }
+            const data = await response.json();
+            if (data.data === null) {
+              setKebutuhan([]);
+              setDataNull(true);
+            } else {
+              setKebutuhan(data.data);
+              setDataNull(false);
+            }
+          } catch (err) {
+            setError("gagal mendapatkan data kebutuhan spbe, cek koneksi internet atau database server");
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchingData();
+      } else if(tahun != 0 && SelectedOpd == "all_opd"){
+        const fetchingData = async () => {
+          try {
+            const response = await fetch(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}`, {
+              headers: {
+                'Authorization': `${token}`,
+                'Content-Type': 'application/json',
+              },
+            });
+            if (!response.ok) {
+              throw new Error("cant fetching data");
+            }
+            const data = await response.json();
+            if (data.data === null) {
+              setKebutuhan([]);
+              setDataNull(true);
+            } else {
+              setKebutuhan(data.data);
+              setDataNull(false);
+            }
+          } catch (err) {
+            setError("gagal mendapatkan data kebutuhan spbe, cek koneksi internet atau database server");
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchingData();
+      } else {
+        const fetchingData = async () => {
+          try {
+            const response = await fetch(`${API_URL}/v1/kebutuhanspbe`, {
+              headers: {
+                'Authorization': `${token}`,
+                'Content-Type': 'application/json',
+              },
+            });
+            if (!response.ok) {
+              throw new Error("cant fetching data");
+            }
+            const data = await response.json();
+            if (data.data === null) {
+              setKebutuhan([]);
+              setDataNull(true);
+            } else {
+              setKebutuhan(data.data);
+              setDataNull(false);
+            }
+          } catch (err) {
+            setError("gagal mendapatkan data kebutuhan spbe, cek koneksi internet atau database server");
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchingData();
+      }
+    }, [tahun, SelectedOpd, token]);
 
     const hapusKebutuhan = async (id: number) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try {
             const response = await fetch(`${API_URL}/v1/deletekebutuhanspbe/${id}`, {
                 method: "DELETE",
+                headers: {
+                    'Authorization': `${token}`,
+                },
             })
             if(!response.ok){
                 alert("gagal fetch kebutuhan");
@@ -111,6 +188,7 @@ const Table = () => {
 
     return (
         <>
+            {user?.roles == "asn" && 
             <div className="flex justify-between mb-5">
                 <ButtonSc typee="button">
                 <div className="flex">
@@ -137,6 +215,7 @@ const Table = () => {
                 </div>
                 </ButtonPr>
             </div>
+            }
             <div className="overflow-auto">
                 <table className="w-full text-sm text-left">
                     <thead className="text-xs text-gray-700 uppercase border">
@@ -145,7 +224,7 @@ const Table = () => {
                             <th rowSpan={2} className="border px-6 py-3 min-w-[200px]">Nama Domain</th>
                             <th rowSpan={2} className="border px-6 py-3 min-w-[200px]">Jenis Kebutuhan</th>
                             <th colSpan={3} className="border px-6 py-3 min-w-[200px] text-center">Kondisi Awal</th>
-                            <th rowSpan={2} className="border px-6 py-3 text-center">Aksi</th>
+                            {user?.roles == "asn" && <th rowSpan={2} className="border px-6 py-3 text-center">Aksi</th>}
                         </tr>
                         <tr>
                             <th className="border px-6 py-3 min-w-[200px] text-center">2022</th>
@@ -228,6 +307,7 @@ const Table = () => {
                                             </td>
                                         </>
                                     )}
+                                    {user?.roles == "asn" && 
                                     <td className="px-6 py-4 flex flex-col gap-2">
                                         <ButtonSc 
                                             className="my-1"
@@ -266,6 +346,7 @@ const Table = () => {
                                             </div>
                                         </ButtonTr>
                                     </td>
+                                    }
                                 </tr>
                             ))
                         )}

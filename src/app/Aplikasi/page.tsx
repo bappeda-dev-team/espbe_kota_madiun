@@ -4,7 +4,7 @@ import HeaderAplikasi from "@/components/pages/Aplikasi/HeaderAplikasi"
 const Aplikasi = () => {
     return(
         <>
-            <div className="mb-5 flex justify-between items-center">
+            <div className="mb-3">
                 <HeaderAplikasi />
             </div>
             <Table />

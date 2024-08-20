@@ -2,7 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
 
-    const isLogin = true;
+    const token = req.cookies.get('token');
+    let isLogin = false;
+
+    if (token) {
+        try {
+            isLogin = true;
+        } catch (error) {
+            console.error('Token verification failed:', error);
+            isLogin = false;
+        }
+    } else {
+        isLogin = false;
+    }
+    
     if(isLogin){
         return NextResponse.next()
     } else {

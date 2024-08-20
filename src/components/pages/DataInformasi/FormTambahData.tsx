@@ -6,6 +6,7 @@ import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useRouter } from "next/navigation";
 import { AlertNotification } from "@/components/common/Alert/Alert";
+import { getUser, getToken } from "@/app/Login/Auth/Auth";
 
 interface OptionType {
   value: number;
@@ -41,16 +42,19 @@ interface FormValues {
 }
 
 const FormTambahData = () => {
-  const [rad_level_1_4_option, set_rad_level_1_4_option] = useState<
-    OptionType[]
-  >([]);
-  const [rad_level_5_7_option, set_rad_level_5_7_option] = useState<
-    OptionType[]
-  >([]);
+  const [rad_level_1_4_option, set_rad_level_1_4_option] = useState<OptionType[]>([]);
+  const [rad_level_5_7_option, set_rad_level_5_7_option] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const token = getToken();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUser = getUser();
+    setUser(fetchUser);
+  },[])
 
   const tahun: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -105,7 +109,7 @@ const FormTambahData = () => {
         jenis_data : null,
         produsen_data : "",
         pj_data : "",
-        kode_opd : "5.01.5.05.0.00.02.0000",
+        kode_opd : user?.kode_opd,
         informasi_terkait_input : "",
         informasi_terkait_output : "",
         interoprabilitas : null,
@@ -128,7 +132,11 @@ const FormTambahData = () => {
   const fetchRadLevel1_4 = async (level: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
+      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (referensi: any) => referensi.level_referensi === level && referensi.jenis_referensi === "DataDanInformasi",
@@ -148,7 +156,11 @@ const FormTambahData = () => {
   const fetchRadLevel5_7 = async (jenis_pohon: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja`);
+      const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (pohon: any) => pohon.jenis_pohon === jenis_pohon,
@@ -177,7 +189,7 @@ const FormTambahData = () => {
         produsen_data : data.produsen_data,
         validitas_data : data.validitas_data?.value,
         pj_data : data.pj_data,
-        kode_opd : "5.01.5.05.0.00.02.0000",
+        kode_opd : user?.kode_opd,
         informasi_terkait_input : data.informasi_terkait_input,
         informasi_terkait_output : data.informasi_terkait_output,
         interoprabilitas : data.interoprabilitas?.value,
@@ -195,7 +207,8 @@ const FormTambahData = () => {
       const response = await fetch(`${API_URL}/v1/createdatainformasi`, {
         method: "POST",
         headers: {
-          "Content-Type" : "application/json"
+          "Content-Type" : "application/json",
+          'Authorization': `${token}`,
         },
         body: JSON.stringify(formData),
       });

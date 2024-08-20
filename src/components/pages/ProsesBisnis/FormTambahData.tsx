@@ -6,6 +6,7 @@ import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useRouter } from "next/navigation";
 import { AlertNotification } from "@/components/common/Alert/Alert";
+import { getToken, getUser } from "@/app/Login/Auth/Auth";
 
 interface OptionType {
   value: number;
@@ -26,22 +27,21 @@ interface FormValues {
 }
 
 const FormTambahData = () => {
-  const [rab_level_1_3_option, set_rab_level_1_3_option] = useState<
-    OptionType[]
-  >([]);
-  const [rab_level_4_6_option, set_rab_level_4_6_option] = useState<
-    OptionType[]
-  >([]);
-  const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>(
-    [],
-  );
-  const [bidang_urusan_option, set_bidang_urusan_option] = useState<
-    OptionType[]
-  >([]);
+  const [rab_level_1_3_option, set_rab_level_1_3_option] = useState<OptionType[]>([]);
+  const [rab_level_4_6_option, set_rab_level_4_6_option] = useState<OptionType[]>([]);
+  const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>([],);
+  const [bidang_urusan_option, set_bidang_urusan_option] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const token = getToken();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUser = getUser();
+    setUser(fetchUser);
+  },[])
 
   const tahun: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -60,7 +60,7 @@ const FormTambahData = () => {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      kode_opd: "5.01.5.05.0.00.02.0000",
+      kode_opd: user?.kode_opd,
       bidang_urusan_id: null,
       tahun: null,
       sasaran_kota_id: null,
@@ -80,7 +80,11 @@ const FormTambahData = () => {
   const fetchRabLevel1_3 = async (level: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
+      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (referensi: any) => referensi.level_referensi === level && referensi.jenis_referensi === "ProsesBisnis",
@@ -100,7 +104,11 @@ const FormTambahData = () => {
   const fetchRabLevel4_6 = async (level: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja`);
+      const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (pohon: any) => pohon.level_pohon === level,
@@ -120,7 +128,11 @@ const FormTambahData = () => {
   const fetchSasaranKota = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/sasarankota`);
+      const response = await fetch(`${API_URL}/v1/sasarankota`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const result = data.data.map((item: any) => ({
         value: item.ID,
@@ -137,7 +149,11 @@ const FormTambahData = () => {
   const fetchBidangUrusan = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/bidangurusan`);
+      const response = await fetch(`${API_URL}/v1/bidangurusan`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const result = data.data.map((item: any) => ({
         value: item.id,
@@ -154,7 +170,7 @@ const FormTambahData = () => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const formData = {
       //key : value
-      kode_opd: "5.01.5.05.0.00.02.0000",
+      kode_opd: user?.kode_opd,
       bidang_urusan_id: data.bidang_urusan_id?.value,
       tahun: data.tahun?.value,
       sasaran_kota_id: data.sasaran_kota_id?.value,
@@ -169,7 +185,8 @@ const FormTambahData = () => {
       const response = await fetch(`${API_URL}/v1/createprosesbisnis`, {
         method: "POST",
         headers: {
-          "Content-Type" : "application/json"
+          "Content-Type" : "application/json",
+          'Authorization': `${token}`,
         },
         body: JSON.stringify(formData),
       });

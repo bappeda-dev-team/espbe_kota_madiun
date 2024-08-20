@@ -1,6 +1,10 @@
 "use client"
 
 import { useEffect, useState } from 'react';
+import { getToken } from "@/app/Login/Auth/Auth";
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import Loading from '@/components/global/Loading/Loading';
 
 interface ProsesBisnis {
   id: number;
@@ -25,29 +29,132 @@ interface aplikasi {
 
 const Table = () => {
 
+  const tahun = useSelector((state: RootState) => state.Tahun.tahun);
+  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [gap, setGap] = useState<ProsesBisnis[]>([]);
   const [dataNull, setDataNull] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const token = getToken();
 
   useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${API_URL}/v1/GapSPBE`);
-        const result = await response.json();
-        if (result.data === null) {
-          setGap([]);
-          setDataNull(true);
-        } else {
-          setGap(result.data);
-          setDataNull(false);
+    if(tahun !== 0 && SelectedOpd !== "all_opd"){
+      const fetchingData = async () => {
+        try {
+          const response = await fetch(`${API_URL}/v1/gapspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
+            headers: {
+              'Authorization': `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error("cant fetching data");
+          }
+          const data = await response.json();
+          if (data.data === null) {
+            setGap([]);
+            setDataNull(true);
+          } else {
+            setGap(data.data);
+            setDataNull(false);
+          }
+        } catch (err) {
+          setError("gagal mendapatkan data GAP Arsitektur, cek koneksi internet atau database server");
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+      };
+      fetchingData();
+    } else if(tahun == 0 && SelectedOpd != "all_opd"){
+      const fetchingData = async () => {
+        try {
+          const response = await fetch(`${API_URL}/v1/gapspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
+            headers: {
+              'Authorization': `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error("cant fetching data");
+          }
+          const data = await response.json();
+          if (data.data === null) {
+            setGap([]);
+            setDataNull(true);
+          } else {
+            setGap(data.data);
+            setDataNull(false);
+          }
+        } catch (err) {
+          setError("gagal mendapatkan data GAP Arsitektur, cek koneksi internet atau database server");
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchingData();
+    } else if(tahun != 0 && SelectedOpd == "all_opd"){
+      const fetchingData = async () => {
+        try {
+          const response = await fetch(`${API_URL}/v1/gapspbe?tahun=${tahun}`, {
+            headers: {
+              'Authorization': `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error("cant fetching data");
+          }
+          const data = await response.json();
+          if (data.data === null) {
+            setGap([]);
+            setDataNull(true);
+          } else {
+            setGap(data.data);
+            setDataNull(false);
+          }
+        } catch (err) {
+          setError("gagal mendapatkan data GAP Arsitektur, cek koneksi internet atau database server");
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchingData();
+    } else {
+      const fetchingData = async () => {
+        try {
+          const response = await fetch(`${API_URL}/v1/gapspbe`, {
+            headers: {
+              'Authorization': `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error("cant fetching data");
+          }
+          const data = await response.json();
+          if (data.data === null) {
+            setGap([]);
+            setDataNull(true);
+          } else {
+            setGap(data.data);
+            setDataNull(false);
+          }
+        } catch (err) {
+          setError("gagal mendapatkan data GAP Arsitektur, cek koneksi internet atau database server");
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchingData();
+    }
+  }, [tahun, SelectedOpd, token]);
 
-    fetchData();
-  }, []);
+  if(loading){
+    return <Loading />
+  } else if(error){
+    return <h1 className="text-red-500">{error}</h1>
+  }
 
   return (
     <>

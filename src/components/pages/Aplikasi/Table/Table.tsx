@@ -7,6 +7,8 @@ import { AlertNotification, AlertQuestion} from "@/components/common/Alert/Alert
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { getToken } from "@/app/Login/Auth/Auth";
+import { getUser } from "@/app/Login/Auth/Auth";
 
 interface aplikasi {
     Id: number;
@@ -19,6 +21,7 @@ interface aplikasi {
     InformasiTerkaitInput : string;
     InformasiTerkaitOutput : string;
     Interoprabilitas : string;
+    Keterangan: string;
     Tahun : number;
     RaaLevel1id : Raa_Level_1_4;
     RaaLevel2id : Raa_Level_1_4;
@@ -42,66 +45,141 @@ interface Raa_Level_5_7 {
 
 const Table = () => {
     //state fetch data Aplikasi
-    const tahun = useSelector((state: RootState) => state.Tahun.tahun)
+    const tahun = useSelector((state: RootState) => state.Tahun.tahun);
+    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [aplikasi, setAplikasi] = useState<aplikasi[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null)
     const [dataNull, setDataNull] = useState<boolean>(false);
+    const token = getToken();
+    const [user, setUser] = useState<any>();
 
     useEffect(() => {
+        const fetchUser = getUser();
+        setUser(fetchUser);
+      }, []);
+
+      useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        if(tahun === 0){     
-            const fetchAplikasi = async() => {
-                try{
-                    const response = await fetch(`${API_URL}/v1/aplikasi`);
-                    if(!response.ok){
-                        throw new Error("cant fetch data aplikasi")
-                    }
-                    const result = await response.json();
-                    if (result.data === null) {
-                      setAplikasi([]);
-                      setDataNull(true);
-                    } else {
-                      setAplikasi(result.data);
-                      setDataNull(false);
-                    }
-                } catch(err){
-                    setError("gagal memuat data aplikasi, cek koneksi internet atau database server")
-                } finally {
-                    setLoading(false);
-                }
+        if(tahun !== 0 && SelectedOpd !== "all_opd"){
+          const fetchingData = async () => {
+            try {
+              const response = await fetch(`${API_URL}/v1/aplikasi?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
+                headers: {
+                  'Authorization': `${token}`,
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) {
+                throw new Error("cant fetching data");
+              }
+              const data = await response.json();
+              if (data.data === null) {
+                setAplikasi([]);
+                setDataNull(true);
+              } else {
+                setAplikasi(data.data);
+                setDataNull(false);
+              }
+            } catch (err) {
+              setError("gagal mendapatkan data aplikasi, cek koneksi internet atau database server");
+            } finally {
+              setLoading(false);
             }
-            fetchAplikasi();
-        } else if(tahun !== 0) {
-            const fetchAplikasi = async() => {
-                try{
-                    const response = await fetch(`${API_URL}/v1/aplikasibytahun/${tahun}`);
-                    if(!response.ok){
-                        throw new Error("cant fetch data aplikasi")
-                    }
-                    const result = await response.json();
-                    if (result.data === null) {
-                      setAplikasi([]);
-                      setDataNull(true);
-                    } else {
-                      setAplikasi(result.data);
-                      setDataNull(false);
-                    }
-                } catch(err){
-                    setError("gagal memuat data aplikasi, cek koneksi internet atau database server")
-                } finally {
-                    setLoading(false);
-                }
+          };
+          fetchingData();
+        } else if(tahun == 0 && SelectedOpd != "all_opd"){
+          const fetchingData = async () => {
+            try {
+              const response = await fetch(`${API_URL}/v1/aplikasi?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
+                headers: {
+                  'Authorization': `${token}`,
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) {
+                throw new Error("cant fetching data");
+              }
+              const data = await response.json();
+              if (data.data === null) {
+                setAplikasi([]);
+                setDataNull(true);
+              } else {
+                setAplikasi(data.data);
+                setDataNull(false);
+              }
+            } catch (err) {
+              setError("gagal mendapatkan data aplikasi, cek koneksi internet atau database server");
+            } finally {
+              setLoading(false);
             }
-            fetchAplikasi();
+          };
+          fetchingData();
+        } else if(tahun != 0 && SelectedOpd == "all_opd"){
+          const fetchingData = async () => {
+            try {
+              const response = await fetch(`${API_URL}/v1/aplikasi?tahun=${tahun}`, {
+                headers: {
+                  'Authorization': `${token}`,
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) {
+                throw new Error("cant fetching data");
+              }
+              const data = await response.json();
+              if (data.data === null) {
+                setAplikasi([]);
+                setDataNull(true);
+              } else {
+                setAplikasi(data.data);
+                setDataNull(false);
+              }
+            } catch (err) {
+              setError("gagal mendapatkan data aplikasi, cek koneksi internet atau database server");
+            } finally {
+              setLoading(false);
+            }
+          };
+          fetchingData();
+        } else {
+          const fetchingData = async () => {
+            try {
+              const response = await fetch(`${API_URL}/v1/aplikasi`, {
+                headers: {
+                  'Authorization': `${token}`,
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) {
+                throw new Error("cant fetching data");
+              }
+              const data = await response.json();
+              if (data.data === null) {
+                setAplikasi([]);
+                setDataNull(true);
+              } else {
+                setAplikasi(data.data);
+                setDataNull(false);
+              }
+            } catch (err) {
+              setError("gagal mendapatkan data aplikasi, cek koneksi internet atau database server");
+            } finally {
+              setLoading(false);
+            }
+          };
+          fetchingData();
         }
-    }, [tahun]);
+      }, [tahun, SelectedOpd, token]);
 
     const hapusAplikasi = async(Id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
             const response = await fetch(`${API_URL}/v1/deleteaplikasi/${Id}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: {
+                    'Authorization': `${token}`,
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")
@@ -121,6 +199,7 @@ const Table = () => {
 
     return(
         <>
+            {user?.roles == "asn" && 
             <div className="flex justify-between mb-5">
                 <ButtonSc typee="button">
                 <div className="flex">
@@ -147,6 +226,7 @@ const Table = () => {
                 </div>
                 </ButtonPr>
             </div>
+            }
             <div className="overflow-auto">
                 <table className="w-full text-sm text-left">
                 <thead className="text-xs text-gray-700 uppercase border">
@@ -160,13 +240,16 @@ const Table = () => {
                         <th className="px-6 py-3 min-w-[200px]">Informasi Terkait Input</th>
                         <th className="px-6 py-3 min-w-[200px]">Informasi Terkait Output</th>
                         <th className="px-6 py-3 min-w-[200px]">Interoperabilitas</th>
+                        <th className="px-6 py-3 min-w-[200px]">Keterangan</th>
+                        <th className="px-6 py-3 min-w-[200px]">Tahun</th>
+                        <th className="px-6 py-3 min-w-[200px]">Kode OPD</th>
                         <th className="px-6 py-3 min-w-[200px]">RAA Level 1</th>
                         <th className="px-6 py-3 min-w-[200px]">RAA Level 2</th>
                         <th className="px-6 py-3 min-w-[200px]">RAA Level 3</th>
                         <th className="px-6 py-3 min-w-[200px]">Strategic</th>
                         <th className="px-6 py-3 min-w-[200px]">Tactical</th>
                         <th className="px-6 py-3 min-w-[200px]">Operational</th>
-                        <th className="px-6 py-3 text-center">Aksi</th>
+                        {user?.roles == "asn" && <th className="px-6 py-3 text-center">Aksi</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -188,12 +271,16 @@ const Table = () => {
                             <td className="px-6 py-4">{data.InformasiTerkaitInput ? `${data.InformasiTerkaitInput}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.InformasiTerkaitOutput? `${data.InformasiTerkaitOutput}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.Interoprabilitas? `${data.Interoprabilitas}`: "N/A"}</td>
+                            <td className="px-6 py-4">{data.Keterangan? `${data.Keterangan}`: "N/A"}</td>
+                            <td className="px-6 py-4">{data.Tahun? `${data.Tahun}`: "N/A"}</td>
+                            <td className="px-6 py-4">{data.KodeOPD? `${data.KodeOPD}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.RaaLevel1id? `${data.RaaLevel1id.kode_referensi} ${data.RaaLevel1id.nama_referensi}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.RaaLevel2id? `${data.RaaLevel2id.kode_referensi} ${data.RaaLevel2id.nama_referensi}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.RaaLevel3id? `${data.RaaLevel3id.kode_referensi} ${data.RaaLevel3id.nama_referensi}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.StrategicId? `${data.StrategicId.nama_pohon}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.TacticalId? `${data.TacticalId.nama_pohon}`: "N/A"}</td>
                             <td className="px-6 py-4">{data.OperationalId? `${data.OperationalId.nama_pohon}`: "N/A"}</td>
+                            {user?.roles == "asn" && 
                             <td className="px-6 py-4 flex flex-col">
                                 <ButtonSc 
                                     typee="button" 
@@ -234,6 +321,7 @@ const Table = () => {
                                     </div>
                                 </ButtonTr>
                             </td>
+                            }
                         </tr>
                         ))
                     )}

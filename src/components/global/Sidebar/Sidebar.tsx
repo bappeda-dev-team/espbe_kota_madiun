@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { logout } from "@/app/Login/Auth/Auth";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { ButtonTr, ButtonSc } from "@/components/common/Button/Button";
 import "@/app/globals.css";
+import { getUser } from "@/app/Login/Auth/Auth";
 
 interface SidebarProps {
   isCollapse: boolean;
@@ -16,6 +19,8 @@ interface SidebarProps {
 function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
   const url = usePathname();
   const { id, Id } = useParams();
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
   const [dahsboardActive, setDahsboardActive] = useState<boolean>(false);
   const [UserActive, setUserActive] = useState<boolean>(false);
   const [DataMasterActive, setDataMasterActive] = useState<boolean>(false);
@@ -44,6 +49,11 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDataMasterActive(false);
     }
   }
+
+  useEffect(() => {
+    const fetchUser = getUser();
+    setUser(fetchUser);
+  }, []);
   
   const breakLayanan = () => {
     if (LayananActive === false) {
@@ -404,7 +414,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     }
-  }, [url, id]);
+  }, [url, id, Id]);
 
   return (
     <div className={`fixed custom-scrollbar items-center border-r overflow-y-auto flex-col h-screen transition-all duration-300 ${isCollapse ? 'min-w-20' : 'min-w-[270px]'}`}>
@@ -496,111 +506,115 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
                 {isCollapse ? "" : "User"}
               </li>
             </Link>
-            <li
-              onClick={breakDataMaster}
-              className={`flex py-1 pl-2 cursor-pointer rounded-lg transition-all duration-300 ease-in-out ${
-                DataMasterActive ? "bg-gray-200" : "hover:bg-gray-200"
-              }`}
-            >
-              <Image
-                className="pr-2"
-                src="/iconDark/BookOpen.svg"
-                alt="ChatsTeardrop"
-                width={30}
-                height={30}
-              />
-              {isCollapse ? "" : "Data Master"}
-            </li>
-            <div
-              className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                DataMasterActive ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-              }`}
-            >
-              <div className={`${isCollapse ? 'bg-slate-100' : 'bg-slate-50 pl-3'} py-1`}>
-                <Link href="/PohonKinerja">
-                  <li
-                    className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
-                      pohonKinerjaActive
-                        ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
-                        : "hover:bg-gray-200 font-light"
-                    }`}
-                  >
-                    <Image
-                      className="pr-2"
-                      src={pohonKinerjaActive ? "/iconLight/data.svg" : "/iconDark/data.svg"}
-                      alt="Data"
-                      width={30}
-                      height={30}
-                    />
-                    {isCollapse ? "" : "Pohon Kinerja"}
-                  </li>
-                </Link>
-                <Link href="/ReferensiArsitektur">
-                  <li
-                    className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
-                      referensiArsitekturActive
-                        ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
-                        : "hover:bg-gray-200 font-light"
-                    }`}
-                  >
-                    <Image
-                      className="pr-2"
-                      src={
+            {user?.roles != "asn" &&
+            <>
+              <li
+                onClick={breakDataMaster}
+                className={`flex py-1 pl-2 cursor-pointer rounded-lg transition-all duration-300 ease-in-out ${
+                  DataMasterActive ? "bg-gray-200" : "hover:bg-gray-200"
+                }`}
+              >
+                <Image
+                  className="pr-2"
+                  src="/iconDark/BookOpen.svg"
+                  alt="ChatsTeardrop"
+                  width={30}
+                  height={30}
+                />
+                {isCollapse ? "" : "Data Master"}
+              </li>
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  DataMasterActive ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+                }`}
+              >
+                <div className={`${isCollapse ? 'bg-slate-100' : 'bg-slate-50 pl-3'} py-1`}>
+                  <Link href="/PohonKinerja">
+                    <li
+                      className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
+                        pohonKinerjaActive
+                          ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
+                          : "hover:bg-gray-200 font-light"
+                      }`}
+                    >
+                      <Image
+                        className="pr-2"
+                        src={pohonKinerjaActive ? "/iconLight/data.svg" : "/iconDark/data.svg"}
+                        alt="Data"
+                        width={30}
+                        height={30}
+                      />
+                      {isCollapse ? "" : "Pohon Kinerja"}
+                    </li>
+                  </Link>
+                  <Link href="/ReferensiArsitektur">
+                    <li
+                      className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
                         referensiArsitekturActive
-                          ? "/iconLight/wallet.svg"
-                          : "/iconDark/wallet.svg"
-                      }
-                      alt="ListDashes"
-                      width={30}
-                      height={30}
-                    />
-                    {isCollapse ? "" : "Referensi Arsitektur"}
-                  </li>
-                </Link>
-                <Link href="/SasaranKota">
-                  <li
-                    className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
-                      sasaranKotaActive
-                        ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
-                        : "hover:bg-gray-200 font-light"
-                    }`}
-                  >
-                    <Image
-                      className="pr-2"
-                      src={
+                          ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
+                          : "hover:bg-gray-200 font-light"
+                      }`}
+                    >
+                      <Image
+                        className="pr-2"
+                        src={
+                          referensiArsitekturActive
+                            ? "/iconLight/wallet.svg"
+                            : "/iconDark/wallet.svg"
+                        }
+                        alt="ListDashes"
+                        width={30}
+                        height={30}
+                      />
+                      {isCollapse ? "" : "Referensi Arsitektur"}
+                    </li>
+                  </Link>
+                  <Link href="/SasaranKota">
+                    <li
+                      className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
                         sasaranKotaActive
-                          ? "/iconLight/lifebuoy.svg"
-                          : "/iconDark/lifebuoy.svg"
-                      }
-                      alt="ListDashes"
-                      width={30}
-                      height={30}
-                    />
-                    {isCollapse ? "" : "Sasaran Kota"}
-                  </li>
-                </Link>
-                <Link href="/BidangUrusan">
-                  <li
-                    className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
-                      bidangUrusanActive
-                        ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
-                        : "hover:bg-gray-200 font-light"
-                    }`}
-                  >
-                    <Image
-                      className="pr-2"
-                      src={
-                        bidangUrusanActive ? "/iconLight/book.svg" : "/iconDark/book.svg"
-                      }
-                      alt="ListDashes"
-                      width={30}
-                      height={30}
-                    />
-                    {isCollapse ? "" : "Bidang Urusan"}
-                  </li>
-                </Link>
+                          ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
+                          : "hover:bg-gray-200 font-light"
+                      }`}
+                    >
+                      <Image
+                        className="pr-2"
+                        src={
+                          sasaranKotaActive
+                            ? "/iconLight/lifebuoy.svg"
+                            : "/iconDark/lifebuoy.svg"
+                        }
+                        alt="ListDashes"
+                        width={30}
+                        height={30}
+                      />
+                      {isCollapse ? "" : "Sasaran Kota"}
+                    </li>
+                  </Link>
+                  <Link href="/BidangUrusan">
+                    <li
+                      className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
+                        bidangUrusanActive
+                          ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
+                          : "hover:bg-gray-200 font-light"
+                      }`}
+                    >
+                      <Image
+                        className="pr-2"
+                        src={
+                          bidangUrusanActive ? "/iconLight/book.svg" : "/iconDark/book.svg"
+                        }
+                        alt="ListDashes"
+                        width={30}
+                        height={30}
+                      />
+                      {isCollapse ? "" : "Bidang Urusan"}
+                    </li>
+                  </Link>
+                </div>
               </div>
-            </div>
+            </>
+            }
           </ul>
         </div>
       </div>
@@ -957,8 +971,8 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       </div>
      <div className="p-5">
       <ButtonTr 
-          halaman_url="/Login"
           className="w-full"
+          onClick={() => logout()}
         >
           {isCollapse ? "" : "Logout"}
         </ButtonTr>

@@ -4,7 +4,7 @@ import HeaderDataInformasi from "@/components/pages/DataInformasi/HeaderDataInfo
 const DataInformasi = () => {
     return(
         <>
-            <div className="mb-5 flex justify-between items-center">
+            <div className="mb-3">
                 <HeaderDataInformasi />
             </div>
             <Table />

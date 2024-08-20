@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/global/Loading/Loading";
+import { getUser, getToken } from "@/app/Login/Auth/Auth";
 
 interface BidangUrusan {
     id : number,
@@ -15,12 +16,24 @@ const Table = () => {
     const [error, setError] = useState<string>();
     const [loading, setLoading] = useState<boolean>(true)
     const [dataNull, setDataNull] = useState<boolean>(false);
+    const token = getToken();
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchUser = getUser();
+        setUser(fetchUser);
+    },[])
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchBidangUrusan = async() => {
             try{
-                const response = await fetch(`${API_URL}/v1/bidangurusan`);
+                const response = await fetch(`${API_URL}/v1/bidangurusan`, {
+                    headers: {
+                        'Authorization': `${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
                 if(!response.ok){
                     throw new Error("cant fetch data Bidang Urusan");
                 }
@@ -39,7 +52,7 @@ const Table = () => {
             }
         }
         fetchBidangUrusan();
-    },[])
+    },[token])
 
     if(error){
         return <h1>{error}</h1>
@@ -49,7 +62,15 @@ const Table = () => {
 
     return(
         <>
-            <h1 className="uppercase font-bold mb-5">Data Bidang Urusan badan perencanaan, penelitian dan pengembangan daerah</h1>
+            <div className="flex">
+                <h1 className="uppercase font-bold mb-5">Data Bidang Urusan</h1>
+                {user?.roles != "admin_kota" ? 
+                    <h1 className="uppercase font-bold mb-5">opd</h1>
+                    :
+                    <h1 className="uppercase font-bold mb-5">Semua OPD</h1>
+                }
+
+            </div>
             <div className="overflow-auto">
                 <table className="w-full text-sm text-left">
                 <thead className="text-xs text-gray-700 uppercase border">

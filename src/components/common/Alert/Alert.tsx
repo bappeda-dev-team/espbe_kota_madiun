@@ -2,7 +2,8 @@ import Swal, { SweetAlertResult } from "sweetalert2";
 
 export const AlertNotification = (
     title: string, 
-    text: string,icon: "success" | "error" | "warning" | "info" | "question", 
+    text: string,
+    icon: "success" | "error" | "warning" | "info" | "question", 
     timer?: number
 ) => {
     Swal.fire({

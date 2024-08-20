@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 import Image from "next/image";
+import { getToken } from "@/app/Login/Auth/Auth";
+import { getUser } from "@/app/Login/Auth/Auth";
 
 interface rabLevel1_3 {
   Id: number;
@@ -55,18 +57,31 @@ interface typeProsesBisnis {
 function Table() {
   //state fetch data proses bisnis
   const tahun = useSelector((state: RootState) => state.Tahun.tahun) //tahunProsesBisnis diambil dari store.ts, tahun diambil dari ProsesBisnisSlicer.ts -> interface TahunState{ tahun: number }
+  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [dataProsesBisnis, setDataProsesBisnis] = useState<typeProsesBisnis[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [dataNull, setDataNull] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
+  const [user, setUser] = useState<any>();
+
+  const token = getToken();
+  useEffect(() => {
+    const fetchUser = getUser();
+    setUser(fetchUser);
+  }, []);
 
   //fetch data proses bisnis
   useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    if(tahun !== 0){
+    if(tahun !== 0 && SelectedOpd !== "all_opd"){
       const fetchingData = async () => {
         try {
-          const response = await fetch(`${API_URL}/v1/prosesbisnisbytahun/${tahun}`);
+          const response = await fetch(`${API_URL}/v1/prosesbisnis/?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
+            headers: {
+              'Authorization': `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
           if (!response.ok) {
             throw new Error("cant fetching data");
           }
@@ -87,10 +102,73 @@ function Table() {
         }
       };
       fetchingData();
-    } else if(tahun == 0){
+    } else if(tahun == 0 && SelectedOpd != "all_opd"){
       const fetchingData = async () => {
         try {
-          const response = await fetch(`${API_URL}/v1/prosesbisnis`);
+          const response = await fetch(`${API_URL}/v1/prosesbisnis?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
+            headers: {
+              'Authorization': `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error("cant fetching data");
+          }
+          const data = await response.json();
+          if (data.data === null) {
+            setDataProsesBisnis([]);
+            setDataNull(true);
+          } else {
+            setDataProsesBisnis(data.data);
+            setDataNull(false);
+          }
+        } catch (err) {
+          setError(
+            "Gagal memuat data, silakan cek koneksi internet atau database server",
+          );
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchingData();
+    } else if(tahun != 0 && SelectedOpd == "all_opd"){
+      const fetchingData = async () => {
+        try {
+          const response = await fetch(`${API_URL}/v1/prosesbisnis?tahun=${tahun}`, {
+            headers: {
+              'Authorization': `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error("cant fetching data");
+          }
+          const data = await response.json();
+          if (data.data === null) {
+            setDataProsesBisnis([]);
+            setDataNull(true);
+          } else {
+            setDataProsesBisnis(data.data);
+            setDataNull(false);
+          }
+        } catch (err) {
+          setError(
+            "Gagal memuat data, silakan cek koneksi internet atau database server",
+          );
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchingData();
+    } else {
+      const fetchingData = async () => {
+        try {
+          const response = await fetch(`${API_URL}/v1/prosesbisnis`, {
+            headers: {
+              'Authorization': `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
           if (!response.ok) {
             throw new Error("cant fetching data");
           }
@@ -112,7 +190,7 @@ function Table() {
       };
       fetchingData();
     }
-  }, [tahun]);
+  }, [tahun, SelectedOpd, token]);
 
   //hapus data
   const hapusProsesBisnis = async (id: any) => {
@@ -120,6 +198,9 @@ function Table() {
     try {
       const response = await fetch(`${API_URL}/v1/deleteprosesbisnis/${id}`, {
         method: "DELETE",
+        headers: {
+          'Authorization': `${token}`,
+        },
       });
       if (!response.ok) {
         throw new Error("cant fetch data");
@@ -139,32 +220,34 @@ function Table() {
 
   return (
     <>
-      <div className="flex justify-between mb-5">
-        <ButtonSc typee="button">
-          <div className="flex">
-            <Image 
-              className="mr-1"
-              src="/iconLight/cetak.svg" 
-              alt="add" 
-              width={20} 
-              height={20} 
-            />
-            Cetak
-          </div>
-        </ButtonSc>
-        <ButtonPr halaman_url="/ProsesBisnis/TambahData" typee="button">
-          <div className="flex">
-            <Image 
-              className="mr-1"
-              src="/iconLight/add.svg" 
-              alt="add" 
-              width={20} 
-              height={20} 
-            />
-            Tambah Data
-          </div>
-        </ButtonPr>
-      </div>
+      {user?.roles == "asn" && 
+        <div className="flex justify-between mb-5">
+          <ButtonSc typee="button">
+            <div className="flex">
+              <Image 
+                className="mr-1"
+                src="/iconLight/cetak.svg" 
+                alt="add" 
+                width={20} 
+                height={20} 
+              />
+              Cetak
+            </div>
+          </ButtonSc>
+          <ButtonPr halaman_url="/ProsesBisnis/TambahData" typee="button">
+            <div className="flex">
+              <Image 
+                className="mr-1"
+                src="/iconLight/add.svg" 
+                alt="add" 
+                width={20} 
+                height={20} 
+              />
+              Tambah Data
+            </div>
+          </ButtonPr>
+        </div>
+      }
       <div className="overflow-auto">
         <table className="w-screen text-sm text-left">
           <thead className="text-xs text-gray-700 uppercase border">
@@ -184,7 +267,7 @@ function Table() {
               <th className="px-6 py-3 min-w-[200px]">Strategic</th>
               <th className="px-6 py-3 min-w-[200px]">Tactical</th>
               <th className="px-6 py-3 min-w-[200px]">Operational</th>
-              <th className="px-6 py-3 text-center">Aksi</th>
+              {user?.roles == "asn" && <th className="px-6 py-3 text-center">Aksi</th>}
             </tr>
           </thead>
           <tbody>
@@ -245,46 +328,48 @@ function Table() {
                       ? `${data.rab_level_6.nama_pohon}`
                       : "N/A"}
                   </td>
-                  <td className="px-6 py-4 flex flex-col">
-                    <ButtonSc
-                      typee="button"
-                      className="my-1"
-                      halaman_url={`/ProsesBisnis/EditData/${data.id}`}
-                    >
-                      <div className="flex">
-                        <Image 
-                          className="mr-1"
-                          src="/iconLight/edit.svg" 
-                          alt="edit" 
-                          width={15} 
-                          height={15} 
-                        />
-                        Edit
-                      </div>
-                    </ButtonSc>
-                    <ButtonTr
-                      typee="button"
-                      className="my-1"
-                      onClick={() => {
-                        AlertQuestion("Hapus?", "hapus proses bisnis yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                          if(result.isConfirmed){
-                              hapusProsesBisnis(data.id);
-                          }
-                        })
-                      }}
-                    >
-                      <div className="flex items-center justify-center w-full">
-                        <Image 
-                          className="mr-1"
-                          src="/iconLight/trash.svg" 
-                          alt="trash" 
-                          width={15} 
-                          height={15} 
-                        />
-                        <span>Hapus</span>
-                      </div>
-                    </ButtonTr>
-                  </td>
+                  {user?.roles == "asn" && 
+                    <td className="px-6 py-4 flex flex-col">
+                      <ButtonSc
+                        typee="button"
+                        className="my-1"
+                        halaman_url={`/ProsesBisnis/EditData/${data.id}`}
+                      >
+                        <div className="flex">
+                          <Image 
+                            className="mr-1"
+                            src="/iconLight/edit.svg" 
+                            alt="edit" 
+                            width={15} 
+                            height={15} 
+                          />
+                          Edit
+                        </div>
+                      </ButtonSc>
+                      <ButtonTr
+                        typee="button"
+                        className="my-1"
+                        onClick={() => {
+                          AlertQuestion("Hapus?", "hapus proses bisnis yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                            if(result.isConfirmed){
+                                hapusProsesBisnis(data.id);
+                            }
+                          })
+                        }}
+                      >
+                        <div className="flex items-center justify-center w-full">
+                          <Image 
+                            className="mr-1"
+                            src="/iconLight/trash.svg" 
+                            alt="trash" 
+                            width={15} 
+                            height={15} 
+                          />
+                          <span>Hapus</span>
+                        </div>
+                      </ButtonTr>
+                    </td>
+                  }
                 </tr>
               ))
             )}

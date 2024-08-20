@@ -6,6 +6,7 @@ import Select from "react-select";
 import {ButtonPr, ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { useRouter } from "next/navigation";
+import { getUser, getToken } from "@/app/Login/Auth/Auth";
 
 interface OptionTypeString {
     label: string;
@@ -36,6 +37,8 @@ interface JenisKebutuhan {
 
 const FormTambahKebutuhan = () => {
     const router = useRouter();
+    const token = getToken();
+    const [user, setUser] = useState<any>(null);
     const [isClient, setIsClient] = useState<boolean>(false);
     const [domain, setDomain] = useState<OptionTypeString[]>([]);
     const [prosesBisnis, setProsesBisnis] = useState<OptionType[]>([]);
@@ -47,7 +50,7 @@ const FormTambahKebutuhan = () => {
         formState: { errors },
     } = useForm<FormValues>({
         defaultValues: {
-            kode_opd: "5.01.5.05.0.00.02.0000",
+            kode_opd: user?.kode_opd,
             tahun: 2024,
             nama_domain: null,
             id_prosesbisnis: null,
@@ -65,6 +68,11 @@ const FormTambahKebutuhan = () => {
     });
 
     useEffect(() => {
+        const fetchUser = getUser();
+        setUser(fetchUser);
+    },[])
+
+    useEffect(() => {
         setIsClient(true);
     }, []);
 
@@ -77,7 +85,11 @@ const FormTambahKebutuhan = () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try{
-            const response = await fetch(`${API_URL}/v1/domainspbe`);
+            const response = await fetch(`${API_URL}/v1/domainspbe`, {
+                headers: {
+                  'Authorization': `${token}`,
+                },
+              });
             const data = await response.json();
             const result = data.data.map((item: any) => ({
                 label: item.nama_domain,
@@ -95,7 +107,11 @@ const FormTambahKebutuhan = () => {
        const API_URL = process.env.NEXT_PUBLIC_API_URL;
        setIsLoading(true);
        try{
-            const response = await fetch(`${API_URL}/v1/prosesbisnisnogap`);
+            const response = await fetch(`${API_URL}/v1/prosesbisnisnogap`, {
+                headers: {
+                  'Authorization': `${token}`,
+                },
+              });
             const data = await response.json();
             const result = data.data.map((item: any) => ({
                 label: item.nama_proses_bisnis,
@@ -111,7 +127,7 @@ const FormTambahKebutuhan = () => {
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         const formData = {
-            kode_opd: "5.01.5.05.0.00.02.0000",
+            kode_opd: user?.kode_opd,
             tahun: data.tahun,
             nama_domain: data.nama_domain?.value,
             id_prosesbisnis: data.id_prosesbisnis?.value,
@@ -130,6 +146,7 @@ const FormTambahKebutuhan = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    'Authorization': `${token}`,
                 },
                 body: JSON.stringify(formData),
             });

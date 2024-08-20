@@ -7,6 +7,8 @@ import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Aler
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { getToken } from "@/app/Login/Auth/Auth";
+import { getUser } from "@/app/Login/Auth/Auth";
 
 interface layanan {
     Id: number;
@@ -53,61 +55,136 @@ const Table = () => {
     const [error, setError] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const tahun = useSelector((state: RootState) => state.Tahun.tahun)
-    
+    const SelectedOpd = useSelector((state: RootState) => state.Opd.value)
+    const token = getToken();
+    const [user, setUser] = useState<any>();
+
     useEffect(() => {
+        const fetchUser = getUser();
+        setUser(fetchUser);
+      }, []);
+
+      useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        if(tahun === 0){
-            const fetchLayanan = async () => {
-                try{
-                    const response = await fetch(`${API_URL}/v1/layananspbe`)
-                    if(!response.ok){
-                        throw new Error("cant fetch data");
-                    }
-                    const result = await response.json();
-                    if(result.data == null){
-                        setLayanan([]);
-                        setDataNull(true);
-                    } else {
-                        setLayanan(result.data);
-                        setDataNull(false);
-                    }
-                } catch(err){
-                    setError(true);
-                } finally {
-                    setLoading(false);
-                }
+        if(tahun !== 0 && SelectedOpd !== "all_opd"){
+          const fetchingData = async () => {
+            try {
+              const response = await fetch(`${API_URL}/v1/layananspbe/?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
+                headers: {
+                  'Authorization': `${token}`,
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) {
+                throw new Error("cant fetching data");
+              }
+              const data = await response.json();
+              if (data.data === null) {
+                setLayanan([]);
+                setDataNull(true);
+              } else {
+                setLayanan(data.data);
+                setDataNull(false);
+              }
+            } catch (err) {
+              setError(true);
+            } finally {
+              setLoading(false);
             }
-            fetchLayanan();
-        } else if(tahun !== 0){
-            const fetchLayanan = async () => {
-                try{
-                    const response = await fetch(`${API_URL}/v1/layananspbebytahun/${tahun}`)
-                    if(!response.ok){
-                        throw new Error("cant fetch data");
-                    }
-                    const result = await response.json();
-                    if(result.data == null){
-                        setLayanan([]);
-                        setDataNull(true);
-                    } else {
-                        setLayanan(result.data);
-                        setDataNull(false);
-                    }
-                } catch(err){
-                    setError(true);
-                } finally {
-                    setLoading(false);
-                }
+          };
+          fetchingData();
+        } else if(tahun == 0 && SelectedOpd != "all_opd"){
+          const fetchingData = async () => {
+            try {
+              const response = await fetch(`${API_URL}/v1/layananspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
+                headers: {
+                  'Authorization': `${token}`,
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) {
+                throw new Error("cant fetching data");
+              }
+              const data = await response.json();
+              if (data.data === null) {
+                setLayanan([]);
+                setDataNull(true);
+              } else {
+                setLayanan(data.data);
+                setDataNull(false);
+              }
+            } catch (err) {
+              setError(true);
+            } finally {
+              setLoading(false);
             }
-            fetchLayanan();
+          };
+          fetchingData();
+        } else if(tahun != 0 && SelectedOpd == "all_opd"){
+          const fetchingData = async () => {
+            try {
+              const response = await fetch(`${API_URL}/v1/layananspbe?tahun=${tahun}`, {
+                headers: {
+                  'Authorization': `${token}`,
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) {
+                throw new Error("cant fetching data");
+              }
+              const data = await response.json();
+              if (data.data === null) {
+                setLayanan([]);
+                setDataNull(true);
+              } else {
+                setLayanan(data.data);
+                setDataNull(false);
+              }
+            } catch (err) {
+              setError(true);
+            } finally {
+              setLoading(false);
+            }
+          };
+          fetchingData();
+        } else {
+          const fetchingData = async () => {
+            try {
+              const response = await fetch(`${API_URL}/v1/layananspbe`, {
+                headers: {
+                  'Authorization': `${token}`,
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) {
+                throw new Error("cant fetching data");
+              }
+              const data = await response.json();
+              if (data.data === null) {
+                setLayanan([]);
+                setDataNull(true);
+              } else {
+                setLayanan(data.data);
+                setDataNull(false);
+              }
+            } catch (err) {
+              setError(true);
+            } finally {
+              setLoading(false);
+            }
+          };
+          fetchingData();
         }
-    }, [tahun])
+      }, [tahun, SelectedOpd, token]);
 
     const hapusDataLayanan = async(Id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
             const result = await fetch(`${API_URL}/v1/deletelayananspbe/${Id}`, {
                 method : 'DELETE',
+                headers: {
+                    'Authorization': `${token}`,
+                },
             });
             if(!result.ok){
                 throw new Error("gagal terhubung dengan database server")
@@ -129,6 +206,7 @@ const Table = () => {
 
         return(
             <>
+            {user?.roles == "asn" && 
             <div className="flex justify-between mb-5">
                 <ButtonSc typee="button">
                 <div className="flex">
@@ -155,6 +233,7 @@ const Table = () => {
                 </div>
                 </ButtonPr>
             </div>
+            }
                 <div className="overflow-auto">
                     <table className="w-full text-sm text-left">
                     <thead className="text-xs text-gray-700 uppercase border">
@@ -175,7 +254,7 @@ const Table = () => {
                             <th className="px-6 py-3 min-w-[200px]">Strategic </th>
                             <th className="px-6 py-3 min-w-[200px]">Tactical</th>
                             <th className="px-6 py-3 min-w-[200px]">Operational</th>
-                            <th className="px-6 py-3 text-center">Aksi</th>
+                            {user?.roles == "asn" && <th className="px-6 py-3 text-center">Aksi</th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -204,6 +283,7 @@ const Table = () => {
                                 <td className="px-6 py-4">{data.StrategicId ? `${data.StrategicId.nama_pohon}` : "N/A"}</td>
                                 <td className="px-6 py-4">{data.TacticalId ? `${data.TacticalId.nama_pohon}` : "N/A"}</td>
                                 <td className="px-6 py-4">{data.OperationalId ? `${data.OperationalId.nama_pohon}` : "N/A"}</td>
+                                {user?.roles == "asn" && 
                                 <td className="px-6 py-4 flex flex-col">
                                     <ButtonSc 
                                         typee="button" 
@@ -229,10 +309,10 @@ const Table = () => {
                                                 if(result.isConfirmed){
                                                     hapusDataLayanan(data.Id);
                                                 }
-                                              })
+                                            })
                                         }}
                                     >
-                                       <div className="flex items-center justify-center w-full">
+                                    <div className="flex items-center justify-center w-full">
                                             <Image 
                                             className="mr-1"
                                             src="/iconLight/trash.svg" 
@@ -244,6 +324,7 @@ const Table = () => {
                                         </div>
                                     </ButtonTr>
                                 </td>
+                                }
                             </tr>
                             ))
                         )}

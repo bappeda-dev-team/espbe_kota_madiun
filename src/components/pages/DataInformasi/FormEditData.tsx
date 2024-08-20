@@ -7,6 +7,7 @@ import Select from "react-select";
 import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
+import { getUser, getToken } from "@/app/Login/Auth/Auth";
 
 interface OptionType {
   value: number;
@@ -43,6 +44,7 @@ interface formValue {
 const FormEditData = () => {
   const { Id } = useParams();
   const router = useRouter();
+  const token = getToken();
   const {
     control,
     handleSubmit,
@@ -52,6 +54,7 @@ const FormEditData = () => {
   } = useForm<formValue>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
+  const [user, setUser] = useState<any>(null);
 
   const [rad_1_4, set_rad_1_4] = useState<OptionType[]>([]);
   const [rad_5_7, set_rad_5_7] = useState<OptionType[]>([]);
@@ -78,6 +81,11 @@ const FormEditData = () => {
   const [selectedStrategic, setSelectedStrategic] = useState<OptionType | null>(null);
   const [selectedTactical, setSelectedTactical] = useState<OptionType | null>(null);
   const [selectedOperational, setSelectedOperational] = useState<OptionType | null>(null);
+
+  useEffect(() => {
+    const fetchUser = getUser();
+    setUser(fetchUser);
+  },[])
 
   const tahun_option: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -122,7 +130,11 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const fetchingDataId = async () => {
       try {
-        const response = await fetch(`${API_URL}/v1/datainformasibyid/${Id}`);
+        const response = await fetch(`${API_URL}/v1/datainformasibyid/${Id}`, {
+          headers: {
+            'Authorization': `${token}`,
+          },
+        });
         const data = await response.json();
         const result = data.data;
         
@@ -262,14 +274,18 @@ const FormEditData = () => {
     };
     fetchingDataId();
     setIsClient(true);
-  }, [reset, Id]);
+  }, [reset, Id, token]);
 
   //fetching data RAL 1 - 4
   const fetchRad_1_4 = async (level: number) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
+      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (item: any) => item.level_referensi === level && item.jenis_referensi === "DataDanInformasi",
@@ -291,7 +307,11 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja`);
+      const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (pohon: any) => pohon.jenis_pohon === pohon_kinerja,
@@ -348,7 +368,7 @@ const FormEditData = () => {
       produsen_data : data.produsen_data,
       validitas_data : data.validitas_data?.value,
       pj_data : data.pj_data,
-      kode_opd : "5.01.5.05.0.00.02.0000",
+      kode_opd : user?.kode_opd,
       informasi_terkait_input : data.informasi_terkait_input,
       informasi_terkait_output : data.informasi_terkait_output,
       interoprabilitas : data.interoprabilitas?.value,
@@ -367,6 +387,7 @@ const FormEditData = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `${token}`,
         },
         body: JSON.stringify(formData),
       });

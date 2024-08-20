@@ -4,7 +4,7 @@ import HeaderLayanan from "@/components/pages/Layanan/HeaderLayanan";
 const LayananSPBE = () => {
     return(
         <>
-            <div className="mb-5 flex justify-between items-center">
+            <div className="mb-3">
                 <HeaderLayanan />
             </div>
             <Table/>

@@ -7,6 +7,7 @@ import Select from "react-select";
 import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
+import { getUser, getToken } from "@/app/Login/Auth/Auth";
 
 interface OptionType {
   value: number;
@@ -30,6 +31,7 @@ interface formValue {
 const FormEditData = () => {
   const { id } = useParams();
   const router = useRouter();
+  const token = getToken();
   const {
     control,
     handleSubmit,
@@ -38,22 +40,17 @@ const FormEditData = () => {
   } = useForm<formValue>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
+  const [user, setUser] = useState<any>(null);
 
   //state untuk fetch data option
-  const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>(
-    [],
-  );
-  const [bidang_urusan_option, set_bidang_urusan_option] = useState<
-    OptionType[]
-  >([]);
+  const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>([],);
+  const [bidang_urusan_option, set_bidang_urusan_option] = useState<OptionType[]>([]);
   const [rab_1_3, set_rab_1_3] = useState<OptionType[]>([]);
   const [rab_4_6, set_rab_4_6] = useState<OptionType[]>([]);
 
   //state untuk fetch default value data by id
-  const [selectedSasaranKota, setSelectedSasaranKota] =
-    useState<OptionType | null>(null);
-  const [selectedBidangUrusan, setSelectedBidangUrusan] =
-    useState<OptionType | null>(null);
+  const [selectedSasaranKota, setSelectedSasaranKota] = useState<OptionType | null>(null);
+  const [selectedBidangUrusan, setSelectedBidangUrusan] = useState<OptionType | null>(null);
   const [selectedRab1, setSelectedRab1] = useState<OptionType | null>(null);
   const [selectedRab2, setSelectedRab2] = useState<OptionType | null>(null);
   const [selectedRab3, setSelectedRab3] = useState<OptionType | null>(null);
@@ -63,6 +60,11 @@ const FormEditData = () => {
   const [selectedTahun, setSelectedTahun] = useState<OptionType | null>(null);
   const [kode_opd, set_kode_opd] = useState<string>("");
   const [kode_proses_bisnis, set_kode_proses_bisnis] = useState<string>("");
+
+  useEffect(() => {
+    const fetchUser = getUser();
+    setUser(fetchUser);
+  }, [])
 
   const tahun_option: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -78,7 +80,11 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const fetchingDataId = async () => {
       try {
-        const response = await fetch(`${API_URL}/v1/prosesbisnisbyid/${id}`);
+        const response = await fetch(`${API_URL}/v1/prosesbisnisbyid/${id}`, {
+          headers: {
+            'Authorization': `${token}`,
+          },
+        });
         const data = await response.json();
         const result = data.data;
 
@@ -171,13 +177,17 @@ const FormEditData = () => {
     };
     fetchingDataId();
     setIsClient(true);
-  }, [reset, id]);
+  }, [reset, id, token]);
 
   const fetchSasaranKota = async () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/sasarankota`);
+      const response = await fetch(`${API_URL}/v1/sasarankota`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const result = data.data.map((item: any) => ({
         value: item.ID,
@@ -195,7 +205,11 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/bidangurusan`);
+      const response = await fetch(`${API_URL}/v1/bidangurusan`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const result = data.data.map((item: any) => ({
         value: item.id,
@@ -213,7 +227,11 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`);
+      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (item: any) => item.level_referensi === level && item.jenis_referensi === "ProsesBisnis",
@@ -234,7 +252,11 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja`);
+      const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
       const data = await response.json();
       const filteredData = data.data.filter(
         (pohon: any) => pohon.level_pohon === level,
@@ -276,7 +298,7 @@ const FormEditData = () => {
   const onSubmit: SubmitHandler<formValue> = async (data) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const formData = {
-      kode_opd: "5.01.5.05.0.00.02.0000",
+      kode_opd: user?.kode_opd,
       kode_proses_bisnis: data.kode_proses_bisnis,
       sasaran_kota_id: data.sasaran_kota_id?.value,
       bidang_urusan_id: data.bidang_urusan_id?.value,
@@ -292,6 +314,7 @@ const FormEditData = () => {
       const response = await fetch(`${API_URL}/v1/updateprosesbisnis/${id}`, {
         method: "PUT",
         headers: {
+          'Authorization': `${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
