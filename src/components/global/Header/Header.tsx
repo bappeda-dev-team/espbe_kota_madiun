@@ -32,18 +32,18 @@ function Header() {
 
   const TahunOptions = [
     { value: 0, label: 'Semua Tahun' },
-    { value: 2019, label: 'tahun 2019' },
-    { value: 2020, label: 'tahun 2020' },
-    { value: 2021, label: 'tahun 2021' },
-    { value: 2022, label: 'tahun 2022' },
-    { value: 2023, label: 'tahun 2023' },
-    { value: 2024, label: 'tahun 2024' },
-    { value: 2025, label: 'tahun 2025' },
-    { value: 2026, label: 'tahun 2026' },
-    { value: 2027, label: 'tahun 2027' },
-    { value: 2028, label: 'tahun 2028' },
-    { value: 2029, label: 'tahun 2029' },
-    { value: 2030, label: 'tahun 2030' },
+    { value: 2019, label: 'Tahun 2019' },
+    { value: 2020, label: 'Tahun 2020' },
+    { value: 2021, label: 'Tahun 2021' },
+    { value: 2022, label: 'Tahun 2022' },
+    { value: 2023, label: 'Tahun 2023' },
+    { value: 2024, label: 'Tahun 2024' },
+    { value: 2025, label: 'Tahun 2025' },
+    { value: 2026, label: 'Tahun 2026' },
+    { value: 2027, label: 'Tahun 2027' },
+    { value: 2028, label: 'Tahun 2028' },
+    { value: 2029, label: 'Tahun 2029' },
+    { value: 2030, label: 'Tahun 2030' },
   ];
 
   const semuaOPD = { value: 'all_opd', label: 'Semua OPD' };
@@ -137,17 +137,19 @@ function Header() {
         <div className="flex justify-between items-center flex-row w-screen p-5">
           <div className="text-page flex flex-row">
             <h1 className="text-stone-300">{textPath}</h1>
-            <h1 className="text-stone-300 ml-1">{url}</h1>
           </div>
-          <div className="flex">
+          <div className="flex items-center">
             {user?.roles == "admin_kota" && 
               <Select
                 styles={{
-                  control: (baseStyles, state) => ({
+                  control: (baseStyles) => ({
                     ...baseStyles,
-                    borderColor: state.isFocused ? 'rgb(255 255 255' : 'rgb(255 255 255',
-                    textColor: 'rgb(255 255 255'
-                  }),
+                    borderRadius: '8px',
+                    marginLeft: '4px',
+                    marginRight: '4px',
+                    minWidth: '157.562px',
+                    maxWidth: '200px',
+                  })
                 }}
                 placeholder="Semua OPD"
                 options={opdOption}
@@ -161,18 +163,21 @@ function Header() {
             }
             <Select
               styles={{
-                control: (baseStyles, state) => ({
+                control: (baseStyles) => ({
                   ...baseStyles,
-                  borderColor: state.isFocused ? 'rgb(255 255 255' : 'rgb(255 255 255',
-                  textColor: 'rgb(255 255 255'
-                }),
+                  borderRadius: '8px',
+                  marginLeft: '4px',
+                  marginRight: '4px',
+                  minWidth: '157.562px',
+                  maxWidth: '200px'
+                })
               }}
               options={TahunOptions}
               onChange={(selectedOption) => handlerTahun(selectedOption as { value: number | string })}
               defaultValue={TahunOptions[0]}
               classNamePrefix="select"
             />
-            <button className="rounded-lg p-3 border border-emerald-500 text-emerald-500 font-bold text-sm hover:bg-emerald-500 hover:text-white">
+            <button className="rounded-lg px-3 py-2 border ml-1 border-emerald-500 text-emerald-500 font-bold text-sm hover:bg-emerald-500 hover:text-white">
               {/* ambil di local storage ketika sudah login */}
               {user?.roles == "admin_kota" && <p>Admin Kota</p>}
               {user?.roles == "admin_opd" && <p>Admin OPD</p>}

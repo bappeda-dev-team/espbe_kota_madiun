@@ -7,6 +7,8 @@ import Select from "react-select";
 import { useRouter } from "next/navigation";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface OptionType {
   value: number;
@@ -42,6 +44,7 @@ interface FormValues {
 }
 
 const FormTambahData = () => {
+  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [rad_level_1_4_option, set_rad_level_1_4_option] = useState<OptionType[]>([]);
   const [rad_level_5_7_option, set_rad_level_5_7_option] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -109,7 +112,7 @@ const FormTambahData = () => {
         jenis_data : null,
         produsen_data : "",
         pj_data : "",
-        kode_opd : user?.kode_opd,
+        kode_opd : user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
         informasi_terkait_input : "",
         informasi_terkait_output : "",
         interoprabilitas : null,
@@ -189,7 +192,7 @@ const FormTambahData = () => {
         produsen_data : data.produsen_data,
         validitas_data : data.validitas_data?.value,
         pj_data : data.pj_data,
-        kode_opd : user?.kode_opd,
+        kode_opd : user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
         informasi_terkait_input : data.informasi_terkait_input,
         informasi_terkait_output : data.informasi_terkait_output,
         interoprabilitas : data.interoprabilitas?.value,
@@ -224,7 +227,7 @@ const FormTambahData = () => {
   };
 
   return (
-    <div className="border p-5">
+    <div className="border p-5 shadow-xl rounded-xl">
       <h1 className="uppercase font-bold">Form tambah Data Informasi SPBE</h1>
       <form className="flex flex-col mx-5 py-5" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col py-3">
@@ -238,7 +241,7 @@ const FormTambahData = () => {
             render={({ field }) => (
               <>
                 <input
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   {...field}
                   type="text"
                   id="nama_data"
@@ -266,7 +269,7 @@ const FormTambahData = () => {
             render={({ field }) => (
               <>
                 <input
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   {...field}
                   type="text"
                   id="uraian_data"
@@ -298,7 +301,7 @@ const FormTambahData = () => {
             render={({ field }) => (
               <>
                 <input
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   {...field}
                   type="text"
                   id="produsen_data"
@@ -329,7 +332,7 @@ const FormTambahData = () => {
             render={({ field }) => (
               <>
                 <input
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   {...field}
                   type="text"
                   id="pj_data"
@@ -360,7 +363,7 @@ const FormTambahData = () => {
             render={({ field }) => (
               <>
                 <input
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   {...field}
                   type="text"
                   id="informasi_terkait_input"
@@ -391,7 +394,7 @@ const FormTambahData = () => {
             render={({ field }) => (
               <>
                 <input
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   {...field}
                   type="text"
                   id="informasi_terkait_output"
@@ -431,6 +434,12 @@ const FormTambahData = () => {
                       isSearchable
                       isClearable
                       placeholder="Pilih sifat data"
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.sifat_data ?
                       <h1 className="text-red-500">
@@ -462,6 +471,12 @@ const FormTambahData = () => {
                       isSearchable
                       isClearable
                       placeholder="Pilih validitas data"
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.validitas_data ?
                       <h1 className="text-red-500">
@@ -493,6 +508,12 @@ const FormTambahData = () => {
                       isSearchable
                       isClearable
                       placeholder="Pilih Jenis Data"
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.jenis_data ?
                   <h1 className="text-red-500">
@@ -524,6 +545,12 @@ const FormTambahData = () => {
                       isSearchable
                       isClearable
                       placeholder="Pilih Interoprabilitas"
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.interoprabilitas ?
                       <h1 className="text-red-500">
@@ -546,7 +573,7 @@ const FormTambahData = () => {
                   control={control}
                   render={({ field }) => (
                       <input
-                        className="border px-4 py-2 rounded"
+                        className="border px-4 py-2 rounded-lg"
                         {...field}
                         value={field.value || ""}
                         type="text"
@@ -571,6 +598,12 @@ const FormTambahData = () => {
                       isSearchable
                       isClearable
                       placeholder="Pilih Tahun"
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.tahun ?
                       <h1 className="text-red-500">
@@ -610,6 +643,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_rad_level_1_4_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.rad_level_1_id ?
@@ -651,6 +690,12 @@ const FormTambahData = () => {
                       onMenuClose={() => {
                         set_rad_level_1_4_option([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.rad_level_2_id ?
                       <h1 className="text-red-500">
@@ -690,6 +735,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_rad_level_1_4_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.rad_level_3_id ?
@@ -731,6 +782,12 @@ const FormTambahData = () => {
                       onMenuClose={() => {
                         set_rad_level_1_4_option([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.rad_level_4_id ?
                       <h1 className="text-red-500">
@@ -770,6 +827,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_rad_level_5_7_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.strategic_id ?
@@ -811,6 +874,12 @@ const FormTambahData = () => {
                       onMenuClose={() => {
                         set_rad_level_5_7_option([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.tactical_id ?
                       <h1 className="text-red-500">
@@ -850,6 +919,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_rad_level_5_7_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.operational_id ?

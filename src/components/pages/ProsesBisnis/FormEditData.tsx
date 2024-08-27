@@ -8,6 +8,8 @@ import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface OptionType {
   value: number;
@@ -41,6 +43,7 @@ const FormEditData = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
+  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
 
   //state untuk fetch data option
   const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>([],);
@@ -298,7 +301,7 @@ const FormEditData = () => {
   const onSubmit: SubmitHandler<formValue> = async (data) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const formData = {
-      kode_opd: user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
       kode_proses_bisnis: data.kode_proses_bisnis,
       sasaran_kota_id: data.sasaran_kota_id?.value,
       bidang_urusan_id: data.bidang_urusan_id?.value,
@@ -332,7 +335,7 @@ const FormEditData = () => {
   };
 
   return (
-    <div className="border p-5">
+    <div className="border p-5 rounded-xl shadow-xl">
       <h1 className="uppercase font-bold">Form Edit Data Proses Bisnis:</h1>
       <form
         className="flex flex-col mx-5 py-5"
@@ -363,6 +366,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "tahun" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.tahun ?
                       <h1 className="text-red-500">
@@ -405,6 +414,12 @@ const FormEditData = () => {
                           fetchSasaranKota();
                         }
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.sasaran_kota_id ?
                       <h1 className="text-red-500">
@@ -446,6 +461,12 @@ const FormEditData = () => {
                         if (bidang_urusan_option.length === 0) {
                           fetchBidangUrusan();
                         }
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.bidang_urusan_id ?
@@ -492,6 +513,12 @@ const FormEditData = () => {
                       onMenuClose={() => {
                         set_rab_1_3([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.rab_level_1_id ?
                       <h1 className="text-red-500">
@@ -536,6 +563,12 @@ const FormEditData = () => {
                       }}
                       onMenuClose={() => {
                         set_rab_1_3([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.rab_level_2_id ?
@@ -582,6 +615,12 @@ const FormEditData = () => {
                       onMenuClose={() => {
                         set_rab_1_3([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.rab_level_3_id ?
                       <h1 className="text-red-500">
@@ -626,6 +665,12 @@ const FormEditData = () => {
                       }}
                       onMenuClose={() => {
                         set_rab_4_6([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.rab_level_4_id ?
@@ -672,6 +717,12 @@ const FormEditData = () => {
                       onMenuClose={() => {
                         set_rab_4_6([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.rab_level_5_id ?
                       <h1 className="text-red-500">
@@ -716,6 +767,12 @@ const FormEditData = () => {
                       }}
                       onMenuClose={() => {
                         set_rab_4_6([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.rab_level_6_id ?

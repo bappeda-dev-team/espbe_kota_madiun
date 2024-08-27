@@ -1,9 +1,13 @@
-import Table from "@/components/pages/DataMaster/SasaranKota/Table"; 
+import Table from "@/components/pages/DataMaster/SasaranKota/Table";
+import HeaderSasaranKota from "@/components/pages/DataMaster/SasaranKota/HeaderSasaranKota";
 
 const SasaranKota = () => {
     return(
         <>
-         <Table />
+            <div className="flex flex-col mb-4">
+                <HeaderSasaranKota />
+            </div>
+            <Table />
         </>
     )
 }

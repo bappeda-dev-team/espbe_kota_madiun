@@ -7,6 +7,8 @@ import Select from "react-select";
 import { useForm, Controller, SubmitHandler, useFieldArray } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface OptionType {
     value: number;
@@ -37,6 +39,7 @@ interface FormValues {
 }
 
 const FormEditKebutuhan = () => {
+    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const { id } = useParams();
     const router = useRouter();
     const token = getToken();
@@ -54,7 +57,7 @@ const FormEditKebutuhan = () => {
 
     const { control, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
         defaultValues: {
-            kode_opd: user?.kode_opd,
+            kode_opd: user?.user?.kode_opd,
             tahun: 2024,
             nama_domain: null,
             jenis_kebutuhan: [],
@@ -104,7 +107,7 @@ const FormEditKebutuhan = () => {
 
                 // Reset form data with fetched data
                 reset({
-                    kode_opd: user?.kode_opd,
+                    kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
                     tahun: result.tahun,
                     nama_domain: {
                         value: result.nama_domain,
@@ -183,7 +186,7 @@ const FormEditKebutuhan = () => {
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
-            kode_opd: user?.kode_opd,
+            kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
             tahun: data.tahun,
             nama_domain: data.nama_domain?.value,
             id_prosesbisnis: data.proses_bisnis?.value,
@@ -218,7 +221,7 @@ const FormEditKebutuhan = () => {
     };
 
     return (
-        <div className="border p-5">
+        <div className="border p-5 rounded-xl shadow-xl">
             <h1 className="uppercase font-bold">Form Edit Kebutuhan SPBE</h1>
             <form className="flex flex-col mx-5 py-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col py-3">
@@ -244,6 +247,12 @@ const FormEditKebutuhan = () => {
                                         handleChange(option, { name: "nama_domain" });
                                     }}
                                     onMenuOpen={fetchDomain}
+                                    styles={{
+                                        control: (baseStyles) => ({
+                                            ...baseStyles,
+                                            borderRadius: '8px',
+                                        })
+                                    }}
                                 />
                                 {errors.nama_domain ? (
                                     <h1 className="text-red-500">{errors.nama_domain.message}</h1>
@@ -256,7 +265,7 @@ const FormEditKebutuhan = () => {
                 </div>
 
                 <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="id_prosesbisnis">
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="proses_bisnis">
                         Proses Bisnis:
                     </label>
                     <Controller
@@ -278,6 +287,12 @@ const FormEditKebutuhan = () => {
                                     }}
                                     isClearable={true}
                                     onMenuOpen={fetchProsesBisnis}
+                                    styles={{
+                                        control: (baseStyles) => ({
+                                            ...baseStyles,
+                                            borderRadius: '8px',
+                                        })
+                                    }}
                                 />
                                 {errors.proses_bisnis ? (
                                     <h1 className="text-red-500">{errors.proses_bisnis.message}</h1>
@@ -292,24 +307,24 @@ const FormEditKebutuhan = () => {
                 {fields.map((item, index) => (
                     <div key={item.id} className="flex flex-col mb-3 py-2 px-3 bg-emerald-50 rounded-xl">
                         <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor={`jenis_kebutuhan.${index}.kebutuhan`}>
-                            Jenis Kebutuhan {index + 1}:
+                            Kebutuhan {index + 1}:
                         </label>
                         <Controller
                             name={`jenis_kebutuhan.${index}.kebutuhan`}
                             control={control}
-                            rules={{ required: "Jenis Kebutuhan Harus Terisi" }}
+                            rules={{ required: "Kebutuhan Harus Terisi" }}
                             render={({ field }) => (
                                 <>
                                     <input
                                         {...field}
-                                        className="border px-4 py-2 rounded"
+                                        className="border px-4 py-2 rounded-lg"
                                         id={`jenis_kebutuhan.${index}.kebutuhan`}
                                         type="text"
                                     />
                                     {errors.jenis_kebutuhan?.[index]?.kebutuhan ? (
                                         <h1 className="text-red-500">{errors.jenis_kebutuhan[index]?.kebutuhan?.message}</h1>
                                     ) : (
-                                        <h1 className="text-slate-300 text-xs">*Jenis Kebutuhan Harus Terisi</h1>
+                                        <h1 className="text-slate-300 text-xs">*Kebutuhan Harus Terisi</h1>
                                     )}
                                 </>
                             )}
@@ -328,8 +343,9 @@ const FormEditKebutuhan = () => {
                                         <>
                                             <input
                                                 {...field}
-                                                className="border px-4 py-2 rounded"
+                                                className="border px-4 py-2 rounded-lg"
                                                 id={`jenis_kebutuhan.${index}.kondisi_awal.${subIndex}.keterangan`}
+                                                placeholder={`Tuliskan "-" atau "kosong" jika kondisi awal ${subIndex + 1} kosong`}
                                                 type="text"
                                             />
                                             {errors.jenis_kebutuhan?.[index]?.kondisi_awal?.[subIndex]?.keterangan ? (

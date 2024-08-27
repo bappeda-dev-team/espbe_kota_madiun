@@ -1,26 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as jwtDecoded from "jwt-decode";
 
 export function middleware(req: NextRequest) {
 
-    const token = req.cookies.get('token');
-    let isLogin = false;
-
-    if (token) {
-        try {
-            isLogin = true;
-        } catch (error) {
-            console.error('Token verification failed:', error);
-            isLogin = false;
-        }
-    } else {
-        isLogin = false;
-    }
+    const tokenCookie = req.cookies.get('token');
     
-    if(isLogin){
-        return NextResponse.next()
-    } else {
-        return NextResponse.redirect(new URL("/Login", req.url))
+    if (tokenCookie) {
+        const token = tokenCookie.value;
+        try {
+            const decodedToken: any = jwtDecoded.jwtDecode(token);
+            const currentTime = Math.floor(Date.now() / 1000);
+
+            // Periksa apakah token telah kedaluwarsa
+            if (decodedToken.exp < currentTime) {
+                return NextResponse.redirect(new URL('/Login', req.url));
+            }
+
+            return NextResponse.next();
+        } catch (error) {
+            console.error('Token decoding failed:', error);
+        }
     }
+
+    return NextResponse.redirect(new URL('/Login', req.url));
 };
 
 export const config = {

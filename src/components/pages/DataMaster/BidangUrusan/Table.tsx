@@ -62,22 +62,13 @@ const Table = () => {
 
     return(
         <>
-            <div className="flex">
-                <h1 className="uppercase font-bold mb-5">Data Bidang Urusan</h1>
-                {user?.roles != "admin_kota" ? 
-                    <h1 className="uppercase font-bold mb-5">opd</h1>
-                    :
-                    <h1 className="uppercase font-bold mb-5">Semua OPD</h1>
-                }
-
-            </div>
-            <div className="overflow-auto">
+            <div className="overflow-auto shadow-xl rounded-xl">
                 <table className="w-full text-sm text-left">
-                <thead className="text-xs text-gray-700 uppercase border">
+                <thead className="text-xs text-white uppercase bg-amber-500">
                     <tr>
-                        <th className="px-6 py-3 border max-w-[20px] sticky bg-white left-[-2px]">No.</th>
+                        <th className="px-6 py-3 border max-w-[20px] text-center sticky bg-amber-500 left-[-1px]">No.</th>
                         <th className="px-6 py-3 border min-w-[200px]">Bidang</th>
-                        <th className="px-6 py-3 border min-w-[200px]">Kode Bidang Urusan</th>
+                        <th className="px-6 py-3 border min-w-[200px] text-center">Kode Bidang Urusan</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,9 +81,9 @@ const Table = () => {
                 ) : (
                     BidangUrusan.map((data, index) => (
                     <tr key={data.id} className="border rounded-b-lg hover:bg-slate-50">
-                        <td className="px-6 py-4 border sticky bg-white left-[-2px]">{index +1}</td>
+                        <td className="px-6 py-4 border text-center sticky bg-white left-[-2px]">{index +1}</td>
                         <td className="px-6 py-4 border">{data.bidang_urusan}</td>
-                        <td className="px-6 py-4 border">{data.kode_bidang_urusan}</td>
+                        <td className="px-6 py-4 border text-center">{data.kode_bidang_urusan}</td>
                     </tr>
                     ))
                 )}

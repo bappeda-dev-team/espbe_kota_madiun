@@ -7,6 +7,8 @@ import Select from "react-select";
 import { useRouter } from "next/navigation";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { getToken, getUser } from "@/app/Login/Auth/Auth";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface OptionType {
   value: number;
@@ -27,6 +29,7 @@ interface FormValues {
 }
 
 const FormTambahData = () => {
+  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [rab_level_1_3_option, set_rab_level_1_3_option] = useState<OptionType[]>([]);
   const [rab_level_4_6_option, set_rab_level_4_6_option] = useState<OptionType[]>([]);
   const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>([],);
@@ -60,7 +63,7 @@ const FormTambahData = () => {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      kode_opd: user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
       bidang_urusan_id: null,
       tahun: null,
       sasaran_kota_id: null,
@@ -170,7 +173,7 @@ const FormTambahData = () => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const formData = {
       //key : value
-      kode_opd: user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
       bidang_urusan_id: data.bidang_urusan_id?.value,
       tahun: data.tahun?.value,
       sasaran_kota_id: data.sasaran_kota_id?.value,
@@ -202,7 +205,7 @@ const FormTambahData = () => {
   };
 
   return (
-    <div className="border p-5">
+    <div className="border p-5 rounded-xl shadow-xl">
       <h1 className="uppercase font-bold">Form tambah data Proses Bisnis</h1>
       <form
         className="flex flex-col mx-5 py-5"
@@ -225,6 +228,12 @@ const FormTambahData = () => {
                       isSearchable
                       isClearable
                       placeholder="Pilih Tahun"
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        }),
+                      }}
                     />
                     {errors.tahun ?
                       <h1 className="text-red-500">
@@ -263,6 +272,12 @@ const FormTambahData = () => {
                           fetchBidangUrusan();
                         }
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        }),
+                      }}
                     />
                     {errors.bidang_urusan_id ?
                       <h1 className="text-red-500">
@@ -299,6 +314,12 @@ const FormTambahData = () => {
                         if (sasaran_kota_option.length === 0) {
                           fetchSasaranKota();
                         }
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        }),
                       }}
                     />
                     {errors.sasaran_kota_id ?
@@ -340,6 +361,12 @@ const FormTambahData = () => {
                       onMenuClose={() => {
                         set_rab_level_1_3_option([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        }),
+                      }}
                     />
                     {errors.rab_level_1_id ?
                       <h1 className="text-red-500">
@@ -379,6 +406,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_rab_level_1_3_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        }),
                       }}
                     />
                     {errors.rab_level_2_id ?
@@ -420,6 +453,12 @@ const FormTambahData = () => {
                       onMenuClose={() => {
                         set_rab_level_1_3_option([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        }),
+                      }}
                     />
                     {errors.rab_level_3_id ?
                       <h1 className="text-red-500">
@@ -459,6 +498,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_rab_level_4_6_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        }),
                       }}
                     />
                     {errors.rab_level_4_id ?
@@ -500,6 +545,12 @@ const FormTambahData = () => {
                       onMenuClose={() => {
                         set_rab_level_4_6_option([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        }),
+                      }}
                     />
                     {errors.rab_level_5_id ?
                       <h1 className="text-red-500">
@@ -539,6 +590,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_rab_level_4_6_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        }),
                       }}
                     />
                     {errors.rab_level_6_id ?

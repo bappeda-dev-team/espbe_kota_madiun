@@ -1,9 +1,13 @@
-import Perbaikan from "@/components/maintenance/perbaikan";
+import Table from "@/components/pages/PemenuhanKebutuhan/Table";
+import HeaderPemenuhanKebutuhan from "@/components/pages/PemenuhanKebutuhan/HeaderPemenuhanKebutuhan";
 
 const PemenuhanKebutuhan = () => {
     return(
         <>
-            <Perbaikan />
+            <div className="mb-3">
+                <HeaderPemenuhanKebutuhan/>
+            </div>
+            <Table />
         </>
     );
 };

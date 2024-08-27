@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Loading from "../../../global/Loading/Loading";
 import {ButtonPr, ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import { useSelector } from "react-redux";
@@ -62,13 +63,14 @@ function Table() {
   const [loading, setLoading] = useState<boolean>(true);
   const [dataNull, setDataNull] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
-  const [user, setUser] = useState<any>();
-
   const token = getToken();
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  }, []);
+  },[])
 
   //fetch data proses bisnis
   useEffect(() => {
@@ -152,9 +154,7 @@ function Table() {
             setDataNull(false);
           }
         } catch (err) {
-          setError(
-            "Gagal memuat data, silakan cek koneksi internet atau database server",
-          );
+          setError("Gagal memuat data, silakan cek koneksi internet atau database server",);
         } finally {
           setLoading(false);
         }
@@ -181,9 +181,7 @@ function Table() {
             setDataNull(false);
           }
         } catch (err) {
-          setError(
-            "Gagal memuat data, silakan cek koneksi internet atau database server",
-          );
+          setError("Gagal memuat data, silakan cek koneksi internet atau database server",);
         } finally {
           setLoading(false);
         }
@@ -192,6 +190,30 @@ function Table() {
     }
   }, [tahun, SelectedOpd, token]);
 
+  //tambah data
+  const tambahData= async() => {
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+        router.push(`/ProsesBisnis/TambahData`)
+      } else {
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+      }
+    } else {
+      router.push(`/ProsesBisnis/TambahData`)
+    }
+  }
+  //edit data
+  const editData = async(id: number) => {
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+        router.push(`/ProsesBisnis/EditData/${id}`)
+      } else {
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+      }
+    } else {
+      router.push(`/ProsesBisnis/EditData/${id}`)
+    }
+  }
   //hapus data
   const hapusProsesBisnis = async (id: any) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -211,6 +233,38 @@ function Table() {
       AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
     }
   };
+  //cetak data
+  const cetakProsesBisnis = async () => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    try {
+      const response = await fetch(`${API_URL}/exportexcelprosesbisnis`, {
+        method: "GET",
+        headers: {
+          'Authorization': `${token}`,
+          // 'Content-Type': `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjQxNDQ3ODcsImtvZGVfb3BkIjoiMS4wMS4wLjAwLjAuMDAuMDEuMDAyMyIsIm5hbWEiOiJhZ25hciIsIm5pcCI6InRlc3QiLCJyb2xlcyI6WyJhc24iXSwidXNlcl9pZCI6Mn0.xdcqLXbE8eNBlTbDI4qNSgdRJ8BnUSFa7bLi9Vn7t2E`,
+        },
+      });
+      if(!response.ok){
+        throw new Error('terdapat kesalahan di server atau database')
+      }
+      // Mengonversi respons ke Blob untuk diunduh
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // Membuat elemen link untuk mengunduh file
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `data_proses_bisnis_${SelectedOpd}_tahun_${tahun}.xlsx`; // Nama file yang diunduh
+      document.body.appendChild(a);
+      a.click();
+
+      // Membersihkan elemen setelah unduhan
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+    }
+  };
 
   if (loading) {
     return <Loading />;
@@ -220,156 +274,115 @@ function Table() {
 
   return (
     <>
-      {user?.roles == "asn" && 
-        <div className="flex justify-between mb-5">
-          <ButtonSc typee="button">
-            <div className="flex">
-              <Image 
-                className="mr-1"
-                src="/iconLight/cetak.svg" 
-                alt="add" 
-                width={20} 
-                height={20} 
-              />
-              Cetak
-            </div>
-          </ButtonSc>
-          <ButtonPr halaman_url="/ProsesBisnis/TambahData" typee="button">
-            <div className="flex">
-              <Image 
-                className="mr-1"
-                src="/iconLight/add.svg" 
-                alt="add" 
-                width={20} 
-                height={20} 
-              />
-              Tambah Data
-            </div>
-          </ButtonPr>
-        </div>
-      }
-      <div className="overflow-auto">
+      <div className="flex justify-between mb-5">
+        <ButtonSc typee="button" onClick={() => cetakProsesBisnis()}>
+          <div className="flex">
+            <Image 
+              className="mr-1"
+              src="/iconLight/cetak.svg" 
+              alt="add" 
+              width={20} 
+              height={20} 
+            />
+            Cetak
+          </div>
+        </ButtonSc>
+        <ButtonPr typee="button" onClick={() => tambahData()}>
+          <div className="flex">
+            <Image 
+              className="mr-1"
+              src="/iconLight/add.svg" 
+              alt="add" 
+              width={20} 
+              height={20} 
+            />
+            Tambah Data
+          </div>
+        </ButtonPr>
+      </div>
+      <div className="overflow-auto rounded-t-xl bg-white shadow-lg border">
         <table className="w-screen text-sm text-left">
-          <thead className="text-xs text-gray-700 uppercase border">
+          <thead className="text-xs rounded-t-xl text-white bg-emerald-500 uppercase">
             <tr>
-              <th className="px-6 py-3 max-w-[20px] sticky bg-white left-[-2px]">
-                No.
-              </th>
-              <th className="px-6 py-3 min-w-[200px]">Proses Bisnis</th>
-              <th className="px-6 py-3 min-w-[200px]">Kode Proses Bisnis</th>
-              <th className="px-6 py-3 min-w-[200px]">Kode OPD</th>
-              <th className="px-6 py-3 min-w-[200px]">Bidang Urusan</th>
-              <th className="px-6 py-3 min-w-[200px]">Sasaran Kota</th>
-              <th className="px-6 py-3 min-w-[200px]">Tahun</th>
-              <th className="px-6 py-3 min-w-[200px]">RAB Level 1</th>
-              <th className="px-6 py-3 min-w-[200px]">RAB Level 2</th>
-              <th className="px-6 py-3 min-w-[200px]">RAB Level 3</th>
-              <th className="px-6 py-3 min-w-[200px]">Strategic</th>
-              <th className="px-6 py-3 min-w-[200px]">Tactical</th>
-              <th className="px-6 py-3 min-w-[200px]">Operational</th>
-              {user?.roles == "asn" && <th className="px-6 py-3 text-center">Aksi</th>}
+              <th className="px-6 py-3 max-w-[20px] sticky bg-emerald-500 left-[-1px]">No.</th>
+              <th className="border-x border-b px-6 py-3 min-w-[200px]">Proses Bisnis</th>
+              <th className="border-x border-b px-6 py-3 min-w-[200px] text-center">Kode Proses Bisnis</th>
+              <th className="border-x border-b px-6 py-3 min-w-[200px] text-center">Kode OPD</th>
+              <th className="border-x border-b px-6 py-3 min-w-[200px]">Bidang Urusan</th>
+              <th className="border-x border-b px-6 py-3 min-w-[200px]">Sasaran Kota</th>
+              <th className="border-x border-b px-6 py-3 min-w-[100px] text-center">Tahun</th>
+              <th className="border-x border-b px-6 py-3 min-w-[200px]">RAB Level 1</th>
+              <th className="border-x border-b px-6 py-3 min-w-[200px]">RAB Level 2</th>
+              <th className="border-x border-b px-6 py-3 min-w-[200px]">RAB Level 3</th>
+              <th className="border-x border-b px-6 py-3 min-w-[200px]">Strategic</th>
+              <th className="border-x border-b px-6 py-3 min-w-[200px]">Tactical</th>
+              <th className="border-x border-b px-6 py-3 min-w-[200px]">Operational</th>
+              <th className="px-6 py-3 text-center">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {dataNull ? (
               <tr>
-                <td className="px-6 py-3" colSpan={13}>
+                <td className="px-6 py-3" colSpan={14}>
                   Data Kosong / Belum Ditambahkan
                 </td>
               </tr>
             ) : (
               dataProsesBisnis.map((data, index) => (
-                <tr
-                  key={data.id}
-                  className="border rounded-b-lg hover:bg-slate-50"
-                >
-                  <td className="px-6 py-4 sticky bg-white left-[-2px]">
-                    {index + 1}
+                <tr key={data.id} className="border-y rounded-b-lg hover:bg-slate-50">
+                  <td className="px-6 py-4 sticky bg-white left-[-1px]">{index + 1}</td>
+                  <td className="border px-6 py-4">{data.nama_proses_bisnis}</td>
+                  <td className="border px-6 py-4 text-center">{data.kode_proses_bisnis}</td>
+                  <td className="border px-6 py-4">{data.kode_opd}</td>
+                  <td className="border px-6 py-4">{data.bidang_urusan_id ? `${data.bidang_urusan_id.bidang_urusan}` : "N/A"}</td>
+                  <td className="border px-6 py-4">{data.sasaran_kota ? `${data.sasaran_kota.Sasaran}` : "N/A"}</td>
+                  <td className="border px-6 py-4 text-center">{data.tahun}</td>
+                  <td className="border px-6 py-4">{data.rab_level_1 ? `${data.rab_level_1.kode_referensi} ${data.rab_level_1.nama_referensi}` : "N/A"}</td>
+                  <td className="border px-6 py-4">{data.rab_level_2 ? `${data.rab_level_2.kode_referensi} ${data.rab_level_2.nama_referensi}` : "N/A"}</td>
+                  <td className="border px-6 py-4">{data.rab_level_3 ? `${data.rab_level_3.kode_referensi} ${data.rab_level_3.nama_referensi}` : "N/A"}</td>
+                  <td className="border px-6 py-4">{data.rab_level_4 ? `${data.rab_level_4.nama_pohon}` : "N/A"}</td>
+                  <td className="border px-6 py-4">{data.rab_level_5 ? `${data.rab_level_5.nama_pohon}` : "N/A"}</td>
+                  <td className="border px-6 py-4">{data.rab_level_6 ? `${data.rab_level_6.nama_pohon}` : "N/A"}</td> 
+                  <td className="px-6 py-4 flex flex-col">
+                    <ButtonSc
+                      typee="button"
+                      className="my-1"
+                      onClick={() => editData(data.id)}
+                    >
+                      <div className="flex">
+                        <Image 
+                          className="mr-1"
+                          src="/iconLight/edit.svg" 
+                          alt="edit" 
+                          width={15} 
+                          height={15} 
+                        />
+                        Edit
+                      </div>
+                    </ButtonSc>
+                    <ButtonTr
+                      typee="button"
+                      className="my-1"
+                      onClick={() => {
+                        AlertQuestion("Hapus?", "hapus proses bisnis yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                          if(result.isConfirmed){
+                              hapusProsesBisnis(data.id);
+                          }
+                        })
+                      }}
+                    >
+                      <div className="flex items-center justify-center w-full">
+                        <Image 
+                          className="mr-1"
+                          src="/iconLight/trash.svg" 
+                          alt="trash" 
+                          width={15} 
+                          height={15} 
+                        />
+                        <span>Hapus</span>
+                      </div>
+                    </ButtonTr>
                   </td>
-                  <td className="px-6 py-4">{data.nama_proses_bisnis}</td>
-                  <td className="px-6 py-4">{data.kode_proses_bisnis}</td>
-                  <td className="px-6 py-4">{data.kode_opd}</td>
-                  <td className="px-6 py-4">
-                    {data.bidang_urusan_id
-                      ? `${data.bidang_urusan_id.bidang_urusan}`
-                      : "N/A"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {data.sasaran_kota ? `${data.sasaran_kota.Sasaran}` : "N/A"}
-                  </td>
-                  <td className="px-6 py-4">{data.tahun}</td>
-                  <td className="px-6 py-4">
-                    {data.rab_level_1
-                      ? `${data.rab_level_1.kode_referensi} ${data.rab_level_1.nama_referensi}`
-                      : "N/A"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {data.rab_level_2
-                      ? `${data.rab_level_2.kode_referensi} ${data.rab_level_2.nama_referensi}`
-                      : "N/A"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {data.rab_level_3
-                      ? `${data.rab_level_3.kode_referensi} ${data.rab_level_3.nama_referensi}`
-                      : "N/A"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {data.rab_level_4
-                      ? `${data.rab_level_4.nama_pohon}`
-                      : "N/A"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {data.rab_level_5
-                      ? `${data.rab_level_5.nama_pohon}`
-                      : "N/A"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {data.rab_level_6
-                      ? `${data.rab_level_6.nama_pohon}`
-                      : "N/A"}
-                  </td>
-                  {user?.roles == "asn" && 
-                    <td className="px-6 py-4 flex flex-col">
-                      <ButtonSc
-                        typee="button"
-                        className="my-1"
-                        halaman_url={`/ProsesBisnis/EditData/${data.id}`}
-                      >
-                        <div className="flex">
-                          <Image 
-                            className="mr-1"
-                            src="/iconLight/edit.svg" 
-                            alt="edit" 
-                            width={15} 
-                            height={15} 
-                          />
-                          Edit
-                        </div>
-                      </ButtonSc>
-                      <ButtonTr
-                        typee="button"
-                        className="my-1"
-                        onClick={() => {
-                          AlertQuestion("Hapus?", "hapus proses bisnis yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                            if(result.isConfirmed){
-                                hapusProsesBisnis(data.id);
-                            }
-                          })
-                        }}
-                      >
-                        <div className="flex items-center justify-center w-full">
-                          <Image 
-                            className="mr-1"
-                            src="/iconLight/trash.svg" 
-                            alt="trash" 
-                            width={15} 
-                            height={15} 
-                          />
-                          <span>Hapus</span>
-                        </div>
-                      </ButtonTr>
-                    </td>
-                  }
                 </tr>
               ))
             )}

@@ -23,7 +23,7 @@ export const ButtonPr: React.FC<button> = ({children, halaman_url, typee, classN
         <button
             type={typee}
             onClick={onClick || pindahHalaman}
-            className={`bg-gradient-to-r from-[#071952] to-[#008DDA] hover:from-[#0F4C75] hover:to-[#BBE1FA] p-3 text-white rounded-lg ${className}`}
+            className={`bg-gradient-to-r from-[#0F4C75] to-[#64B9F1] hover:from-[#071952] hover:to-[#008DDA] p-3 text-white rounded-lg ${className}`}
         >
             {children}
         </button>
@@ -42,7 +42,7 @@ export const ButtonSc: React.FC<button> = ({children, halaman_url, typee, classN
         <button
             type={typee}
             onClick={onClick || pindahHalaman}
-            className={`bg-gradient-to-r from-[#007F73] to-[#40DA97] hover:from-[#4AAF9B] hover:to-[#64B07B] p-3 text-white rounded-lg ${className}`}
+            className={`bg-gradient-to-r from-[#007F73] to-[#40DA97] hover:from-[#014741] hover:to-[#35B47D] p-3 text-white rounded-lg ${className}`}
         >
             {children}
         </button>

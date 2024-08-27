@@ -11,10 +11,9 @@ interface opd {
   nama_opd : string,
 }
 
-const HeaderDataInformasi = () => {
-
-  const tahun = useSelector((state: RootState) => state.Tahun.tahun);
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.label);
+const HeaderPemenuhanKebutuhan = () => {
+  const tahun = useSelector((state: RootState) => state.Tahun.tahun)
+  const SelectedOpd = useSelector((state: RootState) => state.Opd.label)
   const [user, setUser] = useState<any>(null);
   const [opd, setOpd] = useState<opd[]>([]);
   const token = getToken();
@@ -46,23 +45,22 @@ const HeaderDataInformasi = () => {
       };
       fetchOPD();
     }
-  }, [user, token]
-);
+  }, [user, token]);
+  
+    return (
+        <>
+            <div className="flex justify-between items-center">
+                <div className="flex">
+                    <h1 className="uppercase font-bold mr-1">Pemenuhan Kebutuhan </h1>
+                    {user?.roles == 'admin_kota' ? 
+                      <h1 className="uppercase font-bold">{SelectedOpd === '' ? "Semua OPD" : SelectedOpd} {tahun === 0 ? "Semua Tahun" : tahun}</h1>
+                    :
+                      <h1 className="uppercase font-bold">{opd.length > 0 ? opd[0].nama_opd : ''} {tahun === 0 ? "Semua Tahun" : tahun}</h1>
+                    }
+                </div>
+            </div>
+        </>
+    )
+}
 
-  return (
-    <>
-      <div className="flex items-center justify-between">
-        <div className="flex">
-          <h1 className="uppercase font-bold mr-1">Data Informasi </h1>
-          {user?.roles == 'admin_kota' ? 
-            <h1 className="uppercase font-bold">{SelectedOpd === '' ? "Semua OPD" : SelectedOpd} {tahun === 0 ? "Semua Tahun" : tahun}</h1>
-          :
-            <h1 className="uppercase font-bold">{opd.length > 0 ? opd[0].nama_opd : ''} {tahun === 0 ? "Semua Tahun" : tahun}</h1>
-          }
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default HeaderDataInformasi;
+export default HeaderPemenuhanKebutuhan;

@@ -8,6 +8,8 @@ import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface OptionType {
   value: number;
@@ -45,6 +47,7 @@ const FormEditData = () => {
     reset,
     formState: { errors },
   } = useForm<formValue>();
+  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
@@ -291,7 +294,7 @@ const FormEditData = () => {
       tujuan_layanan_id: data.tujuan_layanan_id?.value,
       fungsi_layanan: data.fungsi_layanan,
       tahun: data.tahun?.value,
-      kode_opd: user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota'? SelectedOpd : user?.kode_opd,
       kementrian_terkait: data.kementrian_terkait,
       metode_layanan: data.metode_layanan?.value,
       ral_level_1_id: data.ral_level_1_id?.value,
@@ -324,7 +327,7 @@ const FormEditData = () => {
   };
 
   return (
-    <div className="border p-5">
+    <div className="border p-5 rounded-xl shadow-xl">
       <h1 className="uppercase font-bold">Form Edit Data Layanan SPBE:</h1>
       <form
         className="flex flex-col mx-5 py-5"
@@ -345,7 +348,7 @@ const FormEditData = () => {
               <>
                 <input
                   {...field}
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   id="nama_layanan"
                   type="text"
                   value={field.value || namaLayanan}
@@ -380,7 +383,7 @@ const FormEditData = () => {
               <>
                 <input
                   {...field}
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   id="fungsi_layanan"
                   type="text"
                   value={field.value || selectedFungsiLayanan}
@@ -415,7 +418,7 @@ const FormEditData = () => {
               <>
                 <input
                   {...field}
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   id="kementrian_terkait"
                   type="text"
                   value={field.value || selectedKementrianTerkait}
@@ -461,6 +464,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "metode_layanan" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.metode_layanan ?
                       <h1 className="text-red-500">
@@ -506,6 +515,12 @@ const FormEditData = () => {
                       onMenuClose={() => {
                         set_ral_5_7([])
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.tujuan_layanan_id ?
                       <h1 className="text-red-500">
@@ -541,6 +556,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "tahun" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.tahun ?
                       <h1 className="text-red-500">
@@ -585,6 +606,12 @@ const FormEditData = () => {
                       }}
                       onMenuClose={() => {
                         set_ral_1_4([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.ral_level_1_id ?
@@ -631,6 +658,12 @@ const FormEditData = () => {
                       onMenuClose={() => {
                         set_ral_1_4([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.ral_level_2_id ?
                       <h1 className="text-red-500">
@@ -675,6 +708,12 @@ const FormEditData = () => {
                       }}
                       onMenuClose={() => {
                         set_ral_1_4([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.ral_level_3_id ?
@@ -721,6 +760,12 @@ const FormEditData = () => {
                       onMenuClose={() => {
                         set_ral_1_4([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.ral_level_4_id ?
                       <h1 className="text-red-500">
@@ -765,6 +810,12 @@ const FormEditData = () => {
                       }}
                       onMenuClose={() => {
                         set_ral_5_7([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.strategic_id ?
@@ -811,6 +862,12 @@ const FormEditData = () => {
                       onMenuClose={() => {
                         set_ral_5_7([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.tactical_id ?
                       <h1 className="text-red-500">
@@ -855,6 +912,12 @@ const FormEditData = () => {
                       }}
                       onMenuClose={() => {
                         set_ral_5_7([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.operational_id ?

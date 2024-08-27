@@ -8,6 +8,8 @@ import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface OptionType {
   value: number;
@@ -40,6 +42,7 @@ interface formValue {
 }
 
 const FormEditData = () => {
+  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const { Id } = useParams();
   const router = useRouter();
   const token = getToken();
@@ -322,7 +325,7 @@ const FormEditData = () => {
       jenis_aplikasi: data.jenis_aplikasi?.value,
       produsen_aplikasi: data.produsen_aplikasi,
       pj_aplikasi: data.pj_aplikasi,
-      kode_opd: user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
       informasi_terkait_input: data.informasi_terkait_input,
       informasi_terkait_output: data.informasi_terkait_output,
       interoprabilitas: data.interoprabilitas?.value,
@@ -358,7 +361,7 @@ const FormEditData = () => {
   };
 
   return (
-    <div className="border p-5">
+    <div className="border p-5 rounded-xl shadow-xl">
       <h1 className="uppercase font-bold">Form Edit Aplikasi :</h1>
       <form
         className="flex flex-col mx-5 py-5"
@@ -379,7 +382,7 @@ const FormEditData = () => {
               <>
                 <input
                   {...field}
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   id="nama_aplikasi"
                   type="text"
                   value={field.value || namaAplikasi}
@@ -414,7 +417,7 @@ const FormEditData = () => {
               <>
                 <input
                   {...field}
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   id="fungsi_aplikasi"
                   type="text"
                   value={field.value || selectedFungsiAplikasi}
@@ -449,7 +452,7 @@ const FormEditData = () => {
               <>
                 <input
                   {...field}
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   id="produsen_aplikasi"
                   type="text"
                   value={field.value || selectedProdusenAplikasi}
@@ -484,7 +487,7 @@ const FormEditData = () => {
               <>
                 <input
                   {...field}
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   id="pj_aplikasi"
                   type="text"
                   value={field.value || selectedPjAplikasi}
@@ -519,7 +522,7 @@ const FormEditData = () => {
               <>
                 <input
                   {...field}
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   id="informasi_terkait_input"
                   type="text"
                   value={field.value || selectedInformasiTerkaitInput}
@@ -554,7 +557,7 @@ const FormEditData = () => {
               <>
                 <input
                   {...field}
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   id="informasi_terkait_output"
                   type="text"
                   value={field.value || selectedInformasiTerkaitOutput}
@@ -601,6 +604,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "jenis_aplikasi" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.jenis_aplikasi ?
                       <h1 className="text-red-500">
@@ -636,6 +645,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "interoprabilitas" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.interoprabilitas ?
                       <h1 className="text-red-500">
@@ -658,7 +673,7 @@ const FormEditData = () => {
                   control={control}
                   render={({ field }) => (
                       <input
-                        className="border px-4 py-2 rounded"
+                        className="border px-4 py-2 rounded-lg"
                         {...field}
                         value={field.value || ""}
                         type="text"
@@ -692,6 +707,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "tahun" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.tahun ?
                       <h1 className="text-red-500">
@@ -729,6 +750,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "raa_level_1_id" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                       onMenuOpen={() => {
                         if (raa_1_4.length === 0) {
                           fetchRaa_1_4(1);
@@ -774,6 +801,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "raa_level_2_id" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                       onMenuOpen={() => {
                         if (raa_1_4.length === 0) {
                           fetchRaa_1_4(2);
@@ -819,6 +852,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "raa_level_3_id" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                       onMenuOpen={() => {
                         if (raa_1_4.length === 0) {
                           fetchRaa_1_4(3);
@@ -864,6 +903,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "strategic_id" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                       onMenuOpen={() => {
                         if (raa_5_7.length === 0) {
                           fetchRaa_5_7("Strategic");
@@ -909,6 +954,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "tactical_id" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                       onMenuOpen={() => {
                         if (raa_5_7.length === 0) {
                           fetchRaa_5_7("Tactical");
@@ -954,6 +1005,12 @@ const FormEditData = () => {
                         handleChange(option, { name: "operational_id" });
                       }}
                       isClearable={true}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                       onMenuOpen={() => {
                         if (raa_5_7.length === 0) {
                           fetchRaa_5_7("Operational");

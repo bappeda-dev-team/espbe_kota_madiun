@@ -7,6 +7,8 @@ import Select from "react-select";
 import { useRouter } from "next/navigation";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface OptionType {
   value: number;
@@ -35,14 +37,16 @@ interface FormValues {
 }
 
 const FormTambahData = () => {
+  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [ral_level_1_4_option, set_ral_level_1_4_option] = useState<OptionType[]>([]);
   const [ral_level_5_7_option, set_ral_level_5_7_option] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
-  const router = useRouter()
+  const router = useRouter();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const token = getToken();
   const [user, setUser] = useState<any>(null);
+  const token = getToken();
+
 
   useEffect(() => {
     const fetchUser = getUser();
@@ -75,7 +79,7 @@ const FormTambahData = () => {
       tujuan_layanan_id: null,
       fungsi_layanan: "",
       tahun: null,
-      kode_opd: user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
       kementrian_terkait: "",
       metode_layanan: null,
       ral_level_1_id: null,
@@ -147,9 +151,9 @@ const FormTambahData = () => {
       tujuan_layanan_id: data.tujuan_layanan_id?.value,
       fungsi_layanan: data.fungsi_layanan,
       tahun: data.tahun?.value,
-      kode_opd: user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
       kementrian_terkait: data.kementrian_terkait,
-      metode_layanan: data.metode_layanan,
+      metode_layanan: data.metode_layanan?.value,
       ral_level_1_id: data.ral_level_1_id?.value,
       ral_level_2_id: data.ral_level_2_id?.value,
       ral_level_3_id: data.ral_level_3_id?.value,
@@ -179,7 +183,7 @@ const FormTambahData = () => {
   };
 
   return (
-    <div className="border p-5">
+    <div className="border p-5 rounded-xl shadow-xl">
       <h1 className="uppercase font-bold">Form tambah data Layanan SPBE</h1>
       <form
         className="flex flex-col mx-5 py-5"
@@ -199,7 +203,7 @@ const FormTambahData = () => {
             render={({ field }) => (
               <>
                 <input
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   {...field}
                   type="text"
                   id="nama_layanan"
@@ -230,7 +234,7 @@ const FormTambahData = () => {
             render={({ field }) => (
               <>
                 <input
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   {...field}
                   type="text"
                   id="fungsi_layanan"
@@ -261,7 +265,7 @@ const FormTambahData = () => {
             render={({ field }) => (
               <>
                 <input
-                  className="border px-4 py-2 rounded"
+                  className="border px-4 py-2 rounded-lg"
                   {...field}
                   type="text"
                   id="kementrian_terkait"
@@ -300,6 +304,12 @@ const FormTambahData = () => {
                       options={MetodeLayanan}
                       isSearchable
                       isClearable
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.metode_layanan ?
                       <h1 className="text-red-500">
@@ -313,7 +323,7 @@ const FormTambahData = () => {
               />
             </div>
             <div className="flex flex-col py-3">
-              <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tujuan Layanan:</label>
+              <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tujuan_layanan_id">Tujuan Layanan:</label>
               <Controller
                 name="tujuan_layanan_id"
                 control={control}
@@ -333,6 +343,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_ral_level_5_7_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.tujuan_layanan_id ?
@@ -360,6 +376,12 @@ const FormTambahData = () => {
                       isSearchable
                       isClearable
                       placeholder="Pilih Tahun"
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.tahun ?
                       <h1 className="text-red-500">
@@ -399,6 +421,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.ral_level_1_id ?
@@ -440,6 +468,12 @@ const FormTambahData = () => {
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.ral_level_2_id ?
                       <h1 className="text-red-500">
@@ -479,6 +513,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.ral_level_3_id ?
@@ -520,6 +560,12 @@ const FormTambahData = () => {
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.ral_level_4_id ?
                       <h1 className="text-red-500">
@@ -559,6 +605,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_ral_level_5_7_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.strategic_id ?
@@ -600,6 +652,12 @@ const FormTambahData = () => {
                       onMenuClose={() => {
                         set_ral_level_5_7_option([]);
                       }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
+                      }}
                     />
                     {errors.tactical_id ?
                       <h1 className="text-red-500">
@@ -639,6 +697,12 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_ral_level_5_7_option([]);
+                      }}
+                      styles={{
+                        control: (baseStyles) => ({
+                          ...baseStyles,
+                          borderRadius: '8px',
+                        })
                       }}
                     />
                     {errors.operational_id ?

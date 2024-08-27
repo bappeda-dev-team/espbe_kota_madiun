@@ -35,7 +35,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
   const [formLayananActive, setFormLayananActive] = useState<boolean>(false);
   const [DataInformasiActive, setDataInformasiActive] = useState<boolean>(false);
   const [AplikasiActive, setAplikasiActive] = useState<boolean>(false);
-  const [ArsiterturActive, setArsitekturActive] = useState<boolean>(false);
   const [GapArsiterturActive, setGapArsitekturActive] = useState<boolean>(false);
   const [KebutuhanSPBEActive, setKebutuhanSPBEActive] = useState<boolean>(false);
   const [PemenuhanKebutuhanActive, setPemenuhanKebutuhanActive] = useState<boolean>(false);
@@ -81,7 +80,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
         setKebutuhanSPBEActive(false);
         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -103,7 +101,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
         setSdmInfrastrukturActive(false);
         setKebutuhanSPBEActive(false);
         setPemenuhanKebutuhanActive(false);
@@ -123,7 +120,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -143,7 +139,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -163,7 +158,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -183,7 +177,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -196,7 +189,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(true),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -204,7 +200,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -217,7 +212,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(false),
         setLayananActive(true),
         setStandartPelayananActive(false),
@@ -225,7 +223,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -234,7 +231,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(false),
         setLayananActive(true),
         setStandartPelayananActive(true),
@@ -242,7 +242,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -255,7 +254,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -263,7 +265,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(true),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -276,7 +277,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -284,7 +288,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(true),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -293,7 +296,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -301,25 +307,8 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(true);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
-        setSdmInfrastrukturActive(false);
-      setPetaRencanaActive(false);
-    } else if (url === "/Arsitektur") {
-      setDahsboardActive(false),
-        setUserActive(false),
-        setDataMasterActive(false),
-        setPohonKinerjaActive(false);
-        setProsesBisnisActive(false),
-        setLayananActive(false),
-        setStandartPelayananActive(false),
-        setFormLayananActive(false),
-        setDataInformasiActive(false),
-        setAplikasiActive(false),
-        setGapArsitekturActive(false);
-        setKebutuhanSPBEActive(false);
-        setArsitekturActive(true);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
@@ -330,7 +319,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -338,7 +330,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
         setKebutuhanSPBEActive(true);
         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -349,7 +340,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -357,7 +351,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
         setKebutuhanSPBEActive(false);
         setPemenuhanKebutuhanActive(true);
         setSdmInfrastrukturActive(false);
@@ -366,7 +359,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -374,7 +370,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(true);
@@ -383,7 +378,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -391,7 +389,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -400,7 +397,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
-        setPohonKinerjaActive(false);
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -408,7 +408,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setDataInformasiActive(false),
         setAplikasiActive(false),
         setGapArsitekturActive(false);
-        setArsitekturActive(false);
          setKebutuhanSPBEActive(false);
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
@@ -781,37 +780,6 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
               </li>
             </Link>
             <Link
-              className={ArsiterturActive ? "text-white" : ""}
-              href="/Arsitektur"
-            >
-              <li
-                className={
-                  ArsiterturActive
-                    ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] flex py-1 pl-2 rounded-lg transition-all duration-300"
-                    : "flex py-1 pl-2 rounded-lg transition-all duration-300 hover:bg-gray-200"
-                }
-              >
-                {ArsiterturActive ? (
-                  <Image
-                    className="pr-2"
-                    src="/iconLight/ListChecks.svg"
-                    alt="ListChecks"
-                    width={30}
-                    height={30}
-                  />
-                ) : (
-                  <Image
-                    className="pr-2"
-                    src="/iconDark/ListChecks.svg"
-                    alt="ListChecks"
-                    width={30}
-                    height={30}
-                  />
-                )}
-                {isCollapse ? "" : "Arsitektur"}
-              </li>
-            </Link>
-            <Link
               className={GapArsiterturActive ? "text-white" : ""}
               href="/GapArsitektur"
             >
@@ -904,7 +872,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
                 {isCollapse ? "" : "Pemenuhan Kebutuhan"}
               </li>
             </Link>
-            <Link
+            {/* <Link
               className={SdmInfrastrukturActive ? "text-white" : ""}
               href="/SdmInfrastruktur"
             >
@@ -934,7 +902,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
                 )}
                 {isCollapse ? "" : "SDM Infrastruktur"}
               </li>
-            </Link>
+            </Link> */}
             <Link
               className={petaRencanaActive ? "text-white" : ""}
               href="/PetaRencana"

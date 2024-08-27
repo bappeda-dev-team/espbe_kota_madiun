@@ -7,6 +7,8 @@ import {ButtonPr, ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { useRouter } from "next/navigation";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface OptionTypeString {
     label: string;
@@ -36,6 +38,7 @@ interface JenisKebutuhan {
 
 
 const FormTambahKebutuhan = () => {
+    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const router = useRouter();
     const token = getToken();
     const [user, setUser] = useState<any>(null);
@@ -50,7 +53,7 @@ const FormTambahKebutuhan = () => {
         formState: { errors },
     } = useForm<FormValues>({
         defaultValues: {
-            kode_opd: user?.kode_opd,
+            kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
             tahun: 2024,
             nama_domain: null,
             id_prosesbisnis: null,
@@ -127,7 +130,7 @@ const FormTambahKebutuhan = () => {
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         const formData = {
-            kode_opd: user?.kode_opd,
+            kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
             tahun: data.tahun,
             nama_domain: data.nama_domain?.value,
             id_prosesbisnis: data.id_prosesbisnis?.value,
@@ -164,7 +167,7 @@ const FormTambahKebutuhan = () => {
     return (
         <>
             {isClient && (
-                <div className="border p-5">
+                <div className="border p-5 rounded-xl shadow-xl">
                     <h1 className="uppercase font-bold">Form tambah Kebutuhan SPBE</h1>
                     <form className="flex flex-col mx-5 py-5" onSubmit={handleSubmit(onSubmit)}>
                         <div className="flex flex-col py-3">
@@ -186,12 +189,11 @@ const FormTambahKebutuhan = () => {
                                             isLoading={isLoading}
                                             onMenuOpen={() => fetchDomain()}
                                             styles={{
-                                                control: (baseStyles, state) => ({
-                                                  ...baseStyles,
-                                                  borderRadius: '8px', // This applies the rounded-full effect
-                                                  borderColor: state.isFocused ? 'your-focus-color' : 'your-normal-color',
+                                                control: (baseStyles) => ({
+                                                    ...baseStyles,
+                                                    borderRadius: '8px',
                                                 }),
-                                              }}
+                                            }}
                                         />
                                         {errors.nama_domain ? (
                                             <h1 className="text-red-500">
@@ -223,12 +225,11 @@ const FormTambahKebutuhan = () => {
                                             isLoading={isLoading}
                                             onMenuOpen={() => fetchProsesBisnis()}
                                             styles={{
-                                                control: (baseStyles, state) => ({
-                                                  ...baseStyles,
-                                                  borderRadius: '8px', // This applies the rounded-full effect
-                                                  borderColor: state.isFocused ? 'your-focus-color' : 'your-normal-color',
+                                                control: (baseStyles) => ({
+                                                    ...baseStyles,
+                                                    borderRadius: '8px',
                                                 }),
-                                              }}
+                                            }}
                                         />
                                         {errors.id_prosesbisnis ? (
                                             <h1 className="text-red-500">
@@ -243,15 +244,15 @@ const FormTambahKebutuhan = () => {
                         </div>
                         {/* Jenis Kebutuhan */}
                         {fields.map((item, index) => (
-                            <div className="bg-emerald-50 mb-3 mt-1 px-3 rounded-lg" key={item.id}>
+                            <div className="bg-emerald-50 mb-3 mt-1 px-3 rounded-xl" key={item.id}>
                                 <div className="flex flex-col py-3">
                                     <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor={`jenis_kebutuhan.${index}.kebutuhan`}>
-                                        Jenis Kebutuhan {index + 1}:
+                                        Kebutuhan {index + 1}:
                                     </label>
                                     <Controller
                                         name={`jenis_kebutuhan.${index}.kebutuhan`}
                                         control={control}
-                                        rules={{ required: "Jenis Kebutuhan Harus Terisi" }}
+                                        rules={{ required: "Kebutuhan Harus Terisi" }}
                                         render={({ field }) => (
                                             <>
                                                 <input
@@ -266,7 +267,7 @@ const FormTambahKebutuhan = () => {
                                                         {errors.jenis_kebutuhan?.[index]?.kebutuhan?.message}
                                                     </h1>
                                                 ) : (
-                                                    <h1 className="text-slate-300 text-xs">*Jenis Kebutuhan Harus Terisi</h1>
+                                                    <h1 className="text-slate-300 text-xs">*Kebutuhan Harus Terisi</h1>
                                                 )}
                                             </>
                                         )}
@@ -289,7 +290,7 @@ const FormTambahKebutuhan = () => {
                                                         {...field}
                                                         type="text"
                                                         id={`jenis_kebutuhan.${index}.kondisi_awal.${subIndex}.keterangan`}
-                                                        placeholder={`Masukkan kondisi awal ${subIndex + 1}`}
+                                                        placeholder={`Tuliskan "-" atau "kosong" jika kondisi awal ${subIndex + 1} kosong`}
                                                     />
                                                     {errors.jenis_kebutuhan?.[index]?.kondisi_awal?.[subIndex]?.keterangan ? (
                                                         <h1 className="text-red-500">
@@ -313,7 +314,7 @@ const FormTambahKebutuhan = () => {
                             className="mb-3"
                             typee="button"
                             onClick={() => append({ kebutuhan: "", kondisi_awal: [{ keterangan: "", tahun: 2023 }, { keterangan: "", tahun: 2024 }] })}
-                        >
+                            >
                             Tambah Jenis Kebutuhan
                         </ButtonPr>
                         <ButtonSc typee="submit">Simpan Data Kebutuhan SPBE</ButtonSc>

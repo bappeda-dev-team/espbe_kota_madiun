@@ -2,9 +2,7 @@
 
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { ButtonSc } from "@/components/common/Button/Button";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { getUser } from "@/app/Login/Auth/Auth";
 import { getToken } from "@/app/Login/Auth/Auth";
 
@@ -62,20 +60,6 @@ const HeaderLayanan = () => {
             <h1 className="uppercase font-bold">{opd.length > 0 ? opd[0].nama_opd : ''} {tahun === 0 ? "Semua Tahun" : tahun}</h1>
           }
         </div>
-        {user?.roles != "asn" && 
-        <ButtonSc typee="button">
-          <div className="flex">
-            <Image 
-              className="mr-1"
-              src="/iconLight/cetak.svg" 
-              alt="add" 
-              width={20} 
-              height={20} 
-              />
-            Cetak
-          </div>
-        </ButtonSc>
-        }
       </div>
     </>
   );
