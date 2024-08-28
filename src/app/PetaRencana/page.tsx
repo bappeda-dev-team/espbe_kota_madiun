@@ -1,4 +1,16 @@
-// "use client"
+"use client"
+
+import Perbaikan from "@/components/maintenance/perbaikan";
+
+const PetaRencana = () => {
+  return(
+    <>
+      <Perbaikan />
+    </>
+  )
+}
+
+export default PetaRencana;
 
 // import { useState } from 'react';
 // import Select from 'react-select';
