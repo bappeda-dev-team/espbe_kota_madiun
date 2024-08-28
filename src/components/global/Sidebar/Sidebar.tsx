@@ -207,7 +207,8 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
     } else if (
       url === "/Layanan/LayananSPBE" ||
       url === "/Layanan/LayananSPBE/TambahData" ||
-      url === `/Layanan/LayananSPBE/EditData/${Id}`
+      url === `/Layanan/LayananSPBE/EditData/${Id}` ||
+      url === `/Layanan/LayananSPBE/FixGapLayananSPBE/${id}`
     ) {
       setDahsboardActive(false),
         setUserActive(false),
@@ -249,7 +250,8 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
     } else if (
       url === "/DataInformasi" ||
       url === "/DataInformasi/TambahData" ||
-      url === `/DataInformasi/EditData/${Id}`
+      url === `/DataInformasi/EditData/${Id}` ||
+      url === `/DataInformasi/FixGapDataInformasi/${id}`
     ) {
       setDahsboardActive(false),
         setUserActive(false),
@@ -272,7 +274,8 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
     } else if (
       url === "/Aplikasi" || 
       url === "/Aplikasi/TambahData" ||
-      url === `/Aplikasi/EditData/${Id}`
+      url === `/Aplikasi/EditData/${Id}` ||
+      url === `/Aplikasi/FixGapAplikasi/${id}`
     ) {
       setDahsboardActive(false),
         setUserActive(false),
@@ -292,7 +295,11 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
          setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
-    } else if (url === "/GapArsitektur") {
+    } else if (
+      url === "/GapArsitektur" ||
+      url === `/GapArsitektur/TambahKeterangan/${id}` ||
+      url === `/GapArsitektur/EditKeterangan/${id}` 
+    ) {
       setDahsboardActive(false),
         setUserActive(false),
         setDataMasterActive(false),
@@ -335,7 +342,8 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
     } else if (
-      url === "/PemenuhanKebutuhan"
+      url === "/PemenuhanKebutuhan" ||
+      url === `/PemenuhanKebutuhan/EditPemenuhan/${id}`
     ) {
       setDahsboardActive(false),
         setUserActive(false),

@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import Loading from '@/components/global/Loading/Loading';
 import { useRouter } from 'next/navigation';
-import { ButtonSc, ButtonPr } from '@/components/common/Button/Button';
 import { AlertNotification } from '@/components/common/Alert/Alert';
 
 interface ProsesBisnis {
@@ -187,6 +186,41 @@ const Table = (data: any) => {
     }
   }
 
+  //handle gap klik
+  const fixGapLayanan = (id: Number) => {
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+        router.push(`/Layanan/LayananSPBE/FixGapLayananSPBE/${id}`);
+      } else {
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+      }
+    } else {
+      router.push(`/Layanan/LayananSPBE/FixGapLayananSPBE/${id}`);
+    }
+  }
+  const fixGapDataInformasi = (id: Number) => {
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+        router.push(`/DataInformasi/FixGapDataInformasi/${id}`);
+      } else {
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+      }
+    } else {
+      router.push(`/DataInformasi/FixGapDataInformasi/${id}`);
+    }
+  }
+  const fixGapAplikasi = (id: Number) => {
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+        router.push(`/Aplikasi/FixGapAplikasi/${id}`);
+      } else {
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+      }
+    } else {
+      router.push(`/Aplikasi/FixGapAplikasi/${id}`);
+    }
+  }
+
   if(loading){
     return <Loading />
   } else if(error){
@@ -218,7 +252,7 @@ const Table = (data: any) => {
                   gap.map((data, index) => (
                   <tr key={data.id} className="border rounded-b-lg hover:bg-slate-50">
                       <td className="border px-6 py-4 sticky bg-white left-[-2px]">{index + 1}</td>
-                      
+                      {/* proses bisnis */}
                       {data.nama_proses_bisnis ? (
                         <td className="border px-6 py-4">
                           {data.nama_proses_bisnis}
@@ -249,7 +283,7 @@ const Table = (data: any) => {
                           )}
                         </td>
                       ) : (
-                        <td className="border px-6 py-4 bg-red-500">
+                        <td className="border px-6 py-4 bg-red-500 cursor-pointer" onClick={() => fixGapLayanan(data.id)}>
                           <h1 className="text-white font-bold text-center">GAP</h1>
                         </td>
                       )}
@@ -274,7 +308,7 @@ const Table = (data: any) => {
                           )}
                         </td>
                       ) : (
-                        <td className="border px-6 py-4 bg-red-500">
+                        <td className="border px-6 py-4 bg-red-500 cursor-pointer" onClick={() => fixGapDataInformasi(data.id)}>
                           <h1 className="text-white font-bold text-center">GAP</h1>
                         </td>
                       )}
@@ -299,7 +333,7 @@ const Table = (data: any) => {
                           )}
                         </td>
                       ) : (
-                        <td className="border px-6 py-4 bg-red-500">
+                        <td className="border px-6 py-4 bg-red-500 cursor-pointer" onClick={() => {fixGapAplikasi(data.id)}}>
                           <h1 className="text-white font-bold text-center">GAP</h1>
                         </td>
                       )}

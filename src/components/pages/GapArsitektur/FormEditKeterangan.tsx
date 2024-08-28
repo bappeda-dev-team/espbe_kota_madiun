@@ -13,7 +13,7 @@ interface KeteranganForm {
 }
 
 const FormEditKeterangan = () => {
-  const { id_keterangan } = useParams();
+  const { id } = useParams();
   const token = getToken();
   const router =  useRouter();
   const { control, handleSubmit, reset} = useForm<KeteranganForm>();
@@ -24,7 +24,7 @@ const FormEditKeterangan = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const fetchingData = async () => {
         try {
-            const response = await fetch(`${API_URL}/v1/kebutuhanspbebyid/${id_keterangan}`, {
+            const response = await fetch(`${API_URL}/v1/kebutuhanspbebyid/${id}`, {
                 headers: {
                     'Authorization': `${token}`,
                     'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ const FormEditKeterangan = () => {
     }
 };
 fetchingData();
-}, [id_keterangan, token]);
+}, [id, token]);
 
 const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
     const formData ={
@@ -53,7 +53,7 @@ const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
     // console.log(formData);
     try{
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      const response = await fetch(`${API_URL}/v1/updateketeranganGapKebutuhan/${id_keterangan}`, {
+      const response = await fetch(`${API_URL}/v1/updateketeranganGapKebutuhan/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -110,7 +110,7 @@ const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
         </div>
         <div className="flex justify-evenly">
             <ButtonSc className="w-full mx-2" typee="submit">Simpan</ButtonSc>
-            <ButtonTr className="w-full mx-2" onClick={() => {router.push("GapArsitektur")}} typee="button">Batal</ButtonTr>
+            <ButtonTr className="w-full mx-2" onClick={() => {router.push("/GapArsitektur")}} typee="button">Batal</ButtonTr>
         </div>
       </form>
     </div>

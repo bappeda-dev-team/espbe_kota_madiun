@@ -54,10 +54,14 @@ export const config = {
         "/KebutuhanSPBE/TambahKebutuhan",
         "/KebutuhanSPBE/EditKebutuhan/:path*",
         
+        "/GapArsitektur",
+        "/GapArsitektur/TambahKeterangan/:path",
+        "/GapArsitektur/EditKeterangan/:path",
+
         "/PemenuhanKebutuhan",
+        "/PemenuhanKebutuhan/EditPemenuhan/:path",
         
         "/Arsitektur",
-        "/GapArsitektur",
         "/SdmInfrastruktur",
         "/PetaRencana",
     ]

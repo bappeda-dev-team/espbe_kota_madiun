@@ -1,21 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Select from "react-select";
-import { useForm, Controller } from "react-hook-form";
 import Loading from "@/components/global/Loading/Loading";
-import {ButtonPr, ButtonSc, ButtonTr } from "@/components/common/Button/Button";
-import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
+import {ButtonSc} from "@/components/common/Button/Button";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
 import { useRouter } from "next/navigation";
-
-interface OptionTypeString {
-  value: string;
-  label: string;
-}
 
 interface PemenuhanKebutuhan {
     id: number;
@@ -40,11 +32,6 @@ interface KondisiAwal {
     keterangan: string;
     tahun: number;
 }
-interface opd {
-  kode_opd : string;
-  nama_opd : string;
-  urusan_opd : any;
-}
 
 const Table = () => {
     const tahun = useSelector((state: RootState) => state.Tahun.tahun);
@@ -54,49 +41,12 @@ const Table = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [user, setUser] = useState<any>(null);
-    const [optionOpd, setOptionOpd] = useState<OptionTypeString[]>([])
     const token = getToken();
     const router = useRouter();
-    
-    const {
-      control,
-      handleSubmit,
-      reset,
-      watch,
-      formState: { errors },
-    } = useForm<any>();
-
-    const indikator: OptionTypeString[] = [
-      {value: '', label: 'Pilih' },
-      {value: 'internal', label: 'Internal' },
-      {value: 'eksternal', label: 'Eksternal' },
-    ];
 
     useEffect(() => {
       const fetchUser = getUser();
       setUser(fetchUser);
-    },[])
-
-    useEffect(() => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      const fetchOptionOpd = async() => {
-        try{
-          const response = await fetch(`${API_URL}/v1/opdall`, {
-            headers: {
-              'Authorization': `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if(!response.ok){
-            throw new Error('cant fetch data opd');
-          }
-          const data = await response.json();
-          setOptionOpd(data);
-        } catch (err){
-          console.log(err);
-        }
-        fetchOptionOpd();
-      }
     },[])
 
     useEffect(() => {
@@ -322,7 +272,7 @@ const Table = () => {
                                     {data.penanggung_jawab ? data.penanggung_jawab : "N/A"}
                                   </td>
                                   <td className="px-6 py-4 flex flex-col gap-2">
-                                    <ButtonSc className="my-1">
+                                    <ButtonSc halaman_url={`/PemenuhanKebutuhan/EditPemenuhan/${data.id}`} className="my-1">
                                       <div className="flex items-center justify-center w-full">
                                           <Image
                                               className="mr-1"
@@ -331,7 +281,7 @@ const Table = () => {
                                               width={15}
                                               height={15}
                                           />
-                                          Simpan
+                                          Edit
                                       </div>
                                     </ButtonSc>
                                   </td>

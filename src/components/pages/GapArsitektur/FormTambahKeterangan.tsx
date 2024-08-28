@@ -107,7 +107,7 @@ const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
         </div>
         <div className="flex justify-evenly">
             <ButtonSc className="w-full mx-2" typee="submit">Simpan</ButtonSc>
-            <ButtonTr className="w-full mx-2" onClick={() => {router.push("GapArsitektur")}} typee="button">Batal</ButtonTr>
+            <ButtonTr className="w-full mx-2" onClick={() => {router.push("/GapArsitektur")}} typee="button">Batal</ButtonTr>
         </div>
       </form>
     </div>

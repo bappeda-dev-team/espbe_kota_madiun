@@ -137,7 +137,7 @@ const FormEditKebutuhan = () => {
         };
 
         fetchDataById();
-    }, [reset, replace, id, token, user]);
+    }, [reset, replace, id, token, user, SelectedOpd]);
 
     const fetchDomain = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;

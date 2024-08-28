@@ -95,18 +95,24 @@ function Header() {
       url === "/Layanan/LayananSPBE" ||
       url === "/Layanan/LayananSPBE/TambahData" ||
       url === `/Layanan/LayananSPBE/EditData/${Id}` ||
+      url === `/Layanan/LayananSPBE/FixGapLayananSPBE/${id}` ||
       url === "/DataInformasi" ||
       url === "/DataInformasi/TambahData" ||
       url === `/DataInformasi/EditData/${Id}` ||
+      url === `/DataInformasi/FixGapDataInformasi/${id}` ||
       url === "/Aplikasi" ||
       url === "/Aplikasi/TambahData" ||
       url === `/Aplikasi/EditData/${Id}` ||
+      url === `/Aplikasi/FixGapAplikasi/${id}` ||
       url === "/GapArsitektur" ||
+      url === `/GapArsitektur/TambahKeterangan/${id}` ||
+      url === `/GapArsitektur/EditKeterangan/${id}` ||
       url === "/Arsitektur" ||
       url === "/KebutuhanSPBE" ||
       url === "/KebutuhanSPBE/TambahKebutuhan" ||
       url === `/KebutuhanSPBE/EditKebutuhan/${id}` ||
       url === "/PemenuhanKebutuhan" ||
+      url === `/PemenuhanKebutuhan/EditPemenuhan/${id}` ||
       url === "/SdmInfrastruktur" ||
       url === "/PetaRencana"
     ) {
