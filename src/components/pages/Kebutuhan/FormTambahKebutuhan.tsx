@@ -317,8 +317,10 @@ const FormTambahKebutuhan = () => {
                             >
                             Tambah Jenis Kebutuhan
                         </ButtonPr>
-                        <ButtonSc typee="submit">Simpan Data Kebutuhan SPBE</ButtonSc>
-                        <ButtonTr className="mt-3" halaman_url="/KebutuhanSPBE">Kembali</ButtonTr>
+                        <div className="flex justify-between w-full">
+                            <ButtonSc className="mx-2 w-full" typee="submit">Simpan Data Kebutuhan SPBE</ButtonSc>
+                            <ButtonTr className="mx-2 w-full" halaman_url="/KebutuhanSPBE">Kembali</ButtonTr>
+                        </div>
                     </form>
                 </div>
             )}

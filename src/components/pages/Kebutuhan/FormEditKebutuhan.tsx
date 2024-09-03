@@ -363,16 +363,18 @@ const FormEditKebutuhan = () => {
                     </div>
                 ))}
                 <ButtonPr
-                    className="mb-3"
+                    className="mb-3 mx-2"
                     typee="button"
                     onClick={() => append({ kebutuhan: "", kondisi_awal: [{ keterangan: "", tahun: 2022 }, { keterangan: "", tahun: 2023 }, { keterangan: "", tahun: 2024 }] })}
                 >
                     Tambah Jenis Kebutuhan
                 </ButtonPr>
-                <ButtonSc typee="submit">Simpan Data Kebutuhan SPBE</ButtonSc>
-                <ButtonTr typee="button" className="mt-5" halaman_url="/KebutuhanSPBE">
-                    Kembali
-                </ButtonTr>
+                <div className="flex justify-between w-full">
+                    <ButtonSc className="w-full mx-2" typee="submit">Simpan Data Kebutuhan SPBE</ButtonSc>
+                    <ButtonTr className="w-full mx-2" typee="button" halaman_url="/KebutuhanSPBE">
+                        Kembali
+                    </ButtonTr>
+                </div>
             </form>
         </div>
     );

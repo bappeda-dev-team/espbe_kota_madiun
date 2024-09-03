@@ -283,8 +283,9 @@ const Table = (data: any) => {
                           )}
                         </td>
                       ) : (
-                        <td className="border px-6 py-4 bg-red-500 cursor-pointer" onClick={() => fixGapLayanan(data.id)}>
+                        <td className="border px-6 py-4 bg-red-500 cursor-pointer group" onClick={() => fixGapLayanan(data.id)}>
                           <h1 className="text-white font-bold text-center">GAP</h1>
+                          <button className="hidden group-hover:block mt-1 text-white border px-2 py-1 rounded-lg hover:bg-white hover:text-red-500">Lengkapi GAP</button>
                         </td>
                       )}
                       {/* Data dan Informasi */}
@@ -308,8 +309,9 @@ const Table = (data: any) => {
                           )}
                         </td>
                       ) : (
-                        <td className="border px-6 py-4 bg-red-500 cursor-pointer" onClick={() => fixGapDataInformasi(data.id)}>
+                        <td className="border px-6 py-4 bg-red-500 cursor-pointer group" onClick={() => fixGapDataInformasi(data.id)}>
                           <h1 className="text-white font-bold text-center">GAP</h1>
+                          <button className="hidden group-hover:block mt-1 text-white border px-2 py-1 rounded-lg hover:bg-white hover:text-red-500">Lengkapi GAP</button>
                         </td>
                       )}
                       {/* Aplikasi */}
@@ -333,8 +335,11 @@ const Table = (data: any) => {
                           )}
                         </td>
                       ) : (
-                        <td className="border px-6 py-4 bg-red-500 cursor-pointer" onClick={() => {fixGapAplikasi(data.id)}}>
-                          <h1 className="text-white font-bold text-center">GAP</h1>
+                        <td className="border px-6 py-4 bg-red-500 cursor-pointer group" onClick={() => {fixGapAplikasi(data.id)}}>
+                          <div className="flex flex-col">
+                            <h1 className="text-white font-bold text-center">GAP</h1>
+                            <button className="hidden group-hover:block mt-1 text-white border px-2 py-1 rounded-lg hover:bg-white hover:text-red-500">Lengkapi GAP</button>
+                          </div>
                         </td>
                       )}
                       {/* keterangan */}
@@ -346,6 +351,33 @@ const Table = (data: any) => {
                                 <div key={info.id_keterangan}>
                                   <div className="flex justify-between items-center">
                                     <span>{info.keterangan}</span>
+                                    {user?.roles != 'asn' && 
+                                      <div className="flex flex-col">
+                                        <button 
+                                          className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
+                                          onClick={() => {tambahketerangan(data.id)}}
+                                        >
+                                          Tambah
+                                        </button>
+                                        <button 
+                                          className="bg-white text-emerald-500 border border-emerald-500 rounded-lg hover:text-white hover:bg-emerald-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
+                                          onClick={() => router.push(`GapArsitektur/EditKeterangan/${info.id_keterangan}`)}
+                                        >
+                                          Edit
+                                        </button>
+                                      </div>
+                                    }
+                                  </div>
+                                  {idx < data.keterangan.length - 1 && <hr className="border-t my-2" />}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <ul>
+                              {data.keterangan.map((info, idx) => (
+                                <div key={info.id_keterangan} className="flex justify-between items-center">
+                                  <li>{info.keterangan}.</li>
+                                  {user?.roles != 'asn' &&
                                     <div className="flex flex-col">
                                       <button 
                                         className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
@@ -360,30 +392,7 @@ const Table = (data: any) => {
                                         Edit
                                       </button>
                                     </div>
-                                  </div>
-                                  {idx < data.keterangan.length - 1 && <hr className="border-t my-2" />}
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <ul>
-                              {data.keterangan.map((info, idx) => (
-                                <div key={info.id_keterangan} className="flex justify-between items-center">
-                                  <li>{info.keterangan}.</li>
-                                  <div className="flex flex-col">
-                                    <button 
-                                      className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
-                                      onClick={() => {tambahketerangan(data.id)}}
-                                    >
-                                      Tambah
-                                    </button>
-                                    <button 
-                                      className="bg-white text-emerald-500 border border-emerald-500 rounded-lg hover:text-white hover:bg-emerald-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
-                                      onClick={() => router.push(`GapArsitektur/EditKeterangan/${info.id_keterangan}`)}
-                                    >
-                                      Edit
-                                    </button>
-                                  </div>
+                                  }
                                 </div>
                               ))}
                             </ul>
@@ -391,7 +400,11 @@ const Table = (data: any) => {
                         </td>
                       ) : (
                         <td className="border px-6 py-4 text-center">
-                          <button className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal" onClick={() => {tambahketerangan(data.id)}}>Tambah Keterangan</button>
+                          {user?.roles != 'asn' ?
+                            <button className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal" onClick={() => {tambahketerangan(data.id)}}>Tambah Keterangan</button>
+                          :
+                            "N/A"
+                          }
                         </td>
                       )}
                   </tr>

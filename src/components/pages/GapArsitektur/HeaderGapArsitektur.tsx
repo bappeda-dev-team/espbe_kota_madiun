@@ -53,12 +53,13 @@ const HeaderGapArsitektur = () => {
     <>
       <div className="flex justify-between items-center">
         <div className="flex">
-          <h1 className="uppercase font-bold mr-1">GAP Arsitektur </h1>
-          {user?.roles == 'admin_kota' ? 
-            <h1 className="uppercase font-bold">{SelectedOpd === '' ? "Semua OPD" : SelectedOpd} {tahun === 0 ? "Semua Tahun" : tahun}</h1>
-          :
-            <h1 className="uppercase font-bold">{opd.length > 0 ? opd[0].nama_opd : ''} {tahun === 0 ? "Semua Tahun" : tahun}</h1>
-          }
+          <h1 className="uppercase font-bold">
+            GAP Arsitektur{" "}
+            {user?.roles == 'admin_kota' 
+              ? `${SelectedOpd === '' ? "Semua OPD" : SelectedOpd} ${tahun === 0 ? "Semua Tahun" : tahun}`
+              : `${opd.length > 0 ? opd[0].nama_opd : ''} ${tahun === 0 ? "Semua Tahun" : tahun}`
+            }
+          </h1>
         </div>
         <ButtonSc typee="button">
           <div className="flex">
