@@ -42,7 +42,7 @@ export const ButtonSc: React.FC<button> = ({children, halaman_url, typee, classN
         <button
             type={typee}
             onClick={onClick || pindahHalaman}
-            className={`bg-gradient-to-r from-[#007F73] to-[#40DA97] hover:from-[#014741] hover:to-[#35B47D] p-3 text-white rounded-lg ${className}`}
+            className={`bg-gradient-to-r from-[#007F73] to-[#40DA97] hover:from-[#014741] hover:to-[#35B47D] px-3 py-2 text-white rounded-lg ${className}`}
         >
             {children}
         </button>
@@ -61,7 +61,7 @@ export const ButtonTr: React.FC<button> = ({children, halaman_url, typee, classN
         <button
             type={typee}
             onClick={onClick || pindahHalaman}
-            className={`bg-gradient-to-r from-[#BE1010] to-[#EA5353] hover:from-[#670505] hover:to-[#FF0000] p-3 text-white rounded-lg ${className}`}
+            className={`bg-gradient-to-r from-[#BE1010] to-[#EA5353] hover:from-[#670505] hover:to-[#FF0000] px-3 py-2 text-white rounded-lg ${className}`}
         >
             {children}
         </button>
@@ -80,7 +80,7 @@ export const Button: React.FC<button> = ({children, halaman_url, typee, classNam
         <button
             type={typee}
             onClick={onClick || pindahHalaman}
-            className={`bg-emerald-300 hover:bg-emerald-500 p-3 text-white rounded-lg ${className}`}
+            className={`bg-emerald-300 hover:bg-emerald-500 px-3 py-2 text-white rounded-lg ${className}`}
         >
             {children}
         </button>

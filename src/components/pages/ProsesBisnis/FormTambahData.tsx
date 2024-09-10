@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 interface OptionType {
   value: number;
   label: string;
+  kode?: string;
 }
 
 interface FormValues {
@@ -30,10 +31,17 @@ interface FormValues {
 
 const FormTambahData = () => {
   const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
+
   const [rab_level_1_3_option, set_rab_level_1_3_option] = useState<OptionType[]>([]);
   const [rab_level_4_6_option, set_rab_level_4_6_option] = useState<OptionType[]>([]);
+
+  const [selectedRab1, setSelectedRab1] = useState<OptionType | null>(null);
+  const [selectedRab2, setSelectedRab2] = useState<OptionType | null>(null);
+  const [selectedRab3, setSelectedRab3] = useState<OptionType | null>(null);
+
   const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>([],);
   const [bidang_urusan_option, set_bidang_urusan_option] = useState<OptionType[]>([]);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter()
@@ -80,10 +88,11 @@ const FormTambahData = () => {
     setIsClient(true);
   }, []);
 
-  const fetchRabLevel1_3 = async (level: number) => {
+  const fetchRabLevel1_3 = async (level: number, value?: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+      const url = value ? `${API_URL}/v1/referensiarsitektur/${value}` : `${API_URL}/v1/referensiarsitektur`
+      const response = await fetch(url, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -94,6 +103,7 @@ const FormTambahData = () => {
       );
       const result = filteredData.map((referensi: any) => ({
         value: referensi.Id,
+        kode: referensi.kode_referensi,
         label: `${referensi.kode_referensi} ${referensi.nama_referensi}`,
       }));
       set_rab_level_1_3_option(result);
@@ -184,23 +194,50 @@ const FormTambahData = () => {
       rab_level_5_id: data.rab_level_5_id?.value,
       rab_level_6_id: data.rab_level_6_id?.value,
     };
-    try{
-      const response = await fetch(`${API_URL}/v1/createprosesbisnis`, {
-        method: "POST",
-        headers: {
-          "Content-Type" : "application/json",
-          'Authorization': `${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-      if(response.ok){
-        AlertNotification("Berhasil", "Berhasil menambahkan data proses bisnis", "success", 1000);
-        router.push("/ProsesBisnis")
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+        AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
-        AlertNotification("Gagal", "cek koneksi interet atau database server", "error", 2000);
+        // console.log(formData);
+          try{
+            const response = await fetch(`${API_URL}/v1/createprosesbisnis`, {
+              method: "POST",
+              headers: {
+                "Content-Type" : "application/json",
+                'Authorization': `${token}`,
+              },
+              body: JSON.stringify(formData),
+            });
+            if(response.ok){
+              AlertNotification("Berhasil", "Berhasil menambahkan data proses bisnis", "success", 1000);
+              router.push("/ProsesBisnis")
+            } else {
+              AlertNotification("Gagal", "cek koneksi interet atau database server", "error", 2000);
+            }
+          } catch(err){
+              AlertNotification("Gagal", "cek koneksi interet atau database server", "error", 2000);
+          }
       }
-    } catch(err){
-        AlertNotification("Gagal", "cek koneksi interet atau database server", "error", 2000);
+    } else {
+      // console.log(formData);
+        try{
+          const response = await fetch(`${API_URL}/v1/createprosesbisnis`, {
+            method: "POST",
+            headers: {
+              "Content-Type" : "application/json",
+              'Authorization': `${token}`,
+            },
+            body: JSON.stringify(formData),
+          });
+          if(response.ok){
+            AlertNotification("Berhasil", "Berhasil menambahkan data proses bisnis", "success", 1000);
+            router.push("/ProsesBisnis")
+          } else {
+            AlertNotification("Gagal", "cek koneksi interet atau database server", "error", 2000);
+          }
+        } catch(err){
+            AlertNotification("Gagal", "cek koneksi interet atau database server", "error", 2000);
+        }
     }
   };
 
@@ -348,19 +385,24 @@ const FormTambahData = () => {
                   <>
                     <Select
                       {...field}
+                      value={selectedRab1}
                       placeholder="Masukkan RAB Level 1"
                       options={rab_level_1_3_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
+                      onChange={(option) => {
+                        setSelectedRab1(option);
+                        field.onChange(option);
+                        setSelectedRab2(null);
+                        setSelectedRab3(null);
+                      }}
                       onMenuOpen={() => {
                         if (rab_level_1_3_option.length === 0) {
                           fetchRabLevel1_3(1);
                         }
                       }}
-                      onMenuClose={() => {
-                        set_rab_level_1_3_option([]);
-                      }}
+                      onMenuClose={() => set_rab_level_1_3_option([])}
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -397,15 +439,19 @@ const FormTambahData = () => {
                       placeholder="Masukkan RAB Level 2"
                       options={rab_level_1_3_option}
                       isLoading={isLoading}
+                      value={selectedRab2}
                       isSearchable
                       isClearable
                       onMenuOpen={() => {
-                        if (rab_level_1_3_option.length === 0) {
-                          fetchRabLevel1_3(2);
+                        if (selectedRab1?.kode) {
+                          fetchRabLevel1_3(2, selectedRab1.kode);
                         }
                       }}
-                      onMenuClose={() => {
-                        set_rab_level_1_3_option([]);
+                      onMenuClose={() => { set_rab_level_1_3_option([]);}}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRab2(option);
+                        setSelectedRab3(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -413,6 +459,7 @@ const FormTambahData = () => {
                           borderRadius: '8px',
                         }),
                       }}
+                      isDisabled={!selectedRab1}
                     />
                     {errors.rab_level_2_id ?
                       <h1 className="text-red-500">
@@ -443,15 +490,18 @@ const FormTambahData = () => {
                       placeholder="Masukkan RAB Level 3"
                       options={rab_level_1_3_option}
                       isLoading={isLoading}
+                      value={selectedRab3}
                       isSearchable
                       isClearable
                       onMenuOpen={() => {
-                        if (rab_level_1_3_option.length === 0) {
-                          fetchRabLevel1_3(3);
+                        if (selectedRab2?.kode) {
+                          fetchRabLevel1_3(3, selectedRab2.kode);
                         }
                       }}
-                      onMenuClose={() => {
-                        set_rab_level_1_3_option([]);
+                      onMenuClose={() => set_rab_level_1_3_option([])}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRab3(option);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -459,6 +509,7 @@ const FormTambahData = () => {
                           borderRadius: '8px',
                         }),
                       }}
+                      isDisabled={!selectedRab2}
                     />
                     {errors.rab_level_3_id ?
                       <h1 className="text-red-500">

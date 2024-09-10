@@ -424,7 +424,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
   }, [url, id, Id]);
 
   return (
-    <div className={`fixed custom-scrollbar items-center border-r overflow-y-auto flex-col h-screen transition-all duration-300 ${isCollapse ? 'min-w-20' : 'min-w-[270px]'}`}>
+    <div className={`fixed custom-scrollbar bg-white items-center border-r overflow-y-auto flex-col h-screen transition-all duration-300 ${isCollapse ? 'min-w-20' : 'min-w-[270px]'}`}>
       <div className={`flex items-center mt-2 transition-all duration-300 ease-in-out text-center ${isCollapse ? 'justify-center mr-1' : 'absolute ml-[200px]'}`}>
           <ButtonSc 
             onClick={() => toggleCollapse()} 

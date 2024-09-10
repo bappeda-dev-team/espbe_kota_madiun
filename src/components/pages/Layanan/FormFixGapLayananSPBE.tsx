@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 interface OptionType {
   value: number;
   label: string;
+  kode?:string;
 }
 interface OptionTypeString {
   value: string;
@@ -59,6 +60,10 @@ const FormFixGapLayananSPBE = () => {
   //state untuk fetch default value data by id
   const [kode_opd, set_kode_opd] = useState<string>("");
 
+  const [selectedRal1, setSelectedRal1] = useState<OptionType | null>(null);
+  const [selectedRal2, setSelectedRal2] = useState<OptionType | null>(null);
+  const [selectedRal3, setSelectedRal3] = useState<OptionType | null>(null);
+  const [selectedRal4, setSelectedRal4] = useState<OptionType | null>(null);
   const [selectedStrategic, setSelectedStrategic] = useState<OptionType | null>(null);
   const [selectedTactical, setSelectedTactical] = useState<OptionType | null>(null);
   const [selectedOperational, setSelectedOperational] = useState<OptionType | null>(null);
@@ -128,11 +133,12 @@ const FormFixGapLayananSPBE = () => {
   }, [reset, id, token]);
 
   //fetching data RAL 1 - 4
-  const fetchRalLevel1_4 = async (level: number) => {
+  const fetchRalLevel1_4 = async (level: number, value?: string) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+      const url = value ? `${API_URL}/v1/referensiarsitektur/${value}` : `${API_URL}/v1/referensiarsitektur`
+      const response = await fetch(url, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -144,6 +150,7 @@ const FormFixGapLayananSPBE = () => {
       const result = filteredData.map((referensi: any) => ({
         value: referensi.Id,
         label: `${referensi.kode_referensi} ${referensi.nama_referensi}`,
+        kode: referensi.kode_referensi,
       }));
       set_ral_level_1_4_option(result);
     } catch (error) {
@@ -209,24 +216,52 @@ const FormFixGapLayananSPBE = () => {
       tactical_id: data.tactical_id?.value,
       operational_id: data.operational_id?.value,
     };
-    try {
-      const response = await fetch(`${API_URL}/v1/createlayananspbe`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        AlertNotification("Berhasil", "Berhasil tambah data layanan sesuai GAP", "success", 1000);
-        router.push("/GapArsitektur")
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+        AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
-        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        // console.log(formData);
+        try {
+          const response = await fetch(`${API_URL}/v1/createlayananspbe`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization': `${token}`,
+            },
+            body: JSON.stringify(formData),
+          });
+    
+          if (response.ok) {
+            AlertNotification("Berhasil", "Berhasil tambah data layanan sesuai GAP", "success", 1000);
+            router.push("/GapArsitektur")
+          } else {
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+          }
+        } catch (error) {
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
       }
-    } catch (error) {
-        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+    } else {
+      // console.log(formData);
+      try {
+        const response = await fetch(`${API_URL}/v1/createlayananspbe`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `${token}`,
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        if (response.ok) {
+          AlertNotification("Berhasil", "Berhasil tambah data layanan sesuai GAP", "success", 1000);
+          router.push("/GapArsitektur")
+        } else {
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
+      } catch (error) {
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+      }
     }
   };
 
@@ -458,6 +493,7 @@ const FormFixGapLayananSPBE = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAL Level 1"
+                      value={selectedRal1}
                       options={ral_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
@@ -469,6 +505,13 @@ const FormFixGapLayananSPBE = () => {
                       }}
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRal1(option);
+                        setSelectedRal2(null);
+                        setSelectedRal3(null);
+                        setSelectedRal4(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -504,17 +547,25 @@ const FormFixGapLayananSPBE = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAL Level 2"
+                      value={selectedRal2}
                       options={ral_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
+                      isDisabled={!selectedRal1}
                       onMenuOpen={() => {
-                        if (ral_level_1_4_option.length === 0) {
-                          fetchRalLevel1_4(2);
+                        if (selectedRal1?.kode) {
+                          fetchRalLevel1_4(2, selectedRal1.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRal2(option);
+                        setSelectedRal3(null);
+                        setSelectedRal4(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -550,17 +601,24 @@ const FormFixGapLayananSPBE = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAL Level 3"
+                      value={selectedRal3}
                       options={ral_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
+                      isDisabled={!selectedRal2}
                       onMenuOpen={() => {
-                        if (ral_level_1_4_option.length === 0) {
-                          fetchRalLevel1_4(3);
+                        if (selectedRal2?.kode) {
+                          fetchRalLevel1_4(3, selectedRal2.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRal3(option);
+                        setSelectedRal4(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -596,17 +654,23 @@ const FormFixGapLayananSPBE = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAL Level 4"
+                      value={selectedRal4}
                       options={ral_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
+                      isDisabled={!selectedRal3}
                       onMenuOpen={() => {
-                        if (ral_level_1_4_option.length === 0) {
-                          fetchRalLevel1_4(4);
+                        if (selectedRal3?.kode) {
+                          fetchRalLevel1_4(4, selectedRal3.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRal4(option);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -694,7 +758,7 @@ const FormFixGapLayananSPBE = () => {
                       {...field}
                       id="tactical_id"
                       value={selectedTactical || null}
-                      placeholder="Pilih RAB Level 5"
+                      placeholder="Pilih Tactical"
                       isLoading={isLoading}
                       options={ral_5_7}
                       onChange={(option) => {

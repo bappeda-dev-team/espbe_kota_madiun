@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 interface OptionType {
   value: number;
   label: string;
+  kode?: string;
 }
 
 interface OptionTypeString {
@@ -45,14 +46,19 @@ interface FormValues {
 
 const FormTambahData = () => {
   const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
-  const [rad_level_1_4_option, set_rad_level_1_4_option] = useState<OptionType[]>([]);
-  const [rad_level_5_7_option, set_rad_level_5_7_option] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const token = getToken();
   const [user, setUser] = useState<any>(null);
+  
+  const [selectedRad1, setSelectedRad1] = useState<OptionType | null>(null);
+  const [selectedRad2, setSelectedRad2] = useState<OptionType | null>(null);
+  const [selectedRad3, setSelectedRad3] = useState<OptionType | null>(null);
+  const [selectedRad4, setSelectedRad4] = useState<OptionType | null>(null);
+  const [rad_level_1_4_option, set_rad_level_1_4_option] = useState<OptionType[]>([]);
+  const [rad_level_5_7_option, set_rad_level_5_7_option] = useState<OptionType[]>([]);
 
   useEffect(() => {
     const fetchUser = getUser();
@@ -132,10 +138,11 @@ const FormTambahData = () => {
     setIsClient(true);
   }, []);
 
-  const fetchRadLevel1_4 = async (level: number) => {
+  const fetchRadLevel1_4 = async (level: number, value?: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+      const url = value ? `${API_URL}/v1/referensiarsitektur/${value}` : `${API_URL}/v1/referensiarsitektur`
+      const response = await fetch(url, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -147,6 +154,7 @@ const FormTambahData = () => {
       const result = filteredData.map((referensi: any) => ({
         value: referensi.Id,
         label: `${referensi.kode_referensi} ${referensi.nama_referensi}`,
+        kode: referensi.kode_referensi,
       }));
       set_rad_level_1_4_option(result);
     } catch (error) {
@@ -206,23 +214,50 @@ const FormTambahData = () => {
         tactical_id : data.tactical_id?.value,
         operational_id : data.operational_id?.value,
     };
-    try{
-      const response = await fetch(`${API_URL}/v1/createdatainformasi`, {
-        method: "POST",
-        headers: {
-          "Content-Type" : "application/json",
-          'Authorization': `${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-      if(response.ok){
-        AlertNotification("Berhasil", "Data Informasi Berhasil Ditambahkan", "success", 1000);
-        router.push("/DataInformasi");
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+        AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
-        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        // console.log(formData);
+        try{
+          const response = await fetch(`${API_URL}/v1/createdatainformasi`, {
+            method: "POST",
+            headers: {
+              "Content-Type" : "application/json",
+              'Authorization': `${token}`,
+            },
+            body: JSON.stringify(formData),
+          });
+          if(response.ok){
+            AlertNotification("Berhasil", "Data Informasi Berhasil Ditambahkan", "success", 1000);
+            router.push("/DataInformasi");
+          } else {
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+          }
+        } catch(err){
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
       }
-    } catch(err){
-        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+    } else {
+      // console.log(formData);
+      try{
+        const response = await fetch(`${API_URL}/v1/createdatainformasi`, {
+          method: "POST",
+          headers: {
+            "Content-Type" : "application/json",
+            'Authorization': `${token}`,
+          },
+          body: JSON.stringify(formData),
+        });
+        if(response.ok){
+          AlertNotification("Berhasil", "Data Informasi Berhasil Ditambahkan", "success", 1000);
+          router.push("/DataInformasi");
+        } else {
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
+      } catch(err){
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+      }
     }
   };
 
@@ -632,6 +667,7 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAD Level 1"
+                      value={selectedRad1}
                       options={rad_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
@@ -643,6 +679,13 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_rad_level_1_4_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRad1(option);
+                        setSelectedRad2(null);
+                        setSelectedRad3(null);
+                        setSelectedRad4(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -678,18 +721,26 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAD Level 2"
+                      value={selectedRad2}
                       options={rad_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
                       onMenuOpen={() => {
-                        if (rad_level_1_4_option.length === 0) {
-                          fetchRadLevel1_4(2);
+                        if (selectedRad1?.kode) {
+                          fetchRadLevel1_4(2, selectedRad1.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_rad_level_1_4_option([]);
                       }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRad2(option);
+                        setSelectedRad3(null);
+                        setSelectedRad4(null);
+                      }}
+                      isDisabled={!selectedRad1}
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -724,18 +775,25 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAD Level 3"
+                      value={selectedRad3}
                       options={rad_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
                       onMenuOpen={() => {
-                        if (rad_level_1_4_option.length === 0) {
-                          fetchRadLevel1_4(3);
+                        if (selectedRad2?.kode) {
+                          fetchRadLevel1_4(3, selectedRad2.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_rad_level_1_4_option([]);
                       }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRad3(option);
+                        setSelectedRad4(null);
+                      }}
+                      isDisabled={!selectedRad2}
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -770,18 +828,24 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAD Level 4"
+                      value={selectedRad4}
                       options={rad_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
                       onMenuOpen={() => {
-                        if (rad_level_1_4_option.length === 0) {
-                          fetchRadLevel1_4(4);
+                        if (selectedRad3?.kode) {
+                          fetchRadLevel1_4(4, selectedRad3.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_rad_level_1_4_option([]);
                       }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRad4(option);
+                      }}
+                      isDisabled={!selectedRad3}
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,

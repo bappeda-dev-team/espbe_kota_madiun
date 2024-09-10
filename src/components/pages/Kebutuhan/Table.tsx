@@ -18,6 +18,8 @@ interface KebutuhanSPBE {
     nama_domain: string;
     id_prosesbisnis: number;
     jenis_kebutuhan: JenisKebutuhan[];
+    indikator_pj: string;
+    penanggung_jawab: string;
 }
 
 interface JenisKebutuhan {
@@ -250,6 +252,8 @@ const Table = () => {
                           <th rowSpan={2} className="border px-6 py-3 min-w-[150px]">Nama Domain</th>
                           <th rowSpan={2} className="border px-6 py-3 min-w-[200px]">Kebutuhan</th>
                           <th colSpan={3} className="border px-6 py-3 min-w-[200px] text-center">Kondisi Awal</th>
+                          <th rowSpan={3} className="border px-6 py-3 min-w-[200px] text-center">Indikator PJ</th>
+                          <th rowSpan={3} className="border px-6 py-3 min-w-[200px] text-center">Penanggung Jawab</th>
                           <th rowSpan={2} className="border px-6 py-3 text-center">Aksi</th>
                       </tr>
                       <tr>
@@ -272,7 +276,7 @@ const Table = () => {
                                   <td className="border px-6 py-4">{data.keterangan ? data.keterangan : "N/A"}</td>
                                   <td className="border px-6 py-4">{data.nama_domain ? data.nama_domain : "N/A"}</td>
                                   {data.jenis_kebutuhan === null ? (
-                                      <>
+                                    <>
                                           <td className="border px-6 py-4">
                                               <h1>N/A</h1>
                                           </td>
@@ -320,6 +324,8 @@ const Table = () => {
                                           </td>
                                       </>
                                   )}
+                                  <td className="border px-6 py-4">{data.indikator_pj ? data.indikator_pj : "N/A"}</td>
+                                  <td className="border px-6 py-4">{data.penanggung_jawab ? data.penanggung_jawab : "N/A"}</td>
                                   <td className="px-6 py-4 flex flex-col gap-2">
                                       <ButtonSc 
                                           className="my-1"

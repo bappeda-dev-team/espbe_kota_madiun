@@ -16,72 +16,84 @@ interface ReferensiArsitektur {
 }
 
 const Table = () => {
+  //level
+  const [levelAll, setLevelAll] = useState<boolean | null>(true);
+  const [level1, setLevel1] = useState<boolean | null>(null);
+  const [level2, setLevel2] = useState<boolean | null>(null);
+  const [level3, setLevel3] = useState<boolean | null>(null);
+  const [level4, setLevel4] = useState<boolean | null>(null);
+  //jenis
+  const [jenisAll, setJenisAll] = useState<boolean | null>(true);
+  const [rab, setRab] = useState<boolean | null>(null);
+  const [ral, setRal] = useState<boolean | null>(null);
+  const [rad, setRad] = useState<boolean | null>(null);
+  const [raa, setRaa] = useState<boolean | null>(null);
 
-    const tahun = useSelector((state: RootState) => state.Tahun.tahun);
-    const [referensiarsitektur, setReferensiArsitektur] = useState<ReferensiArsitektur[]>([]);
-    const [error, setError] = useState<string>();
-    const [loading, setLoading] = useState<boolean>(true)
-    const [dataNull, setDataNull] = useState<boolean>(false);
-    const token = getToken();
+  const tahun = useSelector((state: RootState) => state.Tahun.tahun);
+  const [referensiarsitektur, setReferensiArsitektur] = useState<ReferensiArsitektur[]>([]);
+  const [error, setError] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(true)
+  const [dataNull, setDataNull] = useState<boolean>(false);
+  const token = getToken();
 
-    useEffect(() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        if(tahun !== 0){
-          const fetchingData = async () => {
-            try {
-              const response = await fetch(`${API_URL}/v1/referensiarsitektur?tahun=${tahun}`, {
-                headers: {
-                  'Authorization': `${token}`,
-                  'Content-Type': 'application/json',
-                },
-              });
-              if (!response.ok) {
-                throw new Error("cant fetching data");
-              }
-              const data = await response.json();
-              if (data.data === null) {
-                setReferensiArsitektur([]);
-                setDataNull(true);
-              } else {
-                setReferensiArsitektur(data.data);
-                setDataNull(false);
-              }
-            } catch (err) {
-              setError("gagal mendapatkan data referensi arsitektur, cek koneksi internet atau database server");
-            } finally {
-              setLoading(false);
+  useEffect(() => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      if(tahun !== 0){
+        const fetchingData = async () => {
+          try {
+            const response = await fetch(`${API_URL}/v1/referensiarsitektur?tahun=${tahun}`, {
+              headers: {
+                'Authorization': `${token}`,
+                'Content-Type': 'application/json',
+              },
+            });
+            if (!response.ok) {
+              throw new Error("cant fetching data");
             }
-          };
-          fetchingData();
-        } else {
-          const fetchingData = async () => {
-            try {
-              const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
-                headers: {
-                  'Authorization': `${token}`,
-                  'Content-Type': 'application/json',
-                },
-              });
-              if (!response.ok) {
-                throw new Error("cant fetching data");
-              }
-              const data = await response.json();
-              if (data.data === null) {
-                setReferensiArsitektur([]);
-                setDataNull(true);
-              } else {
-                setReferensiArsitektur(data.data);
-                setDataNull(false);
-              }
-            } catch (err) {
-              setError("gagal mendapatkan data referensi arsitektur, cek koneksi internet atau database server");
-            } finally {
-              setLoading(false);
+            const data = await response.json();
+            if (data.data === null) {
+              setReferensiArsitektur([]);
+              setDataNull(true);
+            } else {
+              setReferensiArsitektur(data.data);
+              setDataNull(false);
             }
-          };
-          fetchingData();
-        }
-      }, [tahun, token]);
+          } catch (err) {
+            setError("gagal mendapatkan data referensi arsitektur, cek koneksi internet atau database server");
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchingData();
+      } else {
+        const fetchingData = async () => {
+          try {
+            const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+              headers: {
+                'Authorization': `${token}`,
+                'Content-Type': 'application/json',
+              },
+            });
+            if (!response.ok) {
+              throw new Error("cant fetching data");
+            }
+            const data = await response.json();
+            if (data.data === null) {
+              setReferensiArsitektur([]);
+              setDataNull(true);
+            } else {
+              setReferensiArsitektur(data.data);
+              setDataNull(false);
+            }
+          } catch (err) {
+            setError("gagal mendapatkan data referensi arsitektur, cek koneksi internet atau database server");
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchingData();
+      }
+    }, [tahun, token]);
 
     if(error){
         return <h1>{error}</h1>
@@ -91,40 +103,96 @@ const Table = () => {
 
     return(
         <>
-            <div className="overflow-auto rounded-xl shadow-xl">
-                <table className="w-full text-sm text-left">
-                <thead className="text-xs text-white uppercase bg-amber-500">
-                    <tr>
-                        <th className="px-6 py-3 border max-w-[20px] text-center sticky bg-amber-500 left-[-1px]">No.</th>
-                        <th className="px-6 py-3 border min-w-[200px]">Nama Referensi</th>
-                        <th className="px-6 py-3 border min-w-[200px]">Jenis Referensi</th>
-                        <th className="px-6 py-3 border min-w-[170px]">Level Referensi</th>
-                        <th className="px-6 py-3 border min-w-[200px]">Kode Referensi</th>
-                        <th className="px-6 py-3 border min-w-[100px] text-center">Tahun</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {dataNull ? (
-                <tr>
-                    <td className="px-6 py-3" colSpan={5}>
-                        Data Kosong / Belum Ditambahkan
-                    </td>
-                </tr>
-                ) : (
-                    referensiarsitektur.map((data, index) => (
-                    <tr key={data.Id} className="border rounded-b-lg hover:bg-slate-50">
-                        <td className="px-6 py-4 border sticky bg-white text-center left-[-2px]">{index +1}</td>
-                        <td className="px-6 py-4 border">{data.nama_referensi}</td>
-                        <td className="px-6 py-4 border">{data.jenis_referensi}</td>
-                        <td className="px-6 py-4 border text-center">{data.level_referensi}</td>
-                        <td className="px-6 py-4 border">{data.kode_referensi}</td>
-                        <td className="px-6 py-4 border text-center">{data.tahun}</td>
-                    </tr>
-                    ))
-                )}
-                </tbody>
-                </table>
+          <div className="mb-3 justify-between">
+            <div className="flex">
+              {levelAll ? 
+                <button className="mx-1 text-xs py-1 min-w-[100px] border bg-amber-500 text-white rounded-lg">Level</button>
+                :
+                <button className="mx-1 text-xs py-1 min-w-[100px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">Level</button>
+              }
+              {level1 ? 
+                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">1</button>
+                :
+                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">1</button>
+              }
+              {level2 ? 
+                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">2</button>
+                :
+                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">2</button>
+              }
+              {level3 ? 
+                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">3</button>
+                :
+                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">3</button>
+              }
+              {level4 ? 
+                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">4</button>
+                :
+                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">4</button>
+              }
             </div>
+            <div className="flex mt-3">
+              {jenisAll ? 
+                <button className="mx-1 text-xs py-1 px-2 min-w-[100px] border bg-amber-500 text-white rounded-lg">Jenis</button>
+                :
+                <button className="mx-1 text-xs py-1 px-2 min-w-[100px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">Jenis</button>
+              }
+              {rab ? 
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border bg-amber-500 text-white rounded-lg">RAB</button>
+                :
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">RAB</button>
+              }
+              {ral ? 
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border bg-amber-500 text-white rounded-lg">RAL</button>
+                :
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">RAL</button>
+              }
+              {rad ? 
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border bg-amber-500 text-white rounded-lg">RAD</button>
+                :
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">RAD</button>
+              }
+              {raa ? 
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border bg-amber-500 text-white rounded-lg">RAA</button>
+                :
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">RAA</button>
+              }
+            </div>
+          </div>
+          <div className="overflow-auto rounded-xl shadow-xl">
+              <table className="w-full text-sm text-left">
+              <thead className="text-xs text-white uppercase bg-amber-500">
+                  <tr>
+                      <th className="px-6 py-3 border max-w-[20px] text-center sticky bg-amber-500 left-[-1px]">No.</th>
+                      <th className="px-6 py-3 border min-w-[200px]">Nama Referensi</th>
+                      <th className="px-6 py-3 border min-w-[200px]">Jenis Referensi</th>
+                      <th className="px-6 py-3 border min-w-[170px]">Level Referensi</th>
+                      <th className="px-6 py-3 border min-w-[200px]">Kode Referensi</th>
+                      <th className="px-6 py-3 border min-w-[100px] text-center">Tahun</th>
+                  </tr>
+              </thead>
+              <tbody>
+              {dataNull ? (
+              <tr>
+                  <td className="px-6 py-3" colSpan={5}>
+                      Data Kosong / Belum Ditambahkan
+                  </td>
+              </tr>
+              ) : (
+                  referensiarsitektur.map((data, index) => (
+                  <tr key={data.Id} className="border rounded-b-lg hover:bg-slate-50">
+                      <td className="px-6 py-4 border sticky bg-white text-center left-[-2px]">{index +1}</td>
+                      <td className="px-6 py-4 border">{data.nama_referensi}</td>
+                      <td className="px-6 py-4 border">{data.jenis_referensi}</td>
+                      <td className="px-6 py-4 border text-center">{data.level_referensi}</td>
+                      <td className="px-6 py-4 border">{data.kode_referensi}</td>
+                      <td className="px-6 py-4 border text-center">{data.tahun}</td>
+                  </tr>
+                  ))
+              )}
+              </tbody>
+              </table>
+          </div>
         </>
     )
 }

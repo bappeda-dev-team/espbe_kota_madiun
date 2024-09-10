@@ -283,9 +283,11 @@ const Table = (data: any) => {
                           )}
                         </td>
                       ) : (
-                        <td className="border px-6 py-4 bg-red-500 cursor-pointer group" onClick={() => fixGapLayanan(data.id)}>
-                          <h1 className="text-white font-bold text-center">GAP</h1>
-                          <button className="hidden group-hover:block mt-1 text-white border px-2 py-1 rounded-lg hover:bg-white hover:text-red-500">Lengkapi GAP</button>
+                        <td className="border px-6 py-2 bg-red-500 cursor-pointer group" onClick={() => fixGapLayanan(data.id)}>
+                          <div className="flex flex-col">
+                            <h1 className="text-white font-bold text-center">GAP</h1>
+                            <button className="hidden group-hover:block mt-1 text-white border px-2 py-1 rounded-lg hover:bg-white hover:text-red-500">Lengkapi GAP</button>
+                          </div>
                         </td>
                       )}
                       {/* Data dan Informasi */}
@@ -309,9 +311,11 @@ const Table = (data: any) => {
                           )}
                         </td>
                       ) : (
-                        <td className="border px-6 py-4 bg-red-500 cursor-pointer group" onClick={() => fixGapDataInformasi(data.id)}>
-                          <h1 className="text-white font-bold text-center">GAP</h1>
-                          <button className="hidden group-hover:block mt-1 text-white border px-2 py-1 rounded-lg hover:bg-white hover:text-red-500">Lengkapi GAP</button>
+                        <td className="border px-6 py-2 bg-red-500 cursor-pointer group" onClick={() => fixGapDataInformasi(data.id)}>
+                          <div className="flex flex-col">
+                            <h1 className="text-white font-bold text-center">GAP</h1>
+                            <button className="hidden group-hover:block mt-1 text-white border px-2 py-1 rounded-lg hover:bg-white hover:text-red-500">Lengkapi GAP</button>
+                          </div>
                         </td>
                       )}
                       {/* Aplikasi */}
@@ -335,7 +339,7 @@ const Table = (data: any) => {
                           )}
                         </td>
                       ) : (
-                        <td className="border px-6 py-4 bg-red-500 cursor-pointer group" onClick={() => {fixGapAplikasi(data.id)}}>
+                        <td className="border px-6 py-2 bg-red-500 cursor-pointer group" onClick={() => {fixGapAplikasi(data.id)}}>
                           <div className="flex flex-col">
                             <h1 className="text-white font-bold text-center">GAP</h1>
                             <button className="hidden group-hover:block mt-1 text-white border px-2 py-1 rounded-lg hover:bg-white hover:text-red-500">Lengkapi GAP</button>

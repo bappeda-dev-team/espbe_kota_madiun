@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 interface OptionType {
   value: number;
   label: string;
+  kode?: string;
 }
 interface OptionTypeString {
   value: string;
@@ -38,14 +39,20 @@ interface FormValues {
 
 const FormTambahData = () => {
   const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
-  const [ral_level_1_4_option, set_ral_level_1_4_option] = useState<OptionType[]>([]);
-  const [ral_level_5_7_option, set_ral_level_5_7_option] = useState<OptionType[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isClient, setIsClient] = useState<boolean>(false);
-  const router = useRouter();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [user, setUser] = useState<any>(null);
+  const [isClient, setIsClient] = useState<boolean>(false);
   const token = getToken();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [selectedRaL1, setSelectedRal1] = useState<OptionType | null>(null);
+  const [selectedRaL2, setSelectedRal2] = useState<OptionType | null>(null);
+  const [selectedRaL3, setSelectedRal3] = useState<OptionType | null>(null);
+  const [selectedRaL4, setSelectedRal4] = useState<OptionType | null>(null);
+
+  const [ral_level_1_4_option, set_ral_level_1_4_option] = useState<OptionType[]>([]);
+  const [ral_level_5_7_option, set_ral_level_5_7_option] = useState<OptionType[]>([]);
+  const router = useRouter();
 
 
   useEffect(() => {
@@ -96,10 +103,11 @@ const FormTambahData = () => {
     setIsClient(true);
   }, []);
 
-  const fetchRalLevel1_4 = async (level: number) => {
+  const fetchRalLevel1_4 = async (level: number, value?: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+      const url = value ? `${API_URL}/v1/referensiarsitektur/${value}` : `${API_URL}/v1/referensiarsitektur`
+      const response = await fetch(url, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -111,6 +119,7 @@ const FormTambahData = () => {
       const result = filteredData.map((referensi: any) => ({
         value: referensi.Id,
         label: `${referensi.kode_referensi} ${referensi.nama_referensi}`,
+        kode: referensi.kode_referensi,
       }));
       set_ral_level_1_4_option(result);
     } catch (error) {
@@ -162,23 +171,50 @@ const FormTambahData = () => {
       tactical_id: data.tactical_id?.value,
       operational_id: data.operational_id?.value,
     };
-    try{
-      const response = await fetch(`${API_URL}/v1/createlayananspbe`, {
-        method: "POST",
-        headers: {
-          "Content-Type" : "application/json",
-          'Authorization': `${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-      if(response.ok){
-        AlertNotification("Berhasil", "Berhasil menambahkan data layanan", "success", 1000);
-        router.push("/Layanan/LayananSPBE")
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+        AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
-        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        // console.log(formData);
+        try{
+          const response = await fetch(`${API_URL}/v1/createlayananspbe`, {
+            method: "POST",
+            headers: {
+              "Content-Type" : "application/json",
+              'Authorization': `${token}`,
+            },
+            body: JSON.stringify(formData),
+          });
+          if(response.ok){
+            AlertNotification("Berhasil", "Berhasil menambahkan data layanan", "success", 1000);
+            router.push("/Layanan/LayananSPBE")
+          } else {
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+          }
+        } catch(err){
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
       }
-    } catch(err){
-        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+    } else {
+      // console.log(formData);
+      try{
+        const response = await fetch(`${API_URL}/v1/createlayananspbe`, {
+          method: "POST",
+          headers: {
+            "Content-Type" : "application/json",
+            'Authorization': `${token}`,
+          },
+          body: JSON.stringify(formData),
+        });
+        if(response.ok){
+          AlertNotification("Berhasil", "Berhasil menambahkan data layanan", "success", 1000);
+          router.push("/Layanan/LayananSPBE")
+        } else {
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
+      } catch(err){
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+      }
     }
   };
 
@@ -410,6 +446,7 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAL Level 1"
+                      value={selectedRaL1}
                       options={ral_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
@@ -421,6 +458,13 @@ const FormTambahData = () => {
                       }}
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRal1(option);
+                        setSelectedRal2(null);
+                        setSelectedRal3(null);
+                        setSelectedRal4(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -456,17 +500,25 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAL Level 2"
+                      value={selectedRaL2}
                       options={ral_level_1_4_option}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
+                      isDisabled={!selectedRaL1}
                       onMenuOpen={() => {
-                        if (ral_level_1_4_option.length === 0) {
-                          fetchRalLevel1_4(2);
+                        if (selectedRaL1?.kode) {
+                          fetchRalLevel1_4(2, selectedRaL1.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRal2(option);
+                        setSelectedRal3(null);
+                        setSelectedRal4(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -504,15 +556,22 @@ const FormTambahData = () => {
                       placeholder="Masukkan RAL Level 3"
                       options={ral_level_1_4_option}
                       isLoading={isLoading}
+                      value={selectedRaL3}
                       isSearchable
                       isClearable
+                      isDisabled={!selectedRaL2}
                       onMenuOpen={() => {
-                        if (ral_level_1_4_option.length === 0) {
-                          fetchRalLevel1_4(3);
+                        if (selectedRaL2?.kode) {
+                          fetchRalLevel1_4(3, selectedRaL2.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRal3(option);
+                        setSelectedRal4(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -550,15 +609,21 @@ const FormTambahData = () => {
                       placeholder="Masukkan RAL Level 4"
                       options={ral_level_1_4_option}
                       isLoading={isLoading}
+                      value={selectedRaL4}
                       isSearchable
                       isClearable
+                      isDisabled={!selectedRaL3}
                       onMenuOpen={() => {
-                        if (ral_level_1_4_option.length === 0) {
-                          fetchRalLevel1_4(4);
+                        if (selectedRaL3?.kode) {
+                          fetchRalLevel1_4(4, selectedRaL3.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_ral_level_1_4_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRal4(option);
                       }}
                       styles={{
                         control: (baseStyles) => ({

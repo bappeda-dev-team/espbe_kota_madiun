@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 interface OptionType {
   value: number;
   label: string;
+  kode?: string;
 }
 interface OptionTypeString {
   value: string;
@@ -148,6 +149,7 @@ const FormEditData = () => {
           const ralLevel1Option = {
             value: result.RalLevel1id.Id,
             label: `${result.RalLevel1id.kode_referensi} ${result.RalLevel1id.nama_referensi}`,
+            kode: result.RalLevel1id.kode_referensi,
           };
           setSelectedRal1(ralLevel1Option);
           reset((prev) => ({ ...prev, ral_level_1_id: ralLevel1Option }));
@@ -156,6 +158,7 @@ const FormEditData = () => {
           const ralLevel2Option = {
             value: result.RalLevel2id.Id,
             label: `${result.RalLevel2id.kode_referensi} ${result.RalLevel2id.nama_referensi}`,
+            kode: result.RalLevel2id.kode_referensi,
           };
           setSelectedRal2(ralLevel2Option);
           reset((prev) => ({ ...prev, ral_level_2_id: ralLevel2Option }));
@@ -164,6 +167,7 @@ const FormEditData = () => {
           const ralLevel3Option = {
             value: result.RalLevel3id.Id,
             label: `${result.RalLevel3id.kode_referensi} ${result.RalLevel3id.nama_referensi}`,
+            kode: result.RalLevel3id.kode_referensi,
           };
           setSelectedRal3(ralLevel3Option);
           reset((prev) => ({ ...prev, ral_level_3_id: ralLevel3Option }));
@@ -172,6 +176,7 @@ const FormEditData = () => {
           const ralLevel4Option = {
             value: result.RalLevel4id.Id,
             label: `${result.RalLevel4id.kode_referensi} ${result.RalLevel4id.nama_referensi}`,
+            kode: result.RalLevel4id.kode_referensi,
           };
           setSelectedRal4(ralLevel4Option);
           reset((prev) => ({ ...prev, ral_level_4_id: ralLevel4Option }));
@@ -210,11 +215,12 @@ const FormEditData = () => {
   }, [reset, Id, token]);
 
   //fetching data RAL 1 - 4
-  const fetchRal_1_4 = async (level: number) => {
+  const fetchRal_1_4 = async (level: number, value?: string) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+      const url = value ? `${API_URL}/v1/referensiarsitektur/${value}` : `${API_URL}/v1/referensiarsitektur`
+      const response = await fetch(url, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -226,6 +232,7 @@ const FormEditData = () => {
       const result = filteredData.map((item: any) => ({
         value: item.Id,
         label: `${item.kode_referensi} ${item.nama_referensi}`,
+        kode: item.kode_referensi,
       }));
       set_ral_1_4(result);
     } catch (err) {
@@ -261,31 +268,6 @@ const FormEditData = () => {
     }
   };
 
-  //
-  const handleChange = (option: any, actionMeta: any) => {
-    if (actionMeta.name === "tujuan_layanan_id") {
-      setSelectedTujuanLayanan(option);
-    } else if (actionMeta.name === "ral_level_1_id") {
-      setSelectedRal1(option);
-    } else if (actionMeta.name === "ral_level_2_id") {
-      setSelectedRal2(option);
-    } else if (actionMeta.name === "ral_level_3_id") {
-      setSelectedRal3(option);
-    } else if (actionMeta.name === "ral_level_4_id") {
-      setSelectedRal4(option);
-    } else if (actionMeta.name === "strategic_id") {
-      setSelectedStrategic(option);
-    } else if (actionMeta.name === "tactical_id") {
-      setSelectedTactical(option);
-    } else if (actionMeta.name === "operational_id") {
-      setSelectedOperational(option);
-    } else if (actionMeta.name === "tahun") {
-      setSelectedTahun(option);
-    } else if (actionMeta.name === "metode_layanan") {
-      setSelectedMetodeLayanan(option);
-    }
-  };
-
   //aski form di submit
   const onSubmit: SubmitHandler<formValue> = async (data) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -305,24 +287,53 @@ const FormEditData = () => {
       tactical_id: data.tactical_id?.value,
       operational_id: data.operational_id?.value,
     };
-    try {
-      const response = await fetch(`${API_URL}/v1/updatelayananspbe/${Id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        AlertNotification("Berhasil", "Berhasil edit data layanan", "success", 1000);
-        router.push("/Layanan/LayananSPBE")
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+        AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
-        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        // console.log(formData);
+        try {
+          const response = await fetch(`${API_URL}/v1/updatelayananspbe/${Id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization': `${token}`,
+            },
+            body: JSON.stringify(formData),
+          });
+    
+          if (response.ok) {
+            AlertNotification("Berhasil", "Berhasil edit data layanan", "success", 1000);
+            router.push("/Layanan/LayananSPBE")
+          } else {
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+          }
+        } catch (error) {
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
       }
-    } catch (error) {
-        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+    } else {
+      // console.log(formData);
+      try {
+        const response = await fetch(`${API_URL}/v1/updatelayananspbe/${Id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `${token}`,
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        if (response.ok) {
+          AlertNotification("Berhasil", "Berhasil edit data layanan", "success", 1000);
+          router.push("/Layanan/LayananSPBE")
+        } else {
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
+      } catch (error) {
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+      }
+
     }
   };
 
@@ -461,7 +472,7 @@ const FormEditData = () => {
                       options={MetodeLayanan}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "metode_layanan" });
+                        setSelectedMetodeLayanan(option);
                       }}
                       isClearable={true}
                       styles={{
@@ -504,7 +515,7 @@ const FormEditData = () => {
                       isLoading={isLoading}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "tujuan_layanan_id" });
+                        setSelectedTujuanLayanan(option);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
@@ -553,7 +564,7 @@ const FormEditData = () => {
                       options={tahun_option}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "tahun" });
+                        setSelectedTahun(option);
                       }}
                       isClearable={true}
                       styles={{
@@ -596,7 +607,10 @@ const FormEditData = () => {
                       options={ral_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "ral_level_1_id" });
+                        setSelectedRal1(option);
+                        setSelectedRal2(null);
+                        setSelectedRal3(null);
+                        setSelectedRal4(null);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
@@ -647,17 +661,20 @@ const FormEditData = () => {
                       options={ral_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "ral_level_2_id" });
+                        setSelectedRal2(option);
+                        setSelectedRal3(null);
+                        setSelectedRal4(null);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_1_4.length === 0) {
-                          fetchRal_1_4(2);
+                        if (selectedRal1?.kode) {
+                          fetchRal_1_4(2, selectedRal1.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_ral_1_4([]);
                       }}
+                      isDisabled={!selectedRal1}
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -698,17 +715,19 @@ const FormEditData = () => {
                       options={ral_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "ral_level_3_id" });
+                        setSelectedRal3(option);
+                        setSelectedRal4(null);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_1_4.length === 0) {
-                          fetchRal_1_4(3);
+                        if (selectedRal2?.kode) {
+                          fetchRal_1_4(3, selectedRal2.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_ral_1_4([]);
                       }}
+                      isDisabled={!selectedRal2}
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -749,17 +768,18 @@ const FormEditData = () => {
                       options={ral_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "ral_level_4_id" });
+                        setSelectedRal4(option);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_1_4.length === 0) {
-                          fetchRal_1_4(4);
+                        if (selectedRal3?.kode) {
+                          fetchRal_1_4(4, selectedRal3.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_ral_1_4([]);
                       }}
+                      isDisabled={!selectedRal3}
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -800,7 +820,7 @@ const FormEditData = () => {
                       options={ral_5_7}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "strategic_id" });
+                        setSelectedStrategic(option);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
@@ -851,7 +871,7 @@ const FormEditData = () => {
                       options={ral_5_7}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "tactical_id" });
+                        setSelectedTactical(option);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
@@ -902,7 +922,7 @@ const FormEditData = () => {
                       options={ral_5_7}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "operational_id" });
+                        setSelectedOperational(option);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {

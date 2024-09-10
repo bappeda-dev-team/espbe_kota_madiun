@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 interface OptionType {
   value: number;
   label: string;
+  kode?: string;
 }
 
 interface OptionTypeString {
@@ -61,6 +62,9 @@ const FormFixGapAplikasi = () => {
   const [raa_1_4, set_raa_1_4] = useState<OptionType[]>([]);
   const [raa_5_7, set_raa_5_7] = useState<OptionType[]>([]);
 
+  const [selectedRaa1, setSelectedRaa1] = useState<OptionType | null>(null);
+  const [selectedRaa2, setSelectedRaa2] = useState<OptionType | null>(null);
+  const [selectedRaa3, setSelectedRaa3] = useState<OptionType | null>(null);
   const [selectedStrategic, setSelectedStrategic] = useState<OptionType | null>(null);
   const [selectedTactical, setSelectedTactical] = useState<OptionType | null>(null);
   const [selectedOperational, setSelectedOperational] = useState<OptionType | null>(null);
@@ -135,11 +139,12 @@ const FormFixGapAplikasi = () => {
     setIsClient(true);
   }, [reset, id, token]);
 
-  const fetchRaaLevel1_4 = async (level: number) => {
+  const fetchRaaLevel1_4 = async (level: number, value?: string) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+      const url = value ? `${API_URL}/v1/referensiarsitektur/${value}` : `${API_URL}/v1/referensiarsitektur`
+      const response = await fetch(url, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -151,6 +156,7 @@ const FormFixGapAplikasi = () => {
       const result = filteredData.map((referensi: any) => ({
         value: referensi.Id,
         label: `${referensi.kode_referensi} ${referensi.nama_referensi}`,
+        kode: referensi.kode_referensi,
       }));
       set_raa_1_4(result);
     } catch (error) {
@@ -219,26 +225,54 @@ const FormFixGapAplikasi = () => {
       tactical_id: data.tactical_id?.value,
       operational_id: data.operational_id?.value,
     };
-    // console.log(formData);
-    try {
-      const response = await fetch(`${API_URL}/v1/createaplikasi`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        AlertNotification("Berhasil", "Berhasil tambah aplikasi sesuai GAP", "success", 1000);
-        router.push("/GapArsitektur");
-        reset();
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+        AlertNotification("Pilih OPD", "OPD harus terpilih di header", "warning", 2000);
       } else {
-        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        // console.log(formData);
+        try {
+          const response = await fetch(`${API_URL}/v1/createaplikasi`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization': `${token}`,
+            },
+            body: JSON.stringify(formData),
+          });
+  
+          if (response.ok) {
+            AlertNotification("Berhasil", "Berhasil tambah aplikasi sesuai GAP", "success", 1000);
+            router.push("/GapArsitektur");
+            reset();
+          } else {
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+          }
+        } catch (error) {
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
       }
-    } catch (error) {
-        AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+    } else {
+      // console.log(formData);
+      try {
+        const response = await fetch(`${API_URL}/v1/createaplikasi`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `${token}`,
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          AlertNotification("Berhasil", "Berhasil tambah aplikasi sesuai GAP", "success", 1000);
+          router.push("/GapArsitektur");
+          reset();
+        } else {
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
+      } catch (error) {
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+      }
     }
   };
   
@@ -578,6 +612,7 @@ const FormFixGapAplikasi = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAA Level 1"
+                      value={selectedRaa1}
                       options={raa_1_4}
                       isLoading={isLoading}
                       isSearchable
@@ -589,6 +624,12 @@ const FormFixGapAplikasi = () => {
                       }}
                       onMenuClose={() => {
                         set_raa_1_4([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRaa1(option);
+                        setSelectedRaa2(null);
+                        setSelectedRaa3(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -624,17 +665,24 @@ const FormFixGapAplikasi = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAA Level 2"
+                      value={selectedRaa2}
                       options={raa_1_4}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
+                      isDisabled={!selectedRaa1}
                       onMenuOpen={() => {
-                        if (raa_1_4.length === 0) {
-                          fetchRaaLevel1_4(2);
+                        if (selectedRaa1?.kode) {
+                          fetchRaaLevel1_4(2, selectedRaa1.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_raa_1_4([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRaa2(option);
+                        setSelectedRaa3(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -670,17 +718,23 @@ const FormFixGapAplikasi = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAD Level 3"
+                      value={selectedRaa3}
                       options={raa_1_4}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
+                      isDisabled={!selectedRaa2}
                       onMenuOpen={() => {
-                        if (raa_1_4.length === 0) {
-                          fetchRaaLevel1_4(3);
+                        if (selectedRaa2?.kode) {
+                          fetchRaaLevel1_4(3, selectedRaa2.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_raa_1_4([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRaa3(option);
                       }}
                       styles={{
                         control: (baseStyles) => ({

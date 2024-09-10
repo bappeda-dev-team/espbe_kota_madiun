@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 interface OptionType {
   value: number;
   label: string;
+  kode?: string;
 }
 interface OptionTypeString {
   value: string;
@@ -63,6 +64,10 @@ const FormFixGapDataInformasi = () => {
   const [rad_1_4, set_rad_1_4] = useState<OptionType[]>([]);
   const [rad_5_7, set_rad_5_7] = useState<OptionType[]>([]);
 
+  const [selectedRad1, setSelectedRad1] = useState<OptionType | null>(null);
+  const [selectedRad2, setSelectedRad2] = useState<OptionType | null>(null);
+  const [selectedRad3, setSelectedRad3] = useState<OptionType | null>(null);
+  const [selectedRad4, setSelectedRad4] = useState<OptionType | null>(null);
   //state untuk fetch default value data by id
   const [selectedStrategic, setSelectedStrategic] = useState<OptionType | null>(null);
   const [selectedTactical, setSelectedTactical] = useState<OptionType | null>(null);
@@ -157,11 +162,12 @@ const FormFixGapDataInformasi = () => {
         setIsClient(true);
       }, [reset, id, token]);
 
-      const fetchRadLevel1_4 = async (level: number) => {
+      const fetchRadLevel1_4 = async (level: number, value?: string) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try {
-          const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+          const url = value ? `${API_URL}/v1/referensiarsitektur/${value}` : `${API_URL}/v1/referensiarsitektur`
+          const response = await fetch(url, {
             headers: {
               'Authorization': `${token}`,
             },
@@ -173,6 +179,7 @@ const FormFixGapDataInformasi = () => {
           const result = filteredData.map((referensi: any) => ({
             value: referensi.Id,
             label: `${referensi.kode_referensi} ${referensi.nama_referensi}`,
+            kode: referensi.kode_referensi,
           }));
           set_rad_1_4(result);
         } catch (error) {
@@ -244,24 +251,51 @@ const FormFixGapDataInformasi = () => {
             tactical_id : data.tactical_id?.value,
             operational_id : data.operational_id?.value,
         };
-        // console.log(formData);
-        try{
-          const response = await fetch(`${API_URL}/v1/createdatainformasi`, {
-            method: "POST",
-            headers: {
-              "Content-Type" : "application/json",
-              'Authorization': `${token}`,
-            },
-            body: JSON.stringify(formData),
-          });
-          if(response.ok){
-            AlertNotification("Berhasil", "Data Informasi Berhasil Ditambahkan sesuai GAP", "success", 1000);
-            router.push("/GapArsitektur");
+        if(user?.roles == 'admin_kota'){
+          if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+            AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
           } else {
-            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+            // console.log(formData);
+            try{
+              const response = await fetch(`${API_URL}/v1/createdatainformasi`, {
+                method: "POST",
+                headers: {
+                  "Content-Type" : "application/json",
+                  'Authorization': `${token}`,
+                },
+                body: JSON.stringify(formData),
+              });
+              if(response.ok){
+                AlertNotification("Berhasil", "Data Informasi Berhasil Ditambahkan sesuai GAP", "success", 1000);
+                router.push("/GapArsitektur");
+              } else {
+                AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+              }
+            } catch(err){
+                AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+            }
           }
-        } catch(err){
-            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        } else {
+          // console.log(formData);
+          try{
+            const response = await fetch(`${API_URL}/v1/createdatainformasi`, {
+              method: "POST",
+              headers: {
+                "Content-Type" : "application/json",
+                'Authorization': `${token}`,
+              },
+              body: JSON.stringify(formData),
+            });
+            if(response.ok){
+              AlertNotification("Berhasil", "Data Informasi Berhasil Ditambahkan sesuai GAP", "success", 1000);
+              router.push("/GapArsitektur");
+            } else {
+              AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+            }
+          } catch(err){
+              AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+          }
+
         }
       };
 
@@ -673,6 +707,7 @@ const FormFixGapDataInformasi = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAD Level 1"
+                      value={selectedRad1}
                       options={rad_1_4}
                       isLoading={isLoading}
                       isSearchable
@@ -684,6 +719,13 @@ const FormFixGapDataInformasi = () => {
                       }}
                       onMenuClose={() => {
                         set_rad_1_4([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRad1(option);
+                        setSelectedRad2(null);
+                        setSelectedRad3(null);
+                        setSelectedRad4(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -719,17 +761,25 @@ const FormFixGapDataInformasi = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAD Level 2"
+                      value={selectedRad2}
                       options={rad_1_4}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
+                      isDisabled={!selectedRad1}
                       onMenuOpen={() => {
-                        if (rad_1_4.length === 0) {
-                          fetchRadLevel1_4(2);
+                        if (selectedRad1?.kode) {
+                          fetchRadLevel1_4(2, selectedRad1.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_rad_1_4([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRad2(option);
+                        setSelectedRad3(null);
+                        setSelectedRad4(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -765,17 +815,24 @@ const FormFixGapDataInformasi = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAD Level 3"
+                      value={selectedRad3}
                       options={rad_1_4}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
+                      isDisabled={!selectedRad2}
                       onMenuOpen={() => {
-                        if (rad_1_4.length === 0) {
-                          fetchRadLevel1_4(3);
+                        if (selectedRad2?.kode) {
+                          fetchRadLevel1_4(3, selectedRad2.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_rad_1_4([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRad3(option);
+                        setSelectedRad4(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -811,17 +868,23 @@ const FormFixGapDataInformasi = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan RAD Level 4"
+                      value={selectedRad4}
                       options={rad_1_4}
                       isLoading={isLoading}
                       isSearchable
                       isClearable
+                      isDisabled={!selectedRad3}
                       onMenuOpen={() => {
-                        if (rad_1_4.length === 0) {
-                          fetchRadLevel1_4(4);
+                        if (selectedRad3?.kode) {
+                          fetchRadLevel1_4(4, selectedRad3.kode);
                         }
                       }}
                       onMenuClose={() => {
                         set_rad_1_4([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRad4(option);
                       }}
                       styles={{
                         control: (baseStyles) => ({

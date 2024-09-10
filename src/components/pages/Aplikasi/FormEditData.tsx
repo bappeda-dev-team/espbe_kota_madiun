@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 interface OptionType {
   value: number;
   label: string;
+  kode?: string;
 }
 
 interface OptionTypeString {
@@ -184,6 +185,7 @@ const FormEditData = () => {
           const raaLevel1Option = {
             value: result.RaaLevel1id.Id,
             label: `${result.RaaLevel1id.kode_referensi} ${result.RaaLevel1id.nama_referensi}`,
+            kode: result.RaaLevel1id.kode_referensi,
           };
           setSelectedRaa1(raaLevel1Option);
           reset((prev) => ({ ...prev, raa_level_1_id: raaLevel1Option }));
@@ -192,6 +194,7 @@ const FormEditData = () => {
           const raaLevel2Option = {
             value: result.RaaLevel2id.Id,
             label: `${result.RaaLevel2id.kode_referensi} ${result.RaaLevel2id.nama_referensi}`,
+            kode: result.RaaLevel2id.kode_referensi
           };
           setSelectedRaa2(raaLevel2Option);
           reset((prev) => ({ ...prev, raa_level_2_id: raaLevel2Option }));
@@ -200,6 +203,7 @@ const FormEditData = () => {
           const raaLevel3Option = {
             value: result.RaaLevel3id.Id,
             label: `${result.RaaLevel3id.kode_referensi} ${result.RaaLevel3id.nama_referensi}`,
+            kode: result.RaaLevel3id.kode_referensi,
           };
           setSelectedRaa3(raaLevel3Option);
           reset((prev) => ({ ...prev, raa_level_3_id: raaLevel3Option }));
@@ -238,11 +242,12 @@ const FormEditData = () => {
   }, [reset, Id, token]);
 
   //fetching data RAL 1 - 4
-  const fetchRaa_1_4 = async (level: number) => {
+  const fetchRaa_1_4 = async (level: number, value?: string) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {
+      const url = value ? `${API_URL}/v1/referensiarsitektur/${value}` : `${API_URL}/v1/referensiarsitektur`
+      const response = await fetch(url, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -254,6 +259,7 @@ const FormEditData = () => {
       const result = filteredData.map((item: any) => ({
         value: item.Id,
         label: `${item.kode_referensi} ${item.nama_referensi}`,
+        kode: item.kode_referensi,
       }));
       set_raa_1_4(result);
     } catch (err) {
@@ -289,31 +295,6 @@ const FormEditData = () => {
     }
   };
 
-  //
-  const handleChange = (option: any, actionMeta: any) => {
-    if (actionMeta.name === "raa_level_1_id") {
-      setSelectedRaa1(option);
-    } else if (actionMeta.name === "raa_level_2_id") {
-      setSelectedRaa2(option);
-    } else if (actionMeta.name === "raa_level_3_id") {
-      setSelectedRaa3(option);
-    } else if (actionMeta.name === "raa_level_4_id") {
-      setSelectedRaa4(option);
-    } else if (actionMeta.name === "strategic_id") {
-      setSelectedStrategic(option);
-    } else if (actionMeta.name === "tactical_id") {
-      setSelectedTactical(option);
-    } else if (actionMeta.name === "operational_id") {
-      setSelectedOperational(option);
-    } else if (actionMeta.name === "tahun") {
-      setSelectedTahun(option);
-    } else if (actionMeta.name === "jenis_aplikasi") {
-      setSelectedJenisAplikasi(option);
-    } else if (actionMeta.name === "interoprabilitas") {
-      setSelectedInteroprabilitas(option);
-    }
-  };
-
   const interoprabilitasValue = watch("interoprabilitas");
 
   //aski form di submit
@@ -338,7 +319,35 @@ const FormEditData = () => {
       tactical_id: data.tactical_id?.value,
       operational_id: data.operational_id?.value,
     };
-    try {
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+        AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
+      } else {
+        // console.log(formData);
+        try {
+          const response = await fetch(`${API_URL}/v1/updateaplikasi/${Id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization': `${token}`,
+            },
+            body: JSON.stringify(formData),
+          });
+    
+          if (response.ok) {
+            AlertNotification("Berhasil", "Data Aplikasi Berhasil Diubah", "success", 1000);
+            router.push("/Aplikasi");
+            reset();
+          } else {
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+          }
+        } catch (error) {
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
+      }
+    } else {
+      // console.log(formData);
+      try {
         const response = await fetch(`${API_URL}/v1/updateaplikasi/${Id}`, {
           method: "PUT",
           headers: {
@@ -358,6 +367,7 @@ const FormEditData = () => {
       } catch (error) {
           AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
       }
+    }
   };
 
   return (
@@ -601,7 +611,7 @@ const FormEditData = () => {
                       options={JenisAplikasi}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "jenis_aplikasi" });
+                        setSelectedJenisAplikasi(option);
                       }}
                       isClearable={true}
                       styles={{
@@ -642,7 +652,7 @@ const FormEditData = () => {
                       options={interoprabilitas}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "interoprabilitas" });
+                        setSelectedInteroprabilitas(option);
                       }}
                       isClearable={true}
                       styles={{
@@ -679,6 +689,9 @@ const FormEditData = () => {
                         type="text"
                         id="keterangan"
                         placeholder="Masukkan Keterangan"
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                        }}
                       />
                   )}
                 />
@@ -704,7 +717,7 @@ const FormEditData = () => {
                       options={tahun_option}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "tahun" });
+                        setSelectedTahun(option);
                       }}
                       isClearable={true}
                       styles={{
@@ -747,7 +760,9 @@ const FormEditData = () => {
                       options={raa_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "raa_level_1_id" });
+                        setSelectedRaa1(option);
+                        setSelectedRaa2(null);
+                        setSelectedRaa3(null);
                       }}
                       isClearable={true}
                       styles={{
@@ -798,9 +813,11 @@ const FormEditData = () => {
                       options={raa_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "raa_level_2_id" });
+                        setSelectedRaa2(option);
+                        setSelectedRaa3(null);
                       }}
                       isClearable={true}
+                      isDisabled={!selectedRaa1}
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -808,8 +825,8 @@ const FormEditData = () => {
                         })
                       }}
                       onMenuOpen={() => {
-                        if (raa_1_4.length === 0) {
-                          fetchRaa_1_4(2);
+                        if (selectedRaa1?.kode) {
+                          fetchRaa_1_4(2, selectedRaa1.kode);
                         }
                       }}
                       onMenuClose={() => {
@@ -849,9 +866,10 @@ const FormEditData = () => {
                       options={raa_1_4}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "raa_level_3_id" });
+                        setSelectedRaa3(option);
                       }}
                       isClearable={true}
+                      isDisabled={!selectedRaa2}
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -859,8 +877,8 @@ const FormEditData = () => {
                         })
                       }}
                       onMenuOpen={() => {
-                        if (raa_1_4.length === 0) {
-                          fetchRaa_1_4(3);
+                        if (selectedRaa2?.kode) {
+                          fetchRaa_1_4(3, selectedRaa2.kode);
                         }
                       }}
                       onMenuClose={() => {
@@ -900,7 +918,7 @@ const FormEditData = () => {
                       options={raa_5_7}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "strategic_id" });
+                        setSelectedStrategic(option);
                       }}
                       isClearable={true}
                       styles={{
@@ -951,7 +969,7 @@ const FormEditData = () => {
                       options={raa_5_7}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "tactical_id" });
+                        setSelectedTactical(option);
                       }}
                       isClearable={true}
                       styles={{
@@ -1002,7 +1020,7 @@ const FormEditData = () => {
                       options={raa_5_7}
                       onChange={(option) => {
                         field.onChange(option);
-                        handleChange(option, { name: "operational_id" });
+                        setSelectedOperational(option);
                       }}
                       isClearable={true}
                       styles={{
