@@ -5,6 +5,7 @@ import Loading from "@/components/global/Loading/Loading";
 import { getToken } from "@/app/Login/Auth/Auth";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import { event } from "jquery";
 
 interface ReferensiArsitektur {
     Id : number,
@@ -18,10 +19,11 @@ interface ReferensiArsitektur {
 const Table = () => {
   //level
   const [levelAll, setLevelAll] = useState<boolean | null>(true);
-  const [level1, setLevel1] = useState<boolean | null>(null);
-  const [level2, setLevel2] = useState<boolean | null>(null);
-  const [level3, setLevel3] = useState<boolean | null>(null);
-  const [level4, setLevel4] = useState<boolean | null>(null);
+  const [level, setLevel] = useState<number | null>(null);
+  // const [level1, setLevel1] = useState<boolean | null>(null);
+  // const [level2, setLevel2] = useState<boolean | null>(null);
+  // const [level3, setLevel3] = useState<boolean | null>(null);
+  // const [level4, setLevel4] = useState<boolean | null>(null);
   //jenis
   const [jenisAll, setJenisAll] = useState<boolean | null>(true);
   const [rab, setRab] = useState<boolean | null>(null);
@@ -31,6 +33,7 @@ const Table = () => {
 
   const tahun = useSelector((state: RootState) => state.Tahun.tahun);
   const [referensiarsitektur, setReferensiArsitektur] = useState<ReferensiArsitektur[]>([]);
+  const [filteredReferensi, setFilteredReferensi] = useState<ReferensiArsitektur[]>([]);
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true)
   const [dataNull, setDataNull] = useState<boolean>(false);
@@ -95,6 +98,121 @@ const Table = () => {
       }
     }, [tahun, token]);
 
+    useEffect(() => {
+      if(rab){
+        if(level != null){
+          const filteredReferensi = referensiarsitektur.filter((item: any) => {
+            return item.jenis_referensi == 'ProsesBisnis' && item.level_referensi == level
+          });
+          if(filteredReferensi === null){
+            setDataNull(true);
+            setFilteredReferensi([]);
+          } else {
+            setDataNull(false);
+            setFilteredReferensi(filteredReferensi);
+          }
+        } else {
+          const filteredReferensi = referensiarsitektur.filter((item: any) => {
+            return item.jenis_referensi == 'ProsesBisnis'
+          });
+          if(filteredReferensi === null){
+            setDataNull(true);
+            setFilteredReferensi([]);
+          } else {
+            setDataNull(false);
+            setFilteredReferensi(filteredReferensi);
+          }
+        }
+      } else if(ral){
+        if(level != null){
+          const filteredReferensi = referensiarsitektur.filter((item: any) => {
+            return item.jenis_referensi == 'Layanan' && item.level_referensi == level
+          });
+          if(filteredReferensi === null){
+            setDataNull(true);
+            setFilteredReferensi([]);
+          } else {
+            setDataNull(false);
+            setFilteredReferensi(filteredReferensi);
+          }
+        } else {
+          const filteredReferensi = referensiarsitektur.filter((item: any) => {
+            return item.jenis_referensi == 'Layanan'
+          });
+          if(filteredReferensi === null){
+            setDataNull(true);
+            setFilteredReferensi([]);
+          } else {
+            setDataNull(false);
+            setFilteredReferensi(filteredReferensi);
+          }
+        }
+      } else if(rad){
+        if(level != null){
+          const filteredReferensi = referensiarsitektur.filter((item: any) => {
+            return item.jenis_referensi == 'DataDanInformasi' && item.level_referensi == level
+          });
+          if(filteredReferensi === null){
+            setDataNull(true);
+            setFilteredReferensi([]);
+          } else {
+            setDataNull(false);
+            setFilteredReferensi(filteredReferensi);
+          }
+        } else {
+          const filteredReferensi = referensiarsitektur.filter((item: any) => {
+            return item.jenis_referensi == 'DataDanInformasi'
+          });
+          if(filteredReferensi === null){
+            setDataNull(true);
+            setFilteredReferensi([]);
+          } else {
+            setDataNull(false);
+            setFilteredReferensi(filteredReferensi);
+          }
+        }
+      } else if(raa){
+        if(level != null){
+          const filteredReferensi = referensiarsitektur.filter((item: any) => {
+            return item.jenis_referensi == 'Aplikasi' && item.level_referensi == level
+          });
+          if(filteredReferensi === null){
+            setDataNull(true);
+            setFilteredReferensi([]);
+          } else {
+            setDataNull(false);
+            setFilteredReferensi(filteredReferensi);
+          }
+        } else {
+          const filteredReferensi = referensiarsitektur.filter((item: any) => {
+            return item.jenis_referensi == 'Aplikasi'
+          });
+          if(filteredReferensi === null){
+            setDataNull(true);
+            setFilteredReferensi([]);
+          } else {
+            setDataNull(false);
+            setFilteredReferensi(filteredReferensi);
+          }
+        }
+      } else if(jenisAll){
+        if(level != null){
+          const filteredReferensi = referensiarsitektur.filter((item: any) => {
+            return item.level_referensi == level
+          });
+          if(filteredReferensi === null){
+            setDataNull(true);
+            setFilteredReferensi([]);
+          } else {
+            setDataNull(false);
+            setFilteredReferensi(filteredReferensi);
+          }
+        } else {
+          setFilteredReferensi(referensiarsitektur);
+        }
+      }
+    },[rab, ral, rad, raa, jenisAll ,referensiarsitektur, level])
+
     if(error){
         return <h1>{error}</h1>
     } else if(loading){
@@ -103,59 +221,124 @@ const Table = () => {
 
     return(
         <>
-          <div className="mb-3 justify-between">
+          <div className="flex mb-3 justify-between">
             <div className="flex">
-              {levelAll ? 
-                <button className="mx-1 text-xs py-1 min-w-[100px] border bg-amber-500 text-white rounded-lg">Level</button>
-                :
-                <button className="mx-1 text-xs py-1 min-w-[100px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">Level</button>
-              }
-              {level1 ? 
-                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">1</button>
-                :
-                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">1</button>
-              }
-              {level2 ? 
-                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">2</button>
-                :
-                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">2</button>
-              }
-              {level3 ? 
-                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">3</button>
-                :
-                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">3</button>
-              }
-              {level4 ? 
-                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">4</button>
-                :
-                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">4</button>
-              }
-            </div>
-            <div className="flex mt-3">
               {jenisAll ? 
                 <button className="mx-1 text-xs py-1 px-2 min-w-[100px] border bg-amber-500 text-white rounded-lg">Jenis</button>
                 :
-                <button className="mx-1 text-xs py-1 px-2 min-w-[100px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">Jenis</button>
+                <button className="mx-1 text-xs py-1 px-2 min-w-[100px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
+                  onClick={() => {
+                    setJenisAll(true);
+                    setRab(false);
+                    setRal(false);
+                    setRad(false);
+                    setRaa(false);
+                  }}
+                >Jenis</button>
               }
               {rab ? 
                 <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border bg-amber-500 text-white rounded-lg">RAB</button>
                 :
-                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">RAB</button>
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
+                  onClick={() => {
+                    setJenisAll(false);
+                    setRab(true);
+                    setRal(false);
+                    setRad(false);
+                    setRaa(false);
+                  }}
+                >RAB</button>
               }
               {ral ? 
                 <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border bg-amber-500 text-white rounded-lg">RAL</button>
                 :
-                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">RAL</button>
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
+                  onClick={() => {
+                    setJenisAll(false);
+                    setRab(false);
+                    setRal(true);
+                    setRad(false);
+                    setRaa(false);
+                  }}
+                >RAL</button>
               }
               {rad ? 
                 <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border bg-amber-500 text-white rounded-lg">RAD</button>
                 :
-                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">RAD</button>
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
+                  onClick={() => {
+                    setJenisAll(false);
+                    setRab(false);
+                    setRal(false);
+                    setRad(true);
+                    setRaa(false);
+                  }}
+                >RAD</button>
               }
               {raa ? 
                 <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border bg-amber-500 text-white rounded-lg">RAA</button>
                 :
-                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white">RAA</button>
+                <button className="mx-1 text-xs py-1 px-2 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
+                  onClick={() => {
+                    setJenisAll(false);
+                    setRab(false);
+                    setRal(false);
+                    setRad(false);
+                    setRaa(true);
+                  }}
+                >RAA</button>
+              }
+            </div>
+            <div className="flex">
+              {levelAll ? 
+                <button className="mx-1 text-xs py-1 min-w-[100px] border bg-amber-500 text-white rounded-lg">Level</button>
+                :
+                <button className="mx-1 text-xs py-1 min-w-[100px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
+                  onClick={() => {
+                    setLevelAll(true);
+                    setLevel(null);
+                  }}
+                >Level</button>
+              }
+              {level == 1 ? 
+                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">1</button>
+                :
+                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
+                  onClick={() => {
+                    setLevelAll(false);
+                    setLevel(1);
+                  }}
+                >1</button>
+              }
+              {level == 2 ? 
+                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">2</button>
+                :
+                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
+                  onClick={() => {
+                    setLevelAll(false);
+                    setLevel(2);
+                  }}
+                >2</button>
+              }
+              {level == 3 ? 
+                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">3</button>
+                :
+                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
+                  onClick={() => {
+                    setLevelAll(false);
+                    setLevel(3);
+                  }}
+                >3</button>
+              }
+              {level == 4 ? 
+                <button className="mx-1 text-xs py-1 min-w-[40px] border bg-amber-500 text-white rounded-lg">4</button>
+                :
+                <button className="mx-1 text-xs py-1 min-w-[40px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
+                  onClick={() => {
+                    setLevelAll(false);
+                    setLevel(4);
+                  }}
+                >4</button>
               }
             </div>
           </div>
@@ -179,7 +362,7 @@ const Table = () => {
                   </td>
               </tr>
               ) : (
-                  referensiarsitektur.map((data, index) => (
+                  filteredReferensi.map((data, index) => (
                   <tr key={data.Id} className="border rounded-b-lg hover:bg-slate-50">
                       <td className="px-6 py-4 border sticky bg-white text-center left-[-2px]">{index +1}</td>
                       <td className="px-6 py-4 border">{data.nama_referensi}</td>
