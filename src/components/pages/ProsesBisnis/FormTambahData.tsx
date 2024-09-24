@@ -121,7 +121,7 @@ const FormTambahData = () => {
   const fetchRabLevel4 = async () => {
     setIsLoading(true);
     try {
-      const url = `${API_URL}/v1/pohonkinerja`
+      const url = `${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd}`
       const response = await fetch(url, {
         headers: {
           'Authorization': `${token}`,

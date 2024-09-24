@@ -193,7 +193,7 @@ const FormFixGapDataInformasi = () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try {
-          const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
+          const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd}`, {
             headers: {
               'Authorization': `${token}`,
             },

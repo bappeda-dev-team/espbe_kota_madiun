@@ -28,6 +28,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
   const [referensiArsitekturActive, setReferensiArsitekturActive] = useState<boolean>(false);
   const [sasaranKotaActive, setSasaranKotaActive] = useState<boolean>(false);
   const [bidangUrusanActive, setBidangUrusanActive] = useState<boolean>(false);
+  const [sasaranKinerjaActive, setSasaranKinerjaActive] = useState<boolean>(false);
 
   const [ProsesBisnisActive, setProsesBisnisActive] = useState<boolean>(false);
   const [LayananActive, setLayananActive] = useState<boolean>(false);
@@ -71,6 +72,8 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
@@ -95,6 +98,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setPohonKinerjaActive(false);
         setProsesBisnisActive(false),
@@ -116,6 +120,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -135,6 +140,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(true),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -154,6 +160,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(true),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -173,6 +180,27 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(true),
+        setSasaranKinerjaActive(false),
+        setProsesBisnisActive(false),
+        setLayananActive(false),
+        setStandartPelayananActive(false),
+        setFormLayananActive(false),
+        setDataInformasiActive(false),
+        setAplikasiActive(false),
+        setGapArsitekturActive(false);
+         setKebutuhanSPBEActive(false);
+         setPemenuhanKebutuhanActive(false);
+        setSdmInfrastrukturActive(false);
+      setPetaRencanaActive(false);
+    } else if (url === "/SasaranKinerja") {
+      setDahsboardActive(false),
+        setUserActive(false),
+        setDataMasterActive(true),
+        setPohonKinerjaActive(false),
+        setReferensiArsitekturActive(false),
+        setSasaranKotaActive(false),
+        setBidangUrusanActive(false),
+        setSasaranKinerjaActive(true),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -196,6 +224,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(true),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -220,6 +249,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(true),
         setStandartPelayananActive(false),
@@ -239,6 +269,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(true),
         setStandartPelayananActive(true),
@@ -263,6 +294,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -287,6 +319,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -310,6 +343,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -333,6 +367,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -356,6 +391,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -375,6 +411,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -394,6 +431,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -413,6 +451,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setReferensiArsitekturActive(false),
         setSasaranKotaActive(false),
         setBidangUrusanActive(false),
+        setSasaranKinerjaActive(false),
         setProsesBisnisActive(false),
         setLayananActive(false),
         setStandartPelayananActive(false),
@@ -620,6 +659,26 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
                         height={30}
                       />
                       {isCollapse ? "" : "Bidang Urusan"}
+                    </li>
+                  </Link>
+                  <Link href="/SasaranKinerja">
+                    <li
+                      className={`flex py-1 pl-2 rounded-lg transition-all duration-300 ease-in-out ${
+                        sasaranKinerjaActive
+                          ? "bg-gradient-to-r from-[#007F73] to-[#40DA97] text-white"
+                          : "hover:bg-gray-200 font-light"
+                      }`}
+                    >
+                      <Image
+                        className="pr-2"
+                        src={
+                          sasaranKinerjaActive ? "/iconLight/book.svg" : "/iconDark/book.svg"
+                        }
+                        alt="ListDashes"
+                        width={30}
+                        height={30}
+                      />
+                      {isCollapse ? "" : "Sasaran Kinerja"}
                     </li>
                   </Link>
                 </div>

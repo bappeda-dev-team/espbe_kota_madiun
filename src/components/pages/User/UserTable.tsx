@@ -7,6 +7,9 @@ import Loading from "@/components/global/Loading/Loading";
 import { ButtonSc } from "@/components/common/Button/Button";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import Image from "next/image";
+import { AlertNotification } from "@/components/common/Alert/Alert";
+import {useRouter} from "next/navigation";
 
 export const ASN = () => {
     const [user, setUser] = useState<any>(null);
@@ -50,11 +53,37 @@ export const AdminOPD = () => {
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
     const token = getToken();
+    const router = useRouter();
 
     useEffect(() => {
         const fetchUser = getUser();
         setUser(fetchUser);
       }, []);
+
+      const sinkronUser = async () => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+            try {
+              const response = await fetch(`${API_URL}/userapifetch?kode_opd=${SelectedOpd}`, {
+                method: "GET",
+                headers: {
+                  'Authorization': `${token}`,
+                },
+              });
+              if (!response.ok) {
+                throw new Error("cant fetch data");
+              }
+              AlertNotification("Berhasil", "Berhasil Sinkron data user", "success", 1000);
+              setTimeout(() => {
+                window.location.reload(); // Refresh halaman
+              }, 1000);
+            } catch (err) {
+              AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+            }
+          } else {
+            AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+          }
+      };
 
     useEffect(() => {
        const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -95,7 +124,23 @@ export const AdminOPD = () => {
 
     return (
         <>
-           <h1 className="uppercase font-bold my-5">Table Data User</h1>
+            <div className="flex items-center justify-between">
+                <h1 className="uppercase font-bold my-5">Table Data User</h1>
+                <ButtonSc 
+                    onClick={() => sinkronUser()}
+                >
+                <div className="flex">
+                    <Image 
+                        className="mr-1"
+                        src="/iconLight/refresh-2.svg" 
+                        alt="refresh-2" 
+                        width={15} 
+                        height={15} 
+                        />
+                    Sinkron
+                </div>
+                </ButtonSc>
+            </div>
             <div className="overflow-auto rounded-t-xl bg-white shadow-lg border">
                 <table className="w-full text-sm text-left">
                 <thead className="text-xs text-gray-700 uppercase border">

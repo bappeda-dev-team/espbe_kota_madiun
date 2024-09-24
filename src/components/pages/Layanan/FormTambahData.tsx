@@ -136,7 +136,7 @@ const FormTambahData = () => {
   const fetchPokinDefault = async (level: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
+      const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd}`, {
         headers: {
           'Authorization': `${token}`,
         },
