@@ -1,6 +1,6 @@
 "use client"
 
-import { ButtonPr, ButtonSc, ButtonTr } from "@/components/common/Button/Button";
+import { ButtonPr } from "@/components/common/Button/Button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { login } from "@/app/Login/Auth/Auth";
 import { useRouter } from "next/navigation";

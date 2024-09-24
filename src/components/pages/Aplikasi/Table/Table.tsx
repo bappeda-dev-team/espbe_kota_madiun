@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
 import { useRouter } from "next/navigation";
+import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface aplikasi {
     Id: number;
@@ -48,9 +49,10 @@ const Table = () => {
     const tahun = useSelector((state: RootState) => state.Tahun.tahun);
     const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [aplikasi, setAplikasi] = useState<aplikasi[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean | null>(null);
     const [error, setError] = useState<string | null>(null)
     const [dataNull, setDataNull] = useState<boolean>(false);
+    const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
     const [user, setUser] = useState<any>(null);
     const token = getToken();
     const router = useRouter();
@@ -62,116 +64,52 @@ const Table = () => {
 
     useEffect(() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      if(tahun !== 0 && SelectedOpd !== "all_opd"){
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/aplikasi?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setAplikasi([]);
-              setDataNull(true);
-            } else {
-              setAplikasi(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError("gagal mendapatkan data aplikasi, cek koneksi internet atau database server");
-          } finally {
-            setLoading(false);
+      const fetchingData = async (url: string) => {
+        try {
+          setLoading(true);
+          const response = await fetch(url, {
+            headers: {
+              Authorization: `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error('cant fetching data');
           }
-        };
-        fetchingData();
-      } else if(tahun == 0 && SelectedOpd != "all_opd"){
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/aplikasi?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setAplikasi([]);
-              setDataNull(true);
-            } else {
-              setAplikasi(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError("gagal mendapatkan data aplikasi, cek koneksi internet atau database server");
-          } finally {
-            setLoading(false);
+          const data = await response.json();
+          if (data.data === null) {
+            setAplikasi([]);
+            setDataNull(true);
+          } else {
+            setAplikasi(data.data);
+            setDataNull(false);
           }
-        };
-        fetchingData();
-      } else if(tahun != 0 && SelectedOpd == "all_opd"){
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/aplikasi?tahun=${tahun}`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setAplikasi([]);
-              setDataNull(true);
-            } else {
-              setAplikasi(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError("gagal mendapatkan data aplikasi, cek koneksi internet atau database server");
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchingData();
-      } else {
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/aplikasi`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setAplikasi([]);
-              setDataNull(true);
-            } else {
-              setAplikasi(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError("gagal mendapatkan data aplikasi, cek koneksi internet atau database server");
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchingData();
+        } catch (err) {
+          setError('Gagal memuat data, silakan cek koneksi internet atau database server');
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      if (user?.roles == 'admin_kota') {
+        if (SelectedOpd === 'all_opd') {
+          // Fetch semua OPD
+          fetchingData(`${API_URL}/v1/aplikasi/?tahun=${tahun}`);
+          setOpdKosong(false);
+        } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+          // Fetch OPD yang dipilih
+          fetchingData(`${API_URL}/v1/aplikasi?tahun=${tahun}&kode_opd=${SelectedOpd}`);
+          setOpdKosong(false);
+        } else if (SelectedOpd === '') {
+          // OPD kosong
+          setOpdKosong(true);
+        }
+      } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
+        // Bukan admin kota, fetch default
+        fetchingData(`${API_URL}/v1/aplikasi/?tahun=${tahun}`);
+        setOpdKosong(false);
       }
-    }, [tahun, SelectedOpd, token]);
+    }, [tahun, SelectedOpd, token, user]);
 
     //tambah data
     const tambahData= async() => {
@@ -253,6 +191,8 @@ const Table = () => {
         return <Loading/>
     } else if(error){
         return <h1 className="text-red-500">{error}</h1>
+    } else if(opdKosong){
+      return <OpdNull />
     }
 
     return(

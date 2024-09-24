@@ -59,7 +59,8 @@ const FormEditData = () => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   const [raa_1_4, set_raa_1_4] = useState<OptionType[]>([]);
-  const [raa_5_7, set_raa_5_7] = useState<OptionType[]>([]);
+  const [raa_5, set_raa_5] = useState<OptionType[]>([]);
+  const [raa_6_7, set_raa_6_7] = useState<OptionType[]>([]);
 
   //state untuk fetch default value data by id
   const [namaAplikasi, setNamaAplikasi] = useState<string>("");
@@ -269,8 +270,8 @@ const FormEditData = () => {
     }
   };
 
-  //fetching data RAL 5 - 7
-  const fetchRaa_5_7 = async (pohon_kinerja: any) => {
+  //fetching data RAL 5
+  const fetchRaa_5 = async (level: number) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
@@ -281,15 +282,37 @@ const FormEditData = () => {
       });
       const data = await response.json();
       const filteredData = data.data.filter(
-        (pohon: any) => pohon.jenis_pohon === pohon_kinerja,
+        (pohon: any) => pohon.level_pohon === level,
       );
       const result = filteredData.map((item: any) => ({
         value: item.id,
         label: item.nama_pohon,
       }));
-      set_raa_5_7(result);
+      set_raa_5(result);
     } catch (err) {
-      console.log("Gagal memuat data Option RAA Level 5 - 7", err);
+      console.log("Gagal memuat data Option RAA Level 5", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  //fetching data RAL 6 - 7
+  const fetchRaa_6_7 = async (jenis: string, value: number) => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/v1/pohonkinerjahirarki/${value}`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
+      const data = await response.json();
+      const result = data.data[jenis].map((item: any) => ({
+        value: item.id,
+        label: item.nama_pohon,
+      }));
+      set_raa_6_7(result);
+    } catch (err) {
+      console.log("Gagal memuat data Option RAA Level 6 - 7", err);
     } finally {
       setIsLoading(false);
     }
@@ -915,10 +938,12 @@ const FormEditData = () => {
                       value={selectedStrategic || null}
                       placeholder="Pilih Strategic"
                       isLoading={isLoading}
-                      options={raa_5_7}
+                      options={raa_5}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedStrategic(option);
+                        setSelectedTactical(null);
+                        setSelectedOperational(null);
                       }}
                       isClearable={true}
                       styles={{
@@ -928,12 +953,12 @@ const FormEditData = () => {
                         })
                       }}
                       onMenuOpen={() => {
-                        if (raa_5_7.length === 0) {
-                          fetchRaa_5_7("Strategic");
+                        if (raa_5.length === 0) {
+                          fetchRaa_5(4);
                         }
                       }}
                       onMenuClose={() => {
-                        set_raa_5_7([]);
+                        set_raa_5([]);
                       }}
                     />
                     {errors.strategic_id ?
@@ -966,10 +991,12 @@ const FormEditData = () => {
                       value={selectedTactical || null}
                       placeholder="Pilih RAB Level 5"
                       isLoading={isLoading}
-                      options={raa_5_7}
+                      options={raa_6_7}
+                      isDisabled={!selectedStrategic}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedTactical(option);
+                        setSelectedOperational(null);
                       }}
                       isClearable={true}
                       styles={{
@@ -979,12 +1006,12 @@ const FormEditData = () => {
                         })
                       }}
                       onMenuOpen={() => {
-                        if (raa_5_7.length === 0) {
-                          fetchRaa_5_7("Tactical");
+                        if (selectedStrategic?.value) {
+                          fetchRaa_6_7("tactical", selectedStrategic.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_raa_5_7([]);
+                        set_raa_6_7([]);
                       }}
                     />
                     {errors.tactical_id ?
@@ -1017,7 +1044,8 @@ const FormEditData = () => {
                       value={selectedOperational || null}
                       placeholder="Pilih Operational"
                       isLoading={isLoading}
-                      options={raa_5_7}
+                      options={raa_6_7}
+                      isDisabled={!selectedTactical}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedOperational(option);
@@ -1030,12 +1058,12 @@ const FormEditData = () => {
                         })
                       }}
                       onMenuOpen={() => {
-                        if (raa_5_7.length === 0) {
-                          fetchRaa_5_7("Operational");
+                        if (selectedTactical?.value) {
+                          fetchRaa_6_7("operational", selectedTactical.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_raa_5_7([]);
+                        set_raa_6_7([]);
                       }}
                     />
                     {errors.operational_id ?

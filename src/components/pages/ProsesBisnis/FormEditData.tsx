@@ -50,7 +50,8 @@ const FormEditData = () => {
   const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>([],);
   const [bidang_urusan_option, set_bidang_urusan_option] = useState<OptionType[]>([]);
   const [rab_1_3, set_rab_1_3] = useState<OptionType[]>([]);
-  const [rab_4_6, set_rab_4_6] = useState<OptionType[]>([]);
+  const [rab_4, set_rab_4] = useState<OptionType[]>([]);
+  const [rab_5_6, set_rab_5_6] = useState<OptionType[]>([]);
 
   //state untuk fetch default value data by id
   const [selectedSasaranKota, setSelectedSasaranKota] = useState<OptionType | null>(null);
@@ -199,7 +200,7 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/bidangurusan`, {
+      const response = await fetch(`${API_URL}/v1/bidangurusanopd?kode_opd=${SelectedOpd}`, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -207,7 +208,7 @@ const FormEditData = () => {
       const data = await response.json();
       const result = data.data.map((item: any) => ({
         value: item.id,
-        label: `${item.id}. ${item.kode_bidang_urusan} - ${item.bidang_urusan}`,
+        label: `${item.kode_bidang_urusan} - ${item.bidang_urusan}`,
       }));
       set_bidang_urusan_option(result);
     } catch (err) {
@@ -244,7 +245,7 @@ const FormEditData = () => {
     }
   };
 
-  const fetchRab_4_6 = async (level: number) => {
+  const fetchRab_4 = async () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
@@ -255,15 +256,36 @@ const FormEditData = () => {
       });
       const data = await response.json();
       const filteredData = data.data.filter(
-        (pohon: any) => pohon.level_pohon === level,
+        (pohon: any) => pohon.level_pohon === 4,
       );
       const result = filteredData.map((item: any) => ({
         value: item.id,
         label: item.nama_pohon,
       }));
-      set_rab_4_6(result);
+      set_rab_4(result);
     } catch (err) {
-      console.log("Gagal memuat data Option RAB Level 4 - 6", err);
+      console.log("Gagal memuat data Option RAB Level 4", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchRab_5_6 = async (jenis: string, value: number) => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/v1/pohonkinerjahirarki/${value}`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
+      const data = await response.json();
+      const result = data.data[jenis].map((item: any) => ({
+        value: item.id,
+        label: item.nama_pohon,
+      }));
+      set_rab_5_6(result);
+    } catch (err) {
+      console.log("Gagal memuat data Option RAB Level 5 - 6", err);
     } finally {
       setIsLoading(false);
     }
@@ -460,6 +482,7 @@ const FormEditData = () => {
                           fetchBidangUrusan();
                         }
                       }}
+                      onMenuClose={() => set_bidang_urusan_option([])}
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -655,19 +678,18 @@ const FormEditData = () => {
                       value={selectedRab4 || null}
                       placeholder="Pilih Strategic"
                       isLoading={isLoading}
-                      options={rab_4_6}
+                      options={rab_4}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedRab4(option);
+                        setSelectedRab5(null);
+                        setSelectedRab6(null);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (rab_4_6.length === 0) {
-                          fetchRab_4_6(4);
+                        if (rab_4.length === 0) {
+                          fetchRab_4();
                         }
-                      }}
-                      onMenuClose={() => {
-                        set_rab_4_6([]);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -706,19 +728,21 @@ const FormEditData = () => {
                       value={selectedRab5 || null}
                       placeholder="Pilih Tactical"
                       isLoading={isLoading}
-                      options={rab_4_6}
+                      options={rab_5_6}
+                      isDisabled={!selectedRab4}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedRab5(option);
+                        setSelectedRab6(null);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (rab_4_6.length === 0) {
-                          fetchRab_4_6(5);
+                        if (selectedRab4?.value) {
+                          fetchRab_5_6("tactical", selectedRab4.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rab_4_6([]);
+                        set_rab_5_6([]);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -757,19 +781,20 @@ const FormEditData = () => {
                       value={selectedRab6 || null}
                       placeholder="Pilih Operational"
                       isLoading={isLoading}
-                      options={rab_4_6}
+                      options={rab_5_6}
+                      isDisabled={!selectedRab5}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedRab6(option);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (rab_4_6.length === 0) {
-                          fetchRab_4_6(6);
+                        if (selectedRab5?.value) {
+                          fetchRab_5_6("operational", selectedRab5.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rab_4_6([]);
+                        set_rab_5_6([]);
                       }}
                       styles={{
                         control: (baseStyles) => ({

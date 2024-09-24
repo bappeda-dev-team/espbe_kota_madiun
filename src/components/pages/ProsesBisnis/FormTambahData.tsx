@@ -33,11 +33,15 @@ const FormTambahData = () => {
   const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
 
   const [rab_level_1_3_option, set_rab_level_1_3_option] = useState<OptionType[]>([]);
-  const [rab_level_4_6_option, set_rab_level_4_6_option] = useState<OptionType[]>([]);
+  const [rab_level_4_option, set_rab_level_4_option] = useState<OptionType[]>([]);
+  const [rab_level_5_6_option, set_rab_level_5_6_option] = useState<OptionType[]>([]);
 
   const [selectedRab1, setSelectedRab1] = useState<OptionType | null>(null);
   const [selectedRab2, setSelectedRab2] = useState<OptionType | null>(null);
   const [selectedRab3, setSelectedRab3] = useState<OptionType | null>(null);
+  const [selectedRab4, setSelectedRab4] = useState<OptionType | null>(null);
+  const [selectedRab5, setSelectedRab5] = useState<OptionType | null>(null);
+  const [selectedRab6, setSelectedRab6] = useState<OptionType | null>(null);
 
   const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>([],);
   const [bidang_urusan_option, set_bidang_urusan_option] = useState<OptionType[]>([]);
@@ -114,25 +118,47 @@ const FormTambahData = () => {
     }
   };
 
-  const fetchRabLevel4_6 = async (level: number) => {
+  const fetchRabLevel4 = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
+      const url = `${API_URL}/v1/pohonkinerja`
+      const response = await fetch(url, {
         headers: {
           'Authorization': `${token}`,
         },
       });
       const data = await response.json();
       const filteredData = data.data.filter(
-        (pohon: any) => pohon.level_pohon === level,
+        (pohon: any) => pohon.level_pohon === 4,
       );
       const result = filteredData.map((pohon: any) => ({
         value: pohon.id,
         label: pohon.nama_pohon,
       }));
-      set_rab_level_4_6_option(result);
+      set_rab_level_4_option(result);
     } catch (err) {
-      console.log("gagal memuat data option RAB Level 4 - 6");
+      console.log("gagal memuat data option RAB Level 4");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchRabLevel5_6 = async (jenis: string, value?: number) => {
+    setIsLoading(true);
+    try {
+      const url = `${API_URL}/v1/pohonkinerjahirarki/${value}`
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
+      const data = await response.json();
+      const result = data.data[jenis].map((pohon: any) => ({
+        value: pohon.id,
+        label: pohon.nama_pohon,
+      }));
+      set_rab_level_5_6_option(result);
+    } catch (err) {
+      console.log("gagal memuat data option RAB Level 5 - 6");
     } finally {
       setIsLoading(false);
     }
@@ -162,7 +188,7 @@ const FormTambahData = () => {
   const fetchBidangUrusan = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/bidangurusan`, {
+      const response = await fetch(`${API_URL}/v1/bidangurusanopd?kode_opd=${SelectedOpd}`, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -170,7 +196,7 @@ const FormTambahData = () => {
       const data = await response.json();
       const result = data.data.map((item: any) => ({
         value: item.id,
-        label: `${item.id}. ${item.kode_bidang_urusan} - ${item.bidang_urusan}`,
+        label: `${item.kode_bidang_urusan} - ${item.bidang_urusan}`,
       }));
       set_bidang_urusan_option(result);
     } catch (err) {
@@ -309,6 +335,7 @@ const FormTambahData = () => {
                           fetchBidangUrusan();
                         }
                       }}
+                      onMenuClose={() => set_bidang_urusan_option([])}
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -538,17 +565,21 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Strategic"
-                      options={rab_level_4_6_option}
+                      value={selectedRab4}
+                      options={rab_level_4_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
                       onMenuOpen={() => {
-                        if (rab_level_4_6_option.length === 0) {
-                          fetchRabLevel4_6(4);
+                        if (rab_level_4_option.length === 0) {
+                          fetchRabLevel4();
                         }
                       }}
-                      onMenuClose={() => {
-                        set_rab_level_4_6_option([]);
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRab4(option);
+                        setSelectedRab5(null);
+                        setSelectedRab6(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -584,17 +615,24 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Tactical"
-                      options={rab_level_4_6_option}
+                      value={selectedRab5}
+                      options={rab_level_5_6_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
+                      isDisabled={!selectedRab4}
                       onMenuOpen={() => {
-                        if (rab_level_4_6_option.length === 0) {
-                          fetchRabLevel4_6(5);
+                        if (selectedRab4?.value) {
+                          fetchRabLevel5_6("tactical", selectedRab4.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rab_level_4_6_option([]);
+                        set_rab_level_5_6_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRab5(option);
+                        setSelectedRab6(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -630,17 +668,23 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Operational"
-                      options={rab_level_4_6_option}
+                      value={selectedRab6}
+                      options={rab_level_5_6_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
+                      isDisabled={!selectedRab5}
                       onMenuOpen={() => {
-                        if (rab_level_4_6_option.length === 0) {
-                          fetchRabLevel4_6(6);
+                        if (selectedRab5?.value) {
+                          fetchRabLevel5_6("operational", selectedRab5.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rab_level_4_6_option([]);
+                        set_rab_level_5_6_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRab6(option);
                       }}
                       styles={{
                         control: (baseStyles) => ({

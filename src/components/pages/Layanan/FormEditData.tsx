@@ -54,7 +54,8 @@ const FormEditData = () => {
   const [user, setUser] = useState<any>(null);
 
   const [ral_1_4, set_ral_1_4] = useState<OptionType[]>([]);
-  const [ral_5_7, set_ral_5_7] = useState<OptionType[]>([]);
+  const [ral_5, set_ral_5] = useState<OptionType[]>([]);
+  const [ral_6_7, set_ral_6_7] = useState<OptionType[]>([]);
 
   //state untuk fetch default value data by id
   const [namaLayanan, setNamaLayanan] = useState<string>("");
@@ -242,8 +243,8 @@ const FormEditData = () => {
     }
   };
 
-  //fetching data RAL 5 - 7
-  const fetchRal_5_7 = async (pohon_kinerja: any) => {
+  //fetching data RAL 5
+  const fetchRal_5 = async (pohon_kinerja: any) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
@@ -260,9 +261,31 @@ const FormEditData = () => {
         value: item.id,
         label: item.nama_pohon,
       }));
-      set_ral_5_7(result);
+      set_ral_5(result);
     } catch (err) {
-      console.log("Gagal memuat data Option RAL Level 5 - 7", err);
+      console.error("Gagal memuat data Option RAL Level 5", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  //fetching data RAL 5 - 7
+  const fetchRal_6_7 = async (jenis: any, value: number) => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/v1/pohonkinerjahirarki/${value}`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
+      const data = await response.json();
+      const result = data.data[jenis].map((item: any) => ({
+        value: item.id,
+        label: item.nama_pohon,
+      }));
+      set_ral_6_7(result);
+    } catch (err) {
+      console.error("Gagal memuat data Option RAL Level 6 - 7", err);
     } finally {
       setIsLoading(false);
     }
@@ -511,7 +534,7 @@ const FormEditData = () => {
                       id="tujuan_layanan_id"
                       value={selectedTujuanLayanan || null}
                       placeholder="Pilih Tujuan Layanan"
-                      options={ral_5_7}
+                      options={ral_5}
                       isLoading={isLoading}
                       onChange={(option) => {
                         field.onChange(option);
@@ -519,12 +542,12 @@ const FormEditData = () => {
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if(ral_5_7.length === 0){
-                          fetchRal_5_7("Operational")
+                        if(ral_5.length === 0){
+                          fetchRal_5("Operational")
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_5_7([])
+                        set_ral_5([])
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -817,19 +840,21 @@ const FormEditData = () => {
                       value={selectedStrategic || null}
                       placeholder="Pilih Strategic"
                       isLoading={isLoading}
-                      options={ral_5_7}
+                      options={ral_5}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedStrategic(option);
+                        setSelectedTactical(null);
+                        setSelectedOperational(null);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_5_7.length === 0) {
-                          fetchRal_5_7("Strategic");
+                        if (ral_5.length === 0) {
+                          fetchRal_5("Strategic");
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_5_7([]);
+                        set_ral_5([]);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -868,19 +893,21 @@ const FormEditData = () => {
                       value={selectedTactical || null}
                       placeholder="Pilih RAB Level 5"
                       isLoading={isLoading}
-                      options={ral_5_7}
+                      options={ral_6_7}
+                      isDisabled={!selectedStrategic}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedTactical(option);
+                        setSelectedOperational(null);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_5_7.length === 0) {
-                          fetchRal_5_7("Tactical");
+                        if (selectedStrategic?.value) {
+                          fetchRal_6_7("tactical", selectedStrategic.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_5_7([]);
+                        set_ral_6_7([]);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -919,19 +946,20 @@ const FormEditData = () => {
                       value={selectedOperational || null}
                       placeholder="Pilih Operational"
                       isLoading={isLoading}
-                      options={ral_5_7}
+                      options={ral_6_7}
+                      isDisabled={!selectedTactical}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedOperational(option);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {
-                        if (ral_5_7.length === 0) {
-                          fetchRal_5_7("Operational");
+                        if (selectedTactical?.value) {
+                          fetchRal_6_7("operational", selectedTactical.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_5_7([]);
+                        set_ral_6_7([]);
                       }}
                       styles={{
                         control: (baseStyles) => ({

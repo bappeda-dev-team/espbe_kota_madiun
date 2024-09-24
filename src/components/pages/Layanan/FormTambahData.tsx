@@ -49,9 +49,13 @@ const FormTambahData = () => {
   const [selectedRaL2, setSelectedRal2] = useState<OptionType | null>(null);
   const [selectedRaL3, setSelectedRal3] = useState<OptionType | null>(null);
   const [selectedRaL4, setSelectedRal4] = useState<OptionType | null>(null);
+  const [selectedRaLStrategic, setSelectedRalStrategic] = useState<OptionType | null>(null);
+  const [selectedRaLTactical, setSelectedRalTactical] = useState<OptionType | null>(null);
+  const [selectedRaLOperational, setSelectedRalOperational] = useState<OptionType | null>(null);
 
   const [ral_level_1_4_option, set_ral_level_1_4_option] = useState<OptionType[]>([]);
-  const [ral_level_5_7_option, set_ral_level_5_7_option] = useState<OptionType[]>([]);
+  const [pokin_option, set_Pokin_option] = useState<OptionType[]>([]);
+  const [ral_level_6_7_option, set_ral_level_6_7_option] = useState<OptionType[]>([]);
   const router = useRouter();
 
 
@@ -129,7 +133,7 @@ const FormTambahData = () => {
     }
   };
 
-  const fetchRalLevel5_7 = async (jenis_pohon: string) => {
+  const fetchPokinDefault = async (level: number) => {
     setIsLoading(true);
     try {
       const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
@@ -139,15 +143,35 @@ const FormTambahData = () => {
       });
       const data = await response.json();
       const filteredData = data.data.filter(
-        (pohon: any) => pohon.jenis_pohon === jenis_pohon,
+        (pohon: any) => pohon.level_pohon === level,
       );
       const result = filteredData.map((pohon: any) => ({
         value: pohon.id,
         label: pohon.nama_pohon,
       }));
-      set_ral_level_5_7_option(result);
+      set_Pokin_option(result);
     } catch (err) {
-      console.log("gagal memuat data option RAL Level 5 - 7");
+      console.log("gagal memuat data option Strategic");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchRalLevel6_7 = async (jenis: string, value: number) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/v1/pohonkinerjahirarki/${value}`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
+      const data = await response.json();
+      const result = data.data[jenis].map((pohon: any) => ({
+        value: pohon.id,
+        label: pohon.nama_pohon,
+      }));
+      set_ral_level_6_7_option(result);
+    } catch (err) {
+      console.log("gagal memuat data option RAL Level 6 - 7");
     } finally {
       setIsLoading(false);
     }
@@ -369,16 +393,16 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Pilih Tujuan Layanan"
-                      options={ral_level_5_7_option}
+                      options={pokin_option}
                       isSearchable
                       isClearable
                       onMenuOpen={() => {
-                        if(ral_level_5_7_option.length === 0){
-                          fetchRalLevel5_7("Operational");
+                        if(pokin_option.length === 0){
+                          fetchPokinDefault(6);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_level_5_7_option([]);
+                        set_Pokin_option([]);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -659,17 +683,24 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Strategic"
-                      options={ral_level_5_7_option}
+                      value={selectedRaLStrategic}
+                      options={pokin_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
                       onMenuOpen={() => {
-                        if (ral_level_5_7_option.length === 0) {
-                          fetchRalLevel5_7("Strategic");
+                        if (pokin_option.length === 0) {
+                          fetchPokinDefault(4);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_level_5_7_option([]);
+                        set_Pokin_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRalStrategic(option);
+                        setSelectedRalTactical(null);
+                        setSelectedRalOperational(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -705,17 +736,24 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Tactical"
-                      options={ral_level_5_7_option}
+                      value={selectedRaLTactical}
+                      options={ral_level_6_7_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
+                      isDisabled={!selectedRaLStrategic}
                       onMenuOpen={() => {
-                        if (ral_level_5_7_option.length === 0) {
-                          fetchRalLevel5_7("Tactical");
+                        if (selectedRaLStrategic?.value) {
+                          fetchRalLevel6_7("tactical", selectedRaLStrategic.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_level_5_7_option([]);
+                        set_ral_level_6_7_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRalTactical(option);
+                        setSelectedRalOperational(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -751,17 +789,23 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Operational"
-                      options={ral_level_5_7_option}
+                      value={selectedRaLOperational}
+                      options={ral_level_6_7_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
+                      isDisabled={!selectedRaLTactical}
                       onMenuOpen={() => {
-                        if (ral_level_5_7_option.length === 0) {
-                          fetchRalLevel5_7("Operational");
+                        if (selectedRaLTactical?.value) {
+                          fetchRalLevel6_7("operational", selectedRaLTactical.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_ral_level_5_7_option([]);
+                        set_ral_level_6_7_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedRalOperational(option);
                       }}
                       styles={{
                         control: (baseStyles) => ({

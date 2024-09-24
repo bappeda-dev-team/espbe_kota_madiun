@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
 import { useRouter } from "next/navigation";
+import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface KebutuhanSPBE {
     id: number;
@@ -42,7 +43,8 @@ const Table = () => {
     const [dataNull, setDataNull] = useState<boolean>(false);
     const [kebutuhan, setKebutuhan] = useState<KebutuhanSPBE[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean | null>(null);
+    const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
     const [user, setUser] = useState<any>(null);
     const token = getToken();
     const router = useRouter();
@@ -53,117 +55,53 @@ const Table = () => {
     },[])
 
     useEffect(() => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      if(tahun !== 0 && SelectedOpd !== "all_opd"){
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setKebutuhan([]);
-              setDataNull(true);
-            } else {
-              setKebutuhan(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError("gagal mendapatkan data kebutuhan spbe, cek koneksi internet atau database server");
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchingData();
-      } else if(tahun == 0 && SelectedOpd != "all_opd"){
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setKebutuhan([]);
-              setDataNull(true);
-            } else {
-              setKebutuhan(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError("gagal mendapatkan data kebutuhan spbe, cek koneksi internet atau database server");
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchingData();
-      } else if(tahun != 0 && SelectedOpd == "all_opd"){
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setKebutuhan([]);
-              setDataNull(true);
-            } else {
-              setKebutuhan(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError("gagal mendapatkan data kebutuhan spbe, cek koneksi internet atau database server");
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchingData();
-      } else {
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/kebutuhanspbe`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setKebutuhan([]);
-              setDataNull(true);
-            } else {
-              setKebutuhan(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError("gagal mendapatkan data kebutuhan spbe, cek koneksi internet atau database server");
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchingData();
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const fetchingData = async (url: string) => {
+      try {
+        setLoading(true);
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('cant fetching data');
+        }
+        const data = await response.json();
+        if (data.data === null) {
+          setKebutuhan([]);
+          setDataNull(true);
+        } else {
+          setKebutuhan(data.data);
+          setDataNull(false);
+        }
+      } catch (err) {
+        setError('Gagal memuat data, silakan cek koneksi internet atau database server');
+      } finally {
+        setLoading(false);
       }
-    }, [tahun, SelectedOpd, token]);
+    };
+  
+    if (user?.roles == 'admin_kota') {
+      if (SelectedOpd === 'all_opd') {
+        // Fetch semua OPD
+        fetchingData(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}`);
+        setOpdKosong(false);
+      } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+        // Fetch OPD yang dipilih
+        fetchingData(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`);
+        setOpdKosong(false);
+      } else if (SelectedOpd === '') {
+        // OPD kosong
+        setOpdKosong(true);
+      }
+    } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
+      // Bukan admin kota, fetch default
+      fetchingData(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}`);
+      setOpdKosong(false);
+    }
+  }, [tahun, SelectedOpd, token, user]);
 
     //tambah data
     const tambahKebutuhan= async() => {
@@ -213,6 +151,8 @@ const Table = () => {
         return <div className="text-red-500">{error}</div>;
     } else if (loading) {
         return <Loading />;
+    } else if(opdKosong){
+      return <OpdNull />
     }
 
     return (
@@ -252,8 +192,7 @@ const Table = () => {
                           <th rowSpan={2} className="border px-6 py-3 min-w-[150px]">Nama Domain</th>
                           <th rowSpan={2} className="border px-6 py-3 min-w-[200px]">Kebutuhan</th>
                           <th colSpan={3} className="border px-6 py-3 min-w-[200px] text-center">Kondisi Awal</th>
-                          <th rowSpan={3} className="border px-6 py-3 min-w-[200px] text-center">Indikator PJ</th>
-                          <th rowSpan={3} className="border px-6 py-3 min-w-[200px] text-center">Penanggung Jawab</th>
+                          <th colSpan={2} rowSpan={2} className="border px-6 py-3 min-w-[400px] text-center">Penanggung Jawab</th>
                           <th rowSpan={2} className="border px-6 py-3 text-center">Aksi</th>
                       </tr>
                       <tr>
@@ -292,6 +231,45 @@ const Table = () => {
                                       </>
                                       ) : (
                                       <>
+                                      {data.jenis_kebutuhan.length > 1 ? 
+                                        <>
+                                          <td className="border px-6 py-4">
+                                              <div className="flex flex-col">
+                                                  {data.jenis_kebutuhan.map((info, idx) => (
+                                                  <>
+                                                    <div className="my-1" key={idx}>{info.kebutuhan? info.kebutuhan : "N/A"}</div>
+                                                    {idx < data.jenis_kebutuhan.length - 1 && <hr className="border-t my-2" />}
+                                                  </>
+                                              ))}
+                                              </div>
+                                          </td>
+                                          <td className="border px-6 py-4">
+                                              {data.jenis_kebutuhan.map((info, idx) => (
+                                                  <div className="flex flex-col" key={idx}>
+                                                      <div className="my-1">{info.kondisi_awal.find(ka => ka.tahun === 2022)?.keterangan || "N/A"}</div>
+                                                      {idx < data.jenis_kebutuhan.length - 1 && <hr className="border-t my-2" />}
+                                                  </div>
+                                              ))}
+                                          </td>
+                                          <td className="border px-6 py-4">
+                                              {data.jenis_kebutuhan.map((info, idx) => (
+                                                  <div className="flex flex-col" key={idx}>
+                                                      <div className="my-1">{info.kondisi_awal.find(ka => ka.tahun === 2023)?.keterangan || "N/A"}</div>
+                                                      {idx < data.jenis_kebutuhan.length - 1 && <hr className="border-t my-2" />}
+                                                  </div>
+                                              ))}
+                                          </td>
+                                          <td className="border px-6 py-4">
+                                              {data.jenis_kebutuhan.map((info, idx) => (
+                                                  <div className="flex flex-col" key={idx}>
+                                                      <div className="my-1">{info.kondisi_awal.find(ka => ka.tahun === 2024)?.keterangan || "N/A"}</div>
+                                                      {idx < data.jenis_kebutuhan.length - 1 && <hr className="border-t my-2" />}
+                                                  </div>
+                                              ))}
+                                          </td>
+                                        </>
+                                      :
+                                        <>
                                           <td className="border px-6 py-4">
                                               <div className="flex flex-col">
                                                   {data.jenis_kebutuhan.map((info, idx) => (
@@ -322,6 +300,8 @@ const Table = () => {
                                                   </div>
                                               ))}
                                           </td>
+                                        </>
+                                      }
                                       </>
                                   )}
                                   <td className="border px-6 py-4">{data.indikator_pj ? data.indikator_pj : "N/A"}</td>

@@ -1,6 +1,8 @@
 'use client'
 
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { logout } from "@/app/Login/Auth/Auth";
 
 type button = {
     onClick? : () => void;
@@ -23,7 +25,7 @@ export const ButtonPr: React.FC<button> = ({children, halaman_url, typee, classN
         <button
             type={typee}
             onClick={onClick || pindahHalaman}
-            className={`bg-gradient-to-r from-[#0F4C75] to-[#64B9F1] hover:from-[#071952] hover:to-[#008DDA] p-3 text-white rounded-lg ${className}`}
+            className={`bg-gradient-to-r from-[#0F4C75] to-[#64B9F1] hover:from-[#071952] hover:to-[#008DDA] px-3 py-2 text-white rounded-lg ${className}`}
         >
             {children}
         </button>
@@ -87,6 +89,56 @@ export const Button: React.FC<button> = ({children, halaman_url, typee, classNam
     );
 }
 
+export const ButtonHeader: React.FC<button> = ({children, halaman_url, typee, className, }) => {
+    const router = useRouter()
+    const [isOpen, setIsOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement | null>(null); // Untuk merujuk elemen menu
+
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event: any) => {
+        if (menuRef.current && !menuRef.current.contains(event.target)) {
+            setIsOpen(false);
+        }
+        };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+    return(
+        <div className="relative inline-block" ref={menuRef}>
+            <button
+                type={typee}
+                onClick={toggleMenu}
+                className={`rounded-lg px-3 py-2 border ml-1 border-emerald-500 text-emerald-500 font-bold text-sm hover:bg-emerald-500 hover:text-white ${className}`}
+            >
+                {children}
+            </button>
+            {isOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg">
+                    <ul>
+                    <li>
+                        <button onClick={() => router.push("/User")} className="block w-full text-left px-4 py-2 hover:bg-emerald-100">
+                            Profil User
+                        </button>
+                    </li>
+                    <li>
+                        <button onClick={() => logout()} className="block w-full text-left px-4 py-2 text-red-500 hover:bg-red-500 hover:text-white">
+                            Logout
+                        </button>
+                    </li>
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
+}
 
 
 //warna default lama

@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
 import { useRouter } from "next/navigation";
+import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface layanan {
     Id: number;
@@ -53,7 +54,8 @@ const Table = () => {
     const [layanan, setLayanan] = useState<layanan[]>([])
     const [dataNull, setDataNull] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean | null>(null);
+    const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
     const tahun = useSelector((state: RootState) => state.Tahun.tahun)
     const SelectedOpd = useSelector((state: RootState) => state.Opd.value)
     const [user, setUser] = useState<any>(null);
@@ -67,116 +69,52 @@ const Table = () => {
 
     useEffect(() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      if(tahun !== 0 && SelectedOpd !== "all_opd"){
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/layananspbe/?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setLayanan([]);
-              setDataNull(true);
-            } else {
-              setLayanan(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError(true);
-          } finally {
-            setLoading(false);
+      const fetchingData = async (url: string) => {
+        try {
+          setLoading(true);
+          const response = await fetch(url, {
+            headers: {
+              Authorization: `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error('cant fetching data');
           }
-        };
-        fetchingData();
-      } else if(tahun == 0 && SelectedOpd != "all_opd"){
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/layananspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setLayanan([]);
-              setDataNull(true);
-            } else {
-              setLayanan(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError(true);
-          } finally {
-            setLoading(false);
+          const data = await response.json();
+          if (data.data === null) {
+            setLayanan([]);
+            setDataNull(true);
+          } else {
+            setLayanan(data.data);
+            setDataNull(false);
           }
-        };
-        fetchingData();
-      } else if(tahun != 0 && SelectedOpd == "all_opd"){
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/layananspbe?tahun=${tahun}`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setLayanan([]);
-              setDataNull(true);
-            } else {
-              setLayanan(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError(true);
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchingData();
-      } else {
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/layananspbe`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            if (data.data === null) {
-              setLayanan([]);
-              setDataNull(true);
-            } else {
-              setLayanan(data.data);
-              setDataNull(false);
-            }
-          } catch (err) {
-            setError(true);
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchingData();
+        } catch (err) {
+          setError(true);
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      if (user?.roles == 'admin_kota') {
+        if (SelectedOpd === 'all_opd') {
+          // Fetch semua OPD
+          fetchingData(`${API_URL}/v1/layananspbe?tahun=${tahun}`);
+          setOpdKosong(false);
+        } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+          // Fetch OPD yang dipilih
+          fetchingData(`${API_URL}/v1/layananspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`);
+          setOpdKosong(false);
+        } else if (SelectedOpd === '') {
+          // OPD kosong
+          setOpdKosong(true);
+        }
+      } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
+        // Bukan admin kota, fetch default
+        fetchingData(`${API_URL}/v1/layananspbe?tahun=${tahun}`);
+        setOpdKosong(false);
       }
-    }, [tahun, SelectedOpd, token]);
+    }, [tahun, SelectedOpd, token, user]);
 
     //tambah data
     const tambahData= async() => {
@@ -258,6 +196,8 @@ const Table = () => {
         return <Loading />
     } else if(error){
         return <h1>Gagal memuat data halaman Layanan, silakan cek koneksi internet atau database server</h1>
+    } else if(opdKosong){
+      return <OpdNull />
     } else {
 
         return(

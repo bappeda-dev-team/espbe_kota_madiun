@@ -57,8 +57,12 @@ const FormTambahData = () => {
   const [selectedRad2, setSelectedRad2] = useState<OptionType | null>(null);
   const [selectedRad3, setSelectedRad3] = useState<OptionType | null>(null);
   const [selectedRad4, setSelectedRad4] = useState<OptionType | null>(null);
+  const [selectedStrategic, setSelectedStrategic] = useState<OptionType | null>(null);
+  const [selectedTactical, setSelectedTactical] = useState<OptionType | null>(null);
+  const [selectedOperational, setSelectedOperational] = useState<OptionType | null>(null);
   const [rad_level_1_4_option, set_rad_level_1_4_option] = useState<OptionType[]>([]);
-  const [rad_level_5_7_option, set_rad_level_5_7_option] = useState<OptionType[]>([]);
+  const [rad_level_5_option, set_rad_level_5_option] = useState<OptionType[]>([]);
+  const [rad_level_6_7_option, set_rad_level_6_7_option] = useState<OptionType[]>([]);
 
   useEffect(() => {
     const fetchUser = getUser();
@@ -164,7 +168,7 @@ const FormTambahData = () => {
     }
   };
 
-  const fetchRadLevel5_7 = async (jenis_pohon: string) => {
+  const fetchRadLevel5 = async (level: number) => {
     setIsLoading(true);
     try {
       const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
@@ -174,15 +178,35 @@ const FormTambahData = () => {
       });
       const data = await response.json();
       const filteredData = data.data.filter(
-        (pohon: any) => pohon.jenis_pohon === jenis_pohon,
+        (pohon: any) => pohon.level_pohon === level,
       );
       const result = filteredData.map((pohon: any) => ({
         value: pohon.id,
         label: pohon.nama_pohon,
       }));
-      set_rad_level_5_7_option(result);
+      set_rad_level_5_option(result);
     } catch (err) {
-      console.log("gagal memuat data option RAD Level 5 - 7");
+      console.log("gagal memuat data option Strategic");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchRadLevel6_7 = async (jenis: string, value: number) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/v1/pohonkinerjahirarki/${value}`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
+      const data = await response.json();
+      const result = data.data[jenis].map((pohon: any) => ({
+        value: pohon.id,
+        label: pohon.nama_pohon,
+      }));
+      set_rad_level_6_7_option(result);
+    } catch (err) {
+      console.log("gagal memuat data option RAD Level 6 - 7");
     } finally {
       setIsLoading(false);
     }
@@ -880,17 +904,22 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Strategic"
-                      options={rad_level_5_7_option}
+                      value={selectedStrategic}
+                      options={rad_level_5_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
                       onMenuOpen={() => {
-                        if (rad_level_5_7_option.length === 0) {
-                          fetchRadLevel5_7("Strategic");
+                        if (rad_level_5_option.length === 0) {
+                          fetchRadLevel5(4);
                         }
                       }}
-                      onMenuClose={() => {
-                        set_rad_level_5_7_option([]);
+                      onMenuClose={() => set_rad_level_5_option([])}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedStrategic(option);
+                        setSelectedTactical(null);
+                        setSelectedOperational(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -926,17 +955,24 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Tactical"
-                      options={rad_level_5_7_option}
+                      value={selectedTactical}
+                      options={rad_level_6_7_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
+                      isDisabled={!selectedStrategic}
                       onMenuOpen={() => {
-                        if (rad_level_5_7_option.length === 0) {
-                          fetchRadLevel5_7("Tactical");
+                        if (selectedStrategic?.value) {
+                          fetchRadLevel6_7("tactical", selectedStrategic.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rad_level_5_7_option([]);
+                        set_rad_level_6_7_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedTactical(option);
+                        setSelectedOperational(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -972,17 +1008,23 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Operational"
-                      options={rad_level_5_7_option}
+                      value={selectedOperational}
+                      options={rad_level_6_7_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
+                      isDisabled={!selectedTactical}
                       onMenuOpen={() => {
-                        if (rad_level_5_7_option.length === 0) {
-                          fetchRadLevel5_7("Operational");
+                        if (selectedTactical?.value) {
+                          fetchRadLevel6_7("operational", selectedTactical.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rad_level_5_7_option([]);
+                        set_rad_level_6_7_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedOperational(option);
                       }}
                       styles={{
                         control: (baseStyles) => ({

@@ -10,6 +10,7 @@ import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Aler
 import Image from "next/image";
 import { getToken } from "@/app/Login/Auth/Auth";
 import { getUser } from "@/app/Login/Auth/Auth";
+import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface rabLevel1_3 {
   Id: number;
@@ -60,8 +61,9 @@ function Table() {
   const tahun = useSelector((state: RootState) => state.Tahun.tahun) //tahunProsesBisnis diambil dari store.ts, tahun diambil dari ProsesBisnisSlicer.ts -> interface TahunState{ tahun: number }
   const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [dataProsesBisnis, setDataProsesBisnis] = useState<typeProsesBisnis[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean | null>(null);
   const [dataNull, setDataNull] = useState<boolean>(false);
+  const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>();
   const token = getToken();
   const [user, setUser] = useState<any>(null);
@@ -75,120 +77,53 @@ function Table() {
   //fetch data proses bisnis
   useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    if(tahun !== 0 && SelectedOpd !== "all_opd"){
-      const fetchingData = async () => {
-        try {
-          const response = await fetch(`${API_URL}/v1/prosesbisnis/?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-            headers: {
-              'Authorization': `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if (!response.ok) {
-            throw new Error("cant fetching data");
-          }
-          const data = await response.json();
-          if (data.data === null) {
-            setDataProsesBisnis([]);
-            setDataNull(true);
-          } else {
-            setDataProsesBisnis(data.data);
-            setDataNull(false);
-          }
-        } catch (err) {
-          setError(
-            "Gagal memuat data, silakan cek koneksi internet atau database server",
-          );
-        } finally {
-          setLoading(false);
+    const fetchingData = async (url: string) => {
+      try {
+        setLoading(true);
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('cant fetching data');
         }
-      };
-      fetchingData();
-    } else if(tahun == 0 && SelectedOpd != "all_opd"){
-      const fetchingData = async () => {
-        try {
-          const response = await fetch(`${API_URL}/v1/prosesbisnis?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-            headers: {
-              'Authorization': `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if (!response.ok) {
-            throw new Error("cant fetching data");
-          }
-          const data = await response.json();
-          if (data.data === null) {
-            setDataProsesBisnis([]);
-            setDataNull(true);
-          } else {
-            setDataProsesBisnis(data.data);
-            setDataNull(false);
-          }
-        } catch (err) {
-          setError(
-            "Gagal memuat data, silakan cek koneksi internet atau database server",
-          );
-        } finally {
-          setLoading(false);
+        const data = await response.json();
+        if (data.data === null) {
+          setDataProsesBisnis([]);
+          setDataNull(true);
+        } else {
+          setDataProsesBisnis(data.data);
+          setDataNull(false);
         }
-      };
-      fetchingData();
-    } else if(tahun != 0 && SelectedOpd == "all_opd"){
-      const fetchingData = async () => {
-        try {
-          const response = await fetch(`${API_URL}/v1/prosesbisnis?tahun=${tahun}`, {
-            headers: {
-              'Authorization': `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if (!response.ok) {
-            throw new Error("cant fetching data");
-          }
-          const data = await response.json();
-          if (data.data === null) {
-            setDataProsesBisnis([]);
-            setDataNull(true);
-          } else {
-            setDataProsesBisnis(data.data);
-            setDataNull(false);
-          }
-        } catch (err) {
-          setError("Gagal memuat data, silakan cek koneksi internet atau database server",);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchingData();
-    } else {
-      const fetchingData = async () => {
-        try {
-          const response = await fetch(`${API_URL}/v1/prosesbisnis`, {
-            headers: {
-              'Authorization': `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if (!response.ok) {
-            throw new Error("cant fetching data");
-          }
-          const data = await response.json();
-          if (data.data === null) {
-            setDataProsesBisnis([]);
-            setDataNull(true);
-          } else {
-            setDataProsesBisnis(data.data);
-            setDataNull(false);
-          }
-        } catch (err) {
-          setError("Gagal memuat data, silakan cek koneksi internet atau database server",);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchingData();
+      } catch (err) {
+        setError("Gagal memuat data halaman Layanan, silakan cek koneksi internet atau database server");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    if (user?.roles == 'admin_kota') {
+      if (SelectedOpd === 'all_opd') {
+        // Fetch semua OPD
+        fetchingData(`${API_URL}/v1/prosesbisnis?tahun=${tahun}`);
+        setOpdKosong(false);
+      } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+        // Fetch OPD yang dipilih
+        fetchingData(`${API_URL}/v1/prosesbisnis?tahun=${tahun}&kode_opd=${SelectedOpd}`);
+        setOpdKosong(false);
+      } else if (SelectedOpd === '') {
+        // OPD kosong
+        setOpdKosong(true);
+      }
+    } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
+      // Bukan admin kota, fetch default
+      fetchingData(`${API_URL}/v1/prosesbisnis?tahun=${tahun}`);
+      setOpdKosong(false);
     }
-  }, [tahun, SelectedOpd, token]);
+  }, [tahun, SelectedOpd, token, user]);
+  
 
   //tambah data
   const tambahData= async() => {
@@ -270,6 +205,8 @@ function Table() {
     return <Loading />;
   } else if (error) {
     return <h1>{error}</h1>;
+  } else if (opdKosong){
+    return <OpdNull />
   }
 
   return (

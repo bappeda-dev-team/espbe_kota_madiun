@@ -3,138 +3,43 @@
 import Perbaikan from "@/components/maintenance/perbaikan";
 
 const PetaRencana = () => {
+
   return(
     <>
-      <Perbaikan />
+      <div className="overflow-auto shadow-xl rounded-xl">
+                <table className="w-full text-sm text-left">
+                <thead className="text-xs text-white uppercase bg-amber-500">
+                    <tr>
+                        <th className="px-6 py-3 border max-w-[20px] text-center sticky bg-amber-500 left-[-1px]">No.</th>
+                        <th className="px-6 py-3 border min-w-[200px]">Kelompok</th>
+                        <th className="px-6 py-3 border min-w-[200px] text-center">kode kelompok</th>
+                        <tr>
+                            <th className="px-6 py-3 border-r max-w-[100px] text-center">absen anggota kelompok</th>
+                            <th className="px-6 py-3 max-w-[300px] text-center">nama anggota kelompok</th>
+                        </tr>
+                        <th className="px-6 py-3 border min-w-[200px]">tugas per anggota</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr className="border rounded-b-lg hover:bg-slate-50">
+                        <td className="px-6 py-4 border text-center sticky bg-white left-[-2px]">1</td>
+                        <td className="px-6 py-4 border">kelompok 1</td>
+                        <td className="px-6 py-4 border">001</td>
+                        <tr>
+                            <td className="py-4 border-r min-w-[100px] text-center">
+                                12
+                            </td>
+                            <td className="w-full px-6 py-4 border-r">
+                                budi
+                            </td>
+                        </tr>
+                        <td className="px-6 py-4 border">membawa buku</td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
     </>
   )
 }
 
 export default PetaRencana;
-
-// import { useState } from 'react';
-// import Select from 'react-select';
-
-// interface FormData {
-//   nama: string;
-//   umur: number;
-//   indikator_pj?: string;
-//   opd?: { value: string; label: string };
-// }
-
-// const dummyData: FormData[] = [
-//   { nama: 'John Doe', umur: 30, indikator_pj: 'tidak' },
-//   { nama: 'Jane Smith', umur: 25, indikator_pj: 'ada', opd: { value: 'opd1', label: 'OPD 1' } },
-//   { nama: 'Jane Smith', umur: 25, indikator_pj: ''},
-// ];
-
-// const options = [
-//   { value: 'opd1', label: 'OPD 1' },
-//   { value: 'opd2', label: 'OPD 2' },
-//   { value: 'opd3', label: 'OPD 3' },
-//   { value: 'opd4', label: 'OPD 4' },
-// ];
-
-// const FormTable = () => {
-//   const [data, setData] = useState<FormData[]>(dummyData);
-
-//   const handleIndikatorPjChange = (index: number, value: string) => {
-//     const newData = [...data];
-//     newData[index].indikator_pj = value;
-//     if (value === 'tidak') {
-//       newData[index].opd = undefined; // Set opd to undefined if "tidak"
-//     }
-//     setData(newData);
-//   };
-
-//   const handleOpdChange = (index: number, selectedOption: any) => {
-//     const newData = [...data];
-//     newData[index].opd = selectedOption;
-//     setData(newData);
-//   };
-
-//   const handleSave = async (index: number) => {
-//     const { indikator_pj, opd } = data[index];
-//     const payload = {
-//       indikator_pj,
-//       opd: opd ? opd.value : '', // Ensure opd is always a string
-//     };
-//     console.log(payload);
-//     // try {
-//     //   const response = await fetch('https://jsonplaceholder.typicode.com/posts/1', {
-//     //     method: 'PUT',
-//     //     headers: {
-//     //       'Content-Type': 'application/json',
-//     //     },
-//     //     body: JSON.stringify(payload),
-//     //   });
-
-//     //   if (!response.ok) {
-//     //     throw new Error('Network response was not ok');
-//     //   }
-
-//     //   const responseData = await response.json();
-//     //   alert('Data berhasil disimpan: ' + JSON.stringify(responseData));
-//     // } catch (error) {
-//     //   console.error('Error saving data:', error);
-//     //   alert('Terjadi kesalahan saat menyimpan data');
-//     // }
-//   };
-
-//   return (
-//     <form>
-//       <table className="min-w-full border-collapse">
-//         <thead>
-//           <tr>
-//             <th className="border px-4 py-2">Nama</th>
-//             <th className="border px-4 py-2">Umur</th>
-//             <th className="border px-4 py-2">Indikator PJ</th>
-//             <th className="border px-4 py-2">OPD</th>
-//             <th className="border px-4 py-2">Aksi</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {data.map((row, index) => (
-//             <tr key={index}>
-//               <td className="border px-4 py-2">{row.nama}</td>
-//               <td className="border px-4 py-2">{row.umur}</td>
-//               <td className="border px-4 py-2">
-//                 <select
-//                   value={row.indikator_pj || ""}
-//                   onChange={(e) => handleIndikatorPjChange(index, e.target.value)}
-//                   className="border rounded px-2 py-1"
-//                 >
-//                   <option value="">Pilih</option>
-//                   <option value="ada">Ada</option>
-//                   <option value="tidak">Tidak</option>
-//                 </select>
-//               </td>
-//               <td className="border px-4 py-2">
-//                 {row.indikator_pj === 'ada' && (
-//                   <Select
-//                     value={row.opd}
-//                     onChange={(selectedOption) => handleOpdChange(index, selectedOption)}
-//                     options={options}
-//                     placeholder="Pilih OPD"
-//                     isClearable
-//                   />
-//                 )}
-//               </td>
-//               <td className="border px-4 py-2">
-//                 <button
-//                   type="button"
-//                   onClick={() => handleSave(index)}
-//                   className="bg-blue-500 text-white px-4 py-2 rounded"
-//                 >
-//                   Simpan
-//                 </button>
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </form>
-//   );
-// };
-
-// export default FormTable;

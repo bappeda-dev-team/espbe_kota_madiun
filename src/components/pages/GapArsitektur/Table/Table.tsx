@@ -7,6 +7,7 @@ import { RootState } from '@/store/store';
 import Loading from '@/components/global/Loading/Loading';
 import { useRouter } from 'next/navigation';
 import { AlertNotification } from '@/components/common/Alert/Alert';
+import OpdNull from '@/components/common/Alert/OpdNull';
 
 interface ProsesBisnis {
   id: number;
@@ -40,7 +41,8 @@ const Table = (data: any) => {
   const [gap, setGap] = useState<ProsesBisnis[]>([]);
   const [dataNull, setDataNull] = useState<boolean>(false);
   const [error, setError] = useState<string | null>("");
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean | null>(false);
+  const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
   const router = useRouter();
   const token = getToken();
   const [user, setUser] = useState<any>(null);
@@ -52,116 +54,52 @@ const Table = (data: any) => {
 
   useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    if(tahun !== 0 && SelectedOpd !== "all_opd"){
-      const fetchingData = async () => {
-        try {
-          const response = await fetch(`${API_URL}/v1/gapspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-            headers: {
-              'Authorization': `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if (!response.ok) {
-            throw new Error("cant fetching data");
-          }
-          const data = await response.json();
-          if (data.data === null) {
-            setGap([]);
-            setDataNull(true);
-          } else {
-            setGap(data.data);
-            setDataNull(false);
-          }
-        } catch (err) {
-          setError("gagal mendapatkan data GAP Arsitektur, cek koneksi internet atau database server");
-        } finally {
-          setLoading(false);
+    const fetchingData = async (url: string) => {
+      try {
+        setLoading(true);
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('cant fetching data');
         }
-      };
-      fetchingData();
-    } else if(tahun == 0 && SelectedOpd != "all_opd"){
-      const fetchingData = async () => {
-        try {
-          const response = await fetch(`${API_URL}/v1/gapspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-            headers: {
-              'Authorization': `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if (!response.ok) {
-            throw new Error("cant fetching data");
-          }
-          const data = await response.json();
-          if (data.data === null) {
-            setGap([]);
-            setDataNull(true);
-          } else {
-            setGap(data.data);
-            setDataNull(false);
-          }
-        } catch (err) {
-          setError("gagal mendapatkan data GAP Arsitektur, cek koneksi internet atau database server");
-        } finally {
-          setLoading(false);
+        const data = await response.json();
+        if (data.data === null) {
+          setGap([]);
+          setDataNull(true);
+        } else {
+          setGap(data.data);
+          setDataNull(false);
         }
-      };
-      fetchingData();
-    } else if(tahun != 0 && SelectedOpd == "all_opd"){
-      const fetchingData = async () => {
-        try {
-          const response = await fetch(`${API_URL}/v1/gapspbe?tahun=${tahun}`, {
-            headers: {
-              'Authorization': `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if (!response.ok) {
-            throw new Error("cant fetching data");
-          }
-          const data = await response.json();
-          if (data.data === null) {
-            setGap([]);
-            setDataNull(true);
-          } else {
-            setGap(data.data);
-            setDataNull(false);
-          }
-        } catch (err) {
-          setError("gagal mendapatkan data GAP Arsitektur, cek koneksi internet atau database server");
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchingData();
-    } else {
-      const fetchingData = async () => {
-        try {
-          const response = await fetch(`${API_URL}/v1/gapspbe`, {
-            headers: {
-              'Authorization': `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if (!response.ok) {
-            throw new Error("cant fetching data");
-          }
-          const data = await response.json();
-          if (data.data === null) {
-            setGap([]);
-            setDataNull(true);
-          } else {
-            setGap(data.data);
-            setDataNull(false);
-          }
-        } catch (err) {
-          setError("gagal mendapatkan data GAP Arsitektur, cek koneksi internet atau database server");
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchingData();
+      } catch (err) {
+        setError('Gagal memuat data, silakan cek koneksi internet atau database server');
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    if (user?.roles == 'admin_kota') {
+      if (SelectedOpd === 'all_opd') {
+        // Fetch semua OPD
+        fetchingData(`${API_URL}/v1/gapspbe/?tahun=${tahun}`);
+        setOpdKosong(false);
+      } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+        // Fetch OPD yang dipilih
+        fetchingData(`${API_URL}/v1/gapspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`);
+        setOpdKosong(false);
+      } else if (SelectedOpd === '') {
+        // OPD kosong
+        setOpdKosong(true);
+      }
+    } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
+      // Bukan admin kota, fetch default
+      fetchingData(`${API_URL}/v1/gapspbe/?tahun=${tahun}`);
+      setOpdKosong(false);
     }
-  }, [tahun, SelectedOpd, token]);
+  }, [tahun, SelectedOpd, token, user]);
 
   const tambahketerangan = async(id: number) => {
     if(user?.roles == 'admin_kota'){
@@ -225,6 +163,8 @@ const Table = (data: any) => {
     return <Loading />
   } else if(error){
     return <h1 className="text-red-500">{error}</h1>
+  } else if(opdKosong){
+    return <OpdNull />
   }
 
   return (
@@ -277,7 +217,7 @@ const Table = (data: any) => {
                           ) : (
                             <ul>
                               {data.layanans.map((info, idx) => (
-                                <li key={idx}>{info.nama_layanan}.</li>
+                                <li key={idx}>{info.nama_layanan}</li>
                               ))}
                             </ul>
                           )}
@@ -333,7 +273,7 @@ const Table = (data: any) => {
                           ) : (
                             <ul>
                               {data.aplikasi.map((info, idx) => (
-                                <li key={idx}>{info.nama_aplikasi}.</li>
+                                <li key={idx}>{info.nama_aplikasi}</li>
                               ))}
                             </ul>
                           )}
@@ -380,7 +320,7 @@ const Table = (data: any) => {
                             <ul>
                               {data.keterangan.map((info, idx) => (
                                 <div key={info.id_keterangan} className="flex justify-between items-center">
-                                  <li>{info.keterangan}.</li>
+                                  <li>{info.keterangan}</li>
                                   {user?.roles != 'asn' &&
                                     <div className="flex flex-col">
                                       <button 

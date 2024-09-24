@@ -710,10 +710,7 @@ const FormFixGapLayananSPBE = () => {
                       placeholder="Pilih Strategic"
                       isLoading={isLoading}
                       options={ral_5_7}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "strategic_id" });
-                      }}
+                      isDisabled
                       isClearable={true}
                       onMenuOpen={() => {
                         if (ral_5_7.length === 0) {
@@ -735,7 +732,7 @@ const FormFixGapLayananSPBE = () => {
                         {errors.strategic_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*Strategic Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Strategic sesuai GAP</h1>
                     }
                   </>
                 )}
@@ -761,10 +758,7 @@ const FormFixGapLayananSPBE = () => {
                       placeholder="Pilih Tactical"
                       isLoading={isLoading}
                       options={ral_5_7}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "tactical_id" });
-                      }}
+                      isDisabled
                       isClearable={true}
                       onMenuOpen={() => {
                         if (ral_5_7.length === 0) {
@@ -786,7 +780,7 @@ const FormFixGapLayananSPBE = () => {
                         {errors.tactical_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*Tactical Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Tactical sesuai GAP</h1>
                     }
                   </>
                 )}
@@ -812,10 +806,7 @@ const FormFixGapLayananSPBE = () => {
                       placeholder="Pilih Operational"
                       isLoading={isLoading}
                       options={ral_5_7}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "operational_id" });
-                      }}
+                      isDisabled
                       isClearable={true}
                       onMenuOpen={() => {
                         if (ral_5_7.length === 0) {
@@ -837,7 +828,7 @@ const FormFixGapLayananSPBE = () => {
                         {errors.operational_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*Operational Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Operational sesuai GAP</h1>
                     }
                   </>
                 )}

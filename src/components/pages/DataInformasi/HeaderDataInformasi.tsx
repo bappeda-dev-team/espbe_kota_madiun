@@ -56,7 +56,7 @@ const HeaderDataInformasi = () => {
           <h1 className="uppercase font-bold">
             Data Informasi{" "}
             {user?.roles == 'admin_kota' 
-              ? `${SelectedOpd === '' ? "Semua OPD" : SelectedOpd} ${tahun === 0 ? "Semua Tahun" : tahun}`
+              ? `${SelectedOpd === '' ? "" : SelectedOpd} ${tahun === 0 ? "Semua Tahun" : tahun}`
               : `${opd.length > 0 ? opd[0].nama_opd : ''} ${tahun === 0 ? "Semua Tahun" : tahun}`
             }
           </h1>

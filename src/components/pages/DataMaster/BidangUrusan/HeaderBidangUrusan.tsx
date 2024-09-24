@@ -1,9 +1,17 @@
 "use client"
 
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { useEffect, useState } from "react";
+import { getUser } from "@/app/Login/Auth/Auth";
+import { getToken } from "@/app/Login/Auth/Auth";
 import Image from "next/image";
 import { ButtonSc } from "@/components/common/Button/Button";
 
 const HeaderBidangUrusan = () => {
+
+  const tahun = useSelector((state: RootState) => state.Tahun.tahun);
+  const SelectedOpd = useSelector((state: RootState) => state.Opd.label);
 
   return (
     <>

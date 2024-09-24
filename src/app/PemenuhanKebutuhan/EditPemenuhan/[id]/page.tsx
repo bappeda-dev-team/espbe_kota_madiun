@@ -1,6 +1,6 @@
 import FormEditPemenuhan from "@/components/pages/PemenuhanKebutuhan/FormEditPemenuhan";
 
-const EditKeterangan = () => {
+const EditPemenuhan = () => {
 
     return(
         <>
@@ -9,4 +9,4 @@ const EditKeterangan = () => {
     )
 }
 
-export default EditKeterangan;
+export default EditPemenuhan;

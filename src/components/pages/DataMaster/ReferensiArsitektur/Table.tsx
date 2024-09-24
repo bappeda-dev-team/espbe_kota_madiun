@@ -54,13 +54,7 @@ const Table = () => {
               throw new Error("cant fetching data");
             }
             const data = await response.json();
-            if (data.data === null) {
-              setReferensiArsitektur([]);
-              setDataNull(true);
-            } else {
-              setReferensiArsitektur(data.data);
-              setDataNull(false);
-            }
+            setReferensiArsitektur(data.data);
           } catch (err) {
             setError("gagal mendapatkan data referensi arsitektur, cek koneksi internet atau database server");
           } finally {
@@ -81,13 +75,7 @@ const Table = () => {
               throw new Error("cant fetching data");
             }
             const data = await response.json();
-            if (data.data === null) {
-              setReferensiArsitektur([]);
-              setDataNull(true);
-            } else {
-              setReferensiArsitektur(data.data);
-              setDataNull(false);
-            }
+            setReferensiArsitektur(data.data);
           } catch (err) {
             setError("gagal mendapatkan data referensi arsitektur, cek koneksi internet atau database server");
           } finally {
@@ -224,7 +212,7 @@ const Table = () => {
           <div className="flex mb-3 justify-between">
             <div className="flex">
               {jenisAll ? 
-                <button className="mx-1 text-xs py-1 px-2 min-w-[100px] border bg-amber-500 text-white rounded-lg">Jenis</button>
+                <button className="mx-1 text-xs py-1 px-2 min-w-[100px] border bg-amber-500 text-white rounded-lg">Semua Jenis</button>
                 :
                 <button className="mx-1 text-xs py-1 px-2 min-w-[100px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
                   onClick={() => {
@@ -291,7 +279,7 @@ const Table = () => {
             </div>
             <div className="flex">
               {levelAll ? 
-                <button className="mx-1 text-xs py-1 min-w-[100px] border bg-amber-500 text-white rounded-lg">Level</button>
+                <button className="mx-1 text-xs py-1 min-w-[100px] border bg-amber-500 text-white rounded-lg">Semua Level</button>
                 :
                 <button className="mx-1 text-xs py-1 min-w-[100px] border border-amber-500 text-amber-500 rounded-lg hover:bg-amber-500 hover:text-white"
                   onClick={() => {

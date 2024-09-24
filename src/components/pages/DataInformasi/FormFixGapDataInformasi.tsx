@@ -923,25 +923,12 @@ const FormFixGapDataInformasi = () => {
                       value={selectedStrategic || null}
                       placeholder="Pilih Strategic"
                       isLoading={isLoading}
-                      options={rad_5_7}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "strategic_id" });
-                      }}
-                      isClearable={true}
+                      isDisabled
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
                           borderRadius: '8px',
                         })
-                      }}
-                      onMenuOpen={() => {
-                        if (rad_5_7.length === 0) {
-                          fetchRadLevel5_7("Strategic");
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_rad_5_7([]);
                       }}
                     />
                     {errors.strategic_id ?
@@ -949,7 +936,7 @@ const FormFixGapDataInformasi = () => {
                         {errors.strategic_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*Strategic Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Strategic sesuai GAP</h1>
                     }
                   </>
                 )}
@@ -974,25 +961,12 @@ const FormFixGapDataInformasi = () => {
                       value={selectedTactical || null}
                       placeholder="Pilih RAB Level 5"
                       isLoading={isLoading}
-                      options={rad_5_7}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "tactical_id" });
-                      }}
-                      isClearable={true}
+                      isDisabled
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
                           borderRadius: '8px',
                         })
-                      }}
-                      onMenuOpen={() => {
-                        if (rad_5_7.length === 0) {
-                          fetchRadLevel5_7("Tactical");
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_rad_5_7([]);
                       }}
                     />
                     {errors.tactical_id ?
@@ -1000,7 +974,7 @@ const FormFixGapDataInformasi = () => {
                         {errors.tactical_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*Tactical Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Tactical sesuai GAP</h1>
                     }
                   </>
                 )}
@@ -1025,25 +999,12 @@ const FormFixGapDataInformasi = () => {
                       value={selectedOperational || null}
                       placeholder="Pilih Operational"
                       isLoading={isLoading}
-                      options={rad_5_7}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "operational_id" });
-                      }}
-                      isClearable={true}
+                      isDisabled
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
                           borderRadius: '8px',
                         })
-                      }}
-                      onMenuOpen={() => {
-                        if (rad_5_7.length === 0) {
-                          fetchRadLevel5_7("Operational");
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_rad_5_7([]);
                       }}
                     />
                     {errors.operational_id ?
@@ -1051,7 +1012,7 @@ const FormFixGapDataInformasi = () => {
                         {errors.operational_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*Operational Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Operational sesuai GAP</h1>
                     }
                   </>
                 )}

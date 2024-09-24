@@ -7,6 +7,7 @@ import { setTahun } from "@/store/TahunSlicer";
 import { setOpd } from "@/store/OpdSlicer";
 import { getToken, getUser } from "@/app/Login/Auth/Auth";
 import Select from "react-select"
+import { ButtonHeader } from "@/components/common/Button/Button";
 
 interface OptionTypeString {
   value: string;
@@ -113,6 +114,7 @@ function Header() {
       url === `/KebutuhanSPBE/EditKebutuhan/${id}` ||
       url === "/PemenuhanKebutuhan" ||
       url === `/PemenuhanKebutuhan/EditPemenuhan/${id}` ||
+      url === `/PemenuhanKebutuhan/TambahPemenuhan/${id}` ||
       url === "/SdmInfrastruktur" ||
       url === "/PetaRencana"
     ) {
@@ -134,17 +136,19 @@ function Header() {
     setSelectedOpd(selectedOption);
     if (selectedOption) {
       dispatch(setOpd({ value: selectedOption.value, label: selectedOption.label }));
+    } else {
+      dispatch(setOpd({ value: "", label: "" }));
     }
   };
 
   return (
     <>
-      <div className="flex items-center border-b h-[77px] border-stone-300 top-0 z-10">
-        <div className="flex justify-between items-center flex-row w-screen p-5">
+      <div className="flex items-center border-b  border-stone-300 top-0 z-10">
+        <div className="flex gap-2 justify-between items-center flex-row w-screen p-5">
           <div className="text-page flex flex-row">
             <h1 className="text-stone-300">{textPath}</h1>
           </div>
-          <div className="flex items-center">
+          <div className="flex flex-wrap gap-3 items-center">
             {user?.roles == "admin_kota" && 
               <Select
                 styles={{
@@ -157,11 +161,12 @@ function Header() {
                     maxWidth: '200px',
                   })
                 }}
-                placeholder="Semua OPD"
+                placeholder="Pilih OPD"
                 options={opdOption}
                 onChange={(selectedOption) => handlerOpd(selectedOption)}
                 isLoading={isLoading}
-                defaultValue={semuaOPD}
+                isClearable
+                // defaultValue={semuaOPD}
                 isSearchable
                 onMenuOpen={() => {fetchOPD()}}
                 onMenuClose={() => {setOpdOption([])}}
@@ -183,12 +188,13 @@ function Header() {
               defaultValue={TahunOptions[0]}
               classNamePrefix="select"
             />
-            <button className="rounded-lg px-3 py-2 border ml-1 border-emerald-500 text-emerald-500 font-bold text-sm hover:bg-emerald-500 hover:text-white">
+            <ButtonHeader className="rounded-lg px-3 py-2 border ml-1 border-emerald-500 text-emerald-500 font-bold text-sm hover:bg-emerald-500 hover:text-white">
               {/* ambil di local storage ketika sudah login */}
               {user?.roles == "admin_kota" && <p>Admin Kota</p>}
               {user?.roles == "admin_opd" && <p>Admin OPD</p>}
               {user?.roles == "asn" && <p>ASN</p>}
-            </button>
+              {user?.roles == undefined && <p>Loading</p>}
+            </ButtonHeader>
           </div>
           {/* <input type="text" className="bg-stone-300 rounded-lg px-5" placeholder="Search"/> */}
         </div>

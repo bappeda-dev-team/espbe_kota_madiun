@@ -773,20 +773,7 @@ const FormFixGapAplikasi = () => {
                       value={selectedStrategic || null}
                       placeholder="Pilih Strategic"
                       isLoading={isLoading}
-                      options={raa_5_7}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "strategic_id" });
-                      }}
-                      isClearable={true}
-                      onMenuOpen={() => {
-                        if (raa_5_7.length === 0) {
-                          fetchRaa_5_7("Strategic");
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_raa_5_7([]);
-                      }}
+                      isDisabled
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -799,7 +786,7 @@ const FormFixGapAplikasi = () => {
                         {errors.strategic_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*Strategic Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Strategic sesuai GAP</h1>
                     }
                   </>
                 )}
@@ -824,20 +811,7 @@ const FormFixGapAplikasi = () => {
                       value={selectedTactical || null}
                       placeholder="Pilih RAB Level 5"
                       isLoading={isLoading}
-                      options={raa_5_7}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "tactical_id" });
-                      }}
-                      isClearable={true}
-                      onMenuOpen={() => {
-                        if (raa_5_7.length === 0) {
-                          fetchRaa_5_7("Tactical");
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_raa_5_7([]);
-                      }}
+                      isDisabled
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -850,7 +824,7 @@ const FormFixGapAplikasi = () => {
                         {errors.tactical_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*Tactical Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Tactical sesuai GAP</h1>
                     }
                   </>
                 )}
@@ -875,20 +849,7 @@ const FormFixGapAplikasi = () => {
                       value={selectedOperational || null}
                       placeholder="Pilih Operational"
                       isLoading={isLoading}
-                      options={raa_5_7}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        handleChange(option, { name: "operational_id" });
-                      }}
-                      isClearable={true}
-                      onMenuOpen={() => {
-                        if (raa_5_7.length === 0) {
-                          fetchRaa_5_7("Operational");
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_raa_5_7([]);
-                      }}
+                      isDisabled
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -901,7 +862,7 @@ const FormFixGapAplikasi = () => {
                         {errors.operational_id.message}
                       </h1>
                       :
-                      <h1 className="text-slate-300 text-xs">*Operational Harus Terisi</h1>
+                      <h1 className="text-slate-300 text-xs">*Operational sesuai GAP</h1>
                     }
                   </>
                 )}

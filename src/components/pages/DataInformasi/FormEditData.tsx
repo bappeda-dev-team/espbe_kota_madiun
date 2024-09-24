@@ -61,7 +61,8 @@ const FormEditData = () => {
   const [user, setUser] = useState<any>(null);
 
   const [rad_1_4, set_rad_1_4] = useState<OptionType[]>([]);
-  const [rad_5_7, set_rad_5_7] = useState<OptionType[]>([]);
+  const [rad_5, set_rad_5] = useState<OptionType[]>([]);
+  const [rad_6_7, set_rad_6_7] = useState<OptionType[]>([]);
 
   //state untuk fetch default value data by id
   const [namaData, setNamaData] = useState<string>("");
@@ -312,8 +313,8 @@ const FormEditData = () => {
     }
   };
 
-  //fetching data RAL 5 - 7
-  const fetchRad_5_7 = async (pohon_kinerja: any) => {
+  //fetching data RAL 5
+  const fetchRad_5 = async (level: number) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
@@ -324,13 +325,35 @@ const FormEditData = () => {
       });
       const data = await response.json();
       const filteredData = data.data.filter(
-        (pohon: any) => pohon.jenis_pohon === pohon_kinerja,
+        (pohon: any) => pohon.level_pohon === level,
       );
       const result = filteredData.map((item: any) => ({
         value: item.id,
         label: item.nama_pohon,
       }));
-      set_rad_5_7(result);
+      set_rad_5(result);
+    } catch (err) {
+      console.log("Gagal memuat data Option RAD Level 5", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  //fetching data RAL 6 - 7
+  const fetchRad_6_7 = async (jenis: string, value: number) => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/v1/pohonkinerjahirarki/${value}`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
+      const data = await response.json();
+      const result = data.data[jenis].map((item: any) => ({
+        value: item.id,
+        label: item.nama_pohon,
+      }));
+      set_rad_6_7(result);
     } catch (err) {
       console.log("Gagal memuat data Option RAD Level 5 - 7", err);
     } finally {
@@ -1097,10 +1120,12 @@ const FormEditData = () => {
                       value={selectedStrategic || null}
                       placeholder="Pilih Strategic"
                       isLoading={isLoading}
-                      options={rad_5_7}
+                      options={rad_5}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedStrategic(option);
+                        setSelectedTactical(null);
+                        setSelectedOperational(null);
                       }}
                       isClearable={true}
                       styles={{
@@ -1110,12 +1135,12 @@ const FormEditData = () => {
                         })
                       }}
                       onMenuOpen={() => {
-                        if (rad_5_7.length === 0) {
-                          fetchRad_5_7("Strategic");
+                        if (rad_5.length === 0) {
+                          fetchRad_5(4);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rad_5_7([]);
+                        set_rad_5([]);
                       }}
                     />
                     {errors.strategic_id ?
@@ -1148,10 +1173,12 @@ const FormEditData = () => {
                       value={selectedTactical || null}
                       placeholder="Pilih RAB Level 5"
                       isLoading={isLoading}
-                      options={rad_5_7}
+                      options={rad_6_7}
+                      isDisabled={!selectedStrategic}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedTactical(option);
+                        setSelectedOperational(null);
                       }}
                       isClearable={true}
                       styles={{
@@ -1161,12 +1188,12 @@ const FormEditData = () => {
                         })
                       }}
                       onMenuOpen={() => {
-                        if (rad_5_7.length === 0) {
-                          fetchRad_5_7("Tactical");
+                        if (selectedStrategic?.value) {
+                          fetchRad_6_7("tactical", selectedStrategic.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rad_5_7([]);
+                        set_rad_6_7([]);
                       }}
                     />
                     {errors.tactical_id ?
@@ -1199,7 +1226,8 @@ const FormEditData = () => {
                       value={selectedOperational || null}
                       placeholder="Pilih Operational"
                       isLoading={isLoading}
-                      options={rad_5_7}
+                      options={rad_6_7}
+                      isDisabled={!selectedTactical}
                       onChange={(option) => {
                         field.onChange(option);
                         setSelectedOperational(option);
@@ -1212,12 +1240,12 @@ const FormEditData = () => {
                         })
                       }}
                       onMenuOpen={() => {
-                        if (rad_5_7.length === 0) {
-                          fetchRad_5_7("Operational");
+                        if (selectedTactical?.value) {
+                          fetchRad_6_7("operational", selectedTactical.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_rad_5_7([]);
+                        set_rad_6_7([]);
                       }}
                     />
                     {errors.operational_id ?

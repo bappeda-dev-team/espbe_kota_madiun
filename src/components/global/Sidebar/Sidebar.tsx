@@ -84,7 +84,10 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
         setPemenuhanKebutuhanActive(false);
         setSdmInfrastrukturActive(false);
       setPetaRencanaActive(false);
-    } else if (url === "/User") {
+    } else if (
+        url === "/User" || 
+        url === "/User/EditPassword"  
+      ) {
       setDahsboardActive(false),
         setUserActive(true),
         setDataMasterActive(false),
@@ -343,7 +346,8 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
       setPetaRencanaActive(false);
     } else if (
       url === "/PemenuhanKebutuhan" ||
-      url === `/PemenuhanKebutuhan/EditPemenuhan/${id}`
+      url === `/PemenuhanKebutuhan/EditPemenuhan/${id}` ||
+      url === `/PemenuhanKebutuhan/TambahPemenuhan/${id}`
     ) {
       setDahsboardActive(false),
         setUserActive(false),
@@ -510,7 +514,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
                     height={30}
                   />
                 )}
-                {isCollapse ? "" : "User"}
+                {isCollapse ? "" : "Data User"}
               </li>
             </Link>
             {user?.roles != "asn" &&

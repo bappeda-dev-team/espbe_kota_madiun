@@ -33,9 +33,12 @@ interface JenisKebutuhan {
 interface FormValues {
     kode_opd: string;
     tahun: number;
+    keterangan: string;
     nama_domain: OptionTypeString | null;
-    jenis_kebutuhan: JenisKebutuhan[];
+    jenis_kebutuhan: JenisKebutuhan[] | null;
     proses_bisnis: OptionType | null;
+    indikator_pj: OptionTypeString | null;
+    penanggung_jawab: OptionTypeString | null;
 }
 
 const FormEditKebutuhan = () => {
@@ -45,10 +48,14 @@ const FormEditKebutuhan = () => {
     const token = getToken();
     const [user, setUser] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [selectedNamaDomain, setSelectedNamaDomain] = useState<OptionTypeString | null>(null);
     const [selectedNamaProsesBisnis, setSelectedNamaProsesBisnis] = useState<OptionType | null>(null);
+    const [selectedNamaDomain, setSelectedNamaDomain] = useState<OptionTypeString | null>(null);
+    const [selectedIndikator_pj, setSelectedIndikator_pj] = useState<OptionTypeString | null>(null);
+    const [selectedPenanggungJawab, setSelectedPenanggungJawab] = useState<OptionTypeString | null>(null);
+    const [selectedKeterangan, setSelectedKeterangan] = useState<OptionType | null>(null);
+
     const [optionDomain, setOptionDomain] = useState<OptionTypeString[]>([]);
-    const [optionProsesBisnis, setOptionProsesBisnis] = useState<OptionType[]>([]);
+    const [optionOpd, setOptionOpd] = useState<OptionTypeString[]>([]);
 
     useEffect(() => {
         const fetchUser = getUser();
@@ -57,9 +64,9 @@ const FormEditKebutuhan = () => {
 
     const { control, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
         defaultValues: {
-            kode_opd: user?.user?.kode_opd,
-            tahun: 2024,
             nama_domain: null,
+            indikator_pj: null,
+            penanggung_jawab: null,
             jenis_kebutuhan: [],
         },
     });
@@ -68,12 +75,6 @@ const FormEditKebutuhan = () => {
         control,
         name: "jenis_kebutuhan",
     });
-
-    const handleChange = (option: any, actionMeta: any) => {
-        if (actionMeta.name === "nama_domain") {
-            setSelectedNamaDomain(option);
-        }
-    };
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -86,16 +87,7 @@ const FormEditKebutuhan = () => {
                   });
                 const data = await response.json();
                 const result = data.data;
-
-                // Set nama_domain
-                if (result.nama_domain) {
-                    const selectedDomain = {
-                        value: result.nama_domain,
-                        label: result.nama_domain,
-                    };
-                    setSelectedNamaDomain(selectedDomain);
-                }
-
+                
                 // Set id_prosesbisnis
                 if (result.proses_bisnis) {
                     const selectedProsesBisnis = {
@@ -104,10 +96,44 @@ const FormEditKebutuhan = () => {
                     };
                     setSelectedNamaProsesBisnis(selectedProsesBisnis);
                 }
+                // Set Ketarangan
+                if (result.keterangan) {
+                    const Keterangan = {
+                        value: result.keterangan,
+                        label: result.keterangan,
+                    };
+                    setSelectedKeterangan(Keterangan);
+                }
+                // Set nama_domain
+                if (result.nama_domain != "" && result.nama_domain !== null) {
+                    const selectedDomain = {
+                        value: result.nama_domain,
+                        label: result.nama_domain,
+                    };
+                    setSelectedNamaDomain(selectedDomain);
+                    reset((prev) => ({ ...prev, nama_domain: selectedDomain }));
+                }
+                // Set indikator_pj
+                if (result.indikator_pj) {
+                    const selectedindikator = {
+                        value: result.indikator_pj,
+                        label: result.indikator_pj,
+                    };
+                    setSelectedIndikator_pj(selectedindikator);
+                    reset((prev) => ({ ...prev, indikator_pj: selectedindikator }));
+                }
+                // Set penanggung_jawab
+                if (result.penanggung_jawab) {
+                    const selectedPJ = {
+                        value: result.penanggung_jawab,
+                        label: result.penanggung_jawab,
+                    };
+                    setSelectedPenanggungJawab(selectedPJ);
+                    reset((prev) => ({ ...prev, penanggung_jawab: selectedPJ }));
+                }
 
                 // Reset form data with fetched data
                 reset({
-                    kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
                     tahun: result.tahun,
                     nama_domain: {
                         value: result.nama_domain,
@@ -117,7 +143,15 @@ const FormEditKebutuhan = () => {
                         value: result.proses_bisnis.id,
                         label: result.proses_bisnis.nama_proses_bisnis,
                     },
-                    jenis_kebutuhan: result.jenis_kebutuhan.map((kebutuhan: JenisKebutuhan) => ({
+                    indikator_pj : {
+                        value: result.indikator_pj,
+                        label: result.indikator_pj,
+                    },
+                    penanggung_jawab: {
+                        value: result.penanggung_jawab,
+                        label: result.penanggung_jawab,
+                    },
+                    jenis_kebutuhan: result.jenis_kebutuhan?.map((kebutuhan: JenisKebutuhan) => ({
                         kebutuhan: kebutuhan.kebutuhan,
                         kondisi_awal: kebutuhan.kondisi_awal.map((kondisi: KondisiAwal) => ({
                             keterangan: kondisi.keterangan,
@@ -132,12 +166,17 @@ const FormEditKebutuhan = () => {
                     kondisi_awal: kebutuhan.kondisi_awal,
                 })));
             } catch (err) {
-                console.log("Gagal fetch data default value by id", err);
+                console.error("Gagal fetch data default value by id", err);
             }
         };
 
         fetchDataById();
     }, [reset, replace, id, token, user, SelectedOpd]);
+
+    const OptionIndikatorPj: OptionTypeString[] = [
+        {value: "internal", label: "internal"},
+        {value: "eksternal", label: "eksternal"}
+    ]
 
     const fetchDomain = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -160,28 +199,25 @@ const FormEditKebutuhan = () => {
             setIsLoading(false);
         }
     };
-
-    const fetchProsesBisnis = async () => {
+    const fetchOpd = async() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        setIsLoading(true);
-        try {
-            const response = await fetch(`${API_URL}/v1/prosesbisnisnogap`, {
+        try{
+            const response = await fetch(`${API_URL}/v1/opdeksternal`, {
                 headers: {
-                  'Authorization': `${token}`,
-                },
-              });
+                    'Authorization': `${token}`,
+                    'Content-Type': 'application/json',
+                  },
+            });
             const data = await response.json();
-            const result = data.data.map((item: any) => ({
-                label: item.nama_proses_bisnis,
-                value: item.id,
-            }));
-            setOptionProsesBisnis(result);
-        } catch (err) {
-            console.log("Gagal fetch data proses bisnis", err);
-        } finally {
-            setIsLoading(false);
+            const opd = data.data.map((item: any) => ({
+              value : item.kode_opd,
+              label : item.nama_opd,
+            })); 
+            setOptionOpd(opd);
+        } catch(err) {
+            console.log("gagal fetch data opd", err);
         }
-    };
+    }
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -189,8 +225,10 @@ const FormEditKebutuhan = () => {
             kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
             tahun: data.tahun,
             nama_domain: data.nama_domain?.value,
-            id_prosesbisnis: data.proses_bisnis?.value,
-            jenis_kebutuhan: data.jenis_kebutuhan.map((kebutuhan) => ({
+            indikator_pj: data.indikator_pj?.value,
+            penanggung_jawab: data.indikator_pj?.value == "eksternal" ? data.penanggung_jawab?.value : ( user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd),
+            id_prosesbisnis: selectedNamaProsesBisnis?.value,
+            jenis_kebutuhan: data.jenis_kebutuhan?.map((kebutuhan) => ({
                 kebutuhan: kebutuhan.kebutuhan,
                 kondisi_awal: kebutuhan.kondisi_awal.map((kondisi) => ({
                     keterangan: kondisi.keterangan,
@@ -198,25 +236,52 @@ const FormEditKebutuhan = () => {
                 })),
             })),
         };
-
-        try {
-            const response = await fetch(`${API_URL}/v1/updatekebutuhanspbe/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    'Authorization': `${token}`,
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                AlertNotification("Berhasil", "Kebutuhan SPBE Berhasil Diubah", "success", 1000);
-                router.push("/KebutuhanSPBE");
+        if(user?.roles == 'admin_kota'){
+            if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+              AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
             } else {
+                console.log(formData);
+                try {
+                    const response = await fetch(`${API_URL}/v1/updatekebutuhanspbe/${id}?kode_opd=${SelectedOpd}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            'Authorization': `${token}`,
+                        },
+                        body: JSON.stringify(formData),
+                    });
+
+                    if (response.ok) {
+                        AlertNotification("Berhasil", "Kebutuhan SPBE Berhasil Diubah", "success", 1000);
+                        router.push("/KebutuhanSPBE");
+                    } else {
+                        AlertNotification("Gagal", "Cek koneksi internet atau database server", "error", 2000);
+                    }
+                } catch (error) {
+                    AlertNotification("Gagal", "Cek koneksi internet atau database server", "error", 2000);
+                }
+            }
+        } else {
+            console.log(formData);
+            try {
+                const response = await fetch(`${API_URL}/v1/updatekebutuhanspbe/${id}?kode_opd=${user?.kode_opd}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'Authorization': `${token}`,
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    AlertNotification("Berhasil", "Kebutuhan SPBE Berhasil Diubah", "success", 1000);
+                    router.push("/KebutuhanSPBE");
+                } else {
+                    AlertNotification("Gagal", "Cek koneksi internet atau database server", "error", 2000);
+                }
+            } catch (error) {
                 AlertNotification("Gagal", "Cek koneksi internet atau database server", "error", 2000);
             }
-        } catch (error) {
-            AlertNotification("Gagal", "Cek koneksi internet atau database server", "error", 2000);
         }
     };
 
@@ -225,13 +290,66 @@ const FormEditKebutuhan = () => {
             <h1 className="uppercase font-bold">Form Edit Kebutuhan SPBE</h1>
             <form className="flex flex-col mx-5 py-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col py-3">
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="proses_bisnis">
+                        Proses Bisnis:
+                    </label>
+                    <Controller
+                        name="proses_bisnis"
+                        control={control}
+                        render={({ field }) => (
+                            <>
+                                <Select
+                                    {...field}
+                                    id="proses_bisnis"
+                                    value={selectedNamaProsesBisnis || null}
+                                    placeholder="Pilih Proses Bisnis"
+                                    isLoading={isLoading}
+                                    isDisabled
+                                    isClearable={true}
+                                    styles={{
+                                        control: (baseStyles) => ({
+                                            ...baseStyles,
+                                            borderRadius: '8px',
+                                        })
+                                    }}
+                                />
+                            </>
+                        )}
+                    />
+                </div>
+                <div className="flex flex-col py-3">
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="keterangan">
+                        Keterangan:
+                    </label>
+                    <Controller
+                        name="keterangan"
+                        control={control}
+                        render={({ field }) => (
+                            <>
+                                <Select
+                                    {...field}
+                                    id="keterangan"
+                                    value={selectedKeterangan || null}
+                                    isDisabled
+                                    styles={{
+                                        control: (baseStyles) => ({
+                                            ...baseStyles,
+                                            borderRadius: '8px',
+                                        })
+                                    }}
+                                />
+                            </>
+                        )}
+                    />
+                </div>
+                <div className="flex flex-col py-3">
                     <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="nama_domain">
                         Nama Domain:
                     </label>
                     <Controller
                         name="nama_domain"
                         control={control}
-                        rules={{ required: "Nama Domain Harus Terisi" }}
+                        // rules={{ required: "Nama Domain Harus Terisi" }}
                         render={({ field }) => (
                             <>
                                 <Select
@@ -244,7 +362,7 @@ const FormEditKebutuhan = () => {
                                     isClearable={true}
                                     onChange={(option) => {
                                         field.onChange(option);
-                                        handleChange(option, { name: "nama_domain" });
+                                        setSelectedNamaDomain(option);
                                     }}
                                     onMenuOpen={fetchDomain}
                                     styles={{
@@ -254,39 +372,37 @@ const FormEditKebutuhan = () => {
                                         })
                                     }}
                                 />
-                                {errors.nama_domain ? (
+                                {/* {errors.nama_domain ? (
                                     <h1 className="text-red-500">{errors.nama_domain.message}</h1>
                                 ) : (
                                     <h1 className="text-slate-300 text-xs">*Nama Domain Harus Terisi</h1>
-                                )}
+                                )} */}
                             </>
                         )}
                     />
                 </div>
-
                 <div className="flex flex-col py-3">
-                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="proses_bisnis">
-                        Proses Bisnis:
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="indikator_pj">
+                        Indikator PJ:
                     </label>
                     <Controller
-                        name="proses_bisnis"
+                        name="indikator_pj"
                         control={control}
-                        rules={{ required: "Proses Bisnis Harus Terisi" }}
+                        rules={{ required: "Indikator PJ Harus Terisi" }}
                         render={({ field }) => (
                             <>
                                 <Select
                                     {...field}
-                                    id="proses_bisnis"
-                                    value={selectedNamaProsesBisnis || null}
-                                    placeholder="Pilih Proses Bisnis"
+                                    id="indikator_pj"
+                                    value={selectedIndikator_pj || null}
+                                    placeholder="Pilih Indikator PJ"
                                     isLoading={isLoading}
-                                    options={optionProsesBisnis}
+                                    options={OptionIndikatorPj}
+                                    isClearable={true}
                                     onChange={(option) => {
                                         field.onChange(option);
-                                        handleChange(option, { name: "proses_bisnis" });
+                                        setSelectedIndikator_pj(option);
                                     }}
-                                    isClearable={true}
-                                    onMenuOpen={fetchProsesBisnis}
                                     styles={{
                                         control: (baseStyles) => ({
                                             ...baseStyles,
@@ -294,15 +410,56 @@ const FormEditKebutuhan = () => {
                                         })
                                     }}
                                 />
-                                {errors.proses_bisnis ? (
-                                    <h1 className="text-red-500">{errors.proses_bisnis.message}</h1>
+                                {errors.indikator_pj ? (
+                                    <h1 className="text-red-500">{errors.indikator_pj.message}</h1>
                                 ) : (
-                                    <h1 className="text-slate-300 text-xs">*Proses Bisnis Harus Terisi</h1>
+                                    <h1 className="text-slate-300 text-xs">*Indikator PJ Harus Terisi</h1>
                                 )}
                             </>
                         )}
                     />
                 </div>
+                {selectedIndikator_pj?.value == 'eksternal' &&
+                <div className="flex flex-col py-3">
+                    <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="penanggung_jawab">
+                        Penanggung Jawab:
+                    </label>
+                    <Controller
+                        name="penanggung_jawab"
+                        control={control}
+                        rules={{ required: "Penanggung Jawab Harus Terisi" }}
+                        render={({ field }) => (
+                            <>
+                                <Select
+                                    {...field}
+                                    id="penanggung_jawab"
+                                    value={selectedPenanggungJawab || null}
+                                    placeholder="Pilih Penanggung Jawab"
+                                    isLoading={isLoading}
+                                    options={optionOpd}
+                                    isClearable={true}
+                                    onMenuOpen={() => fetchOpd()}
+                                    onChange={(option) => {
+                                        field.onChange(option);
+                                        setSelectedPenanggungJawab(option);
+                                    }}
+                                    styles={{
+                                        control: (baseStyles) => ({
+                                            ...baseStyles,
+                                            borderRadius: '8px',
+                                        })
+                                    }}
+                                    />
+                                {errors.nama_domain ? (
+                                    <h1 className="text-red-500">{errors.nama_domain.message}</h1>
+                                ) : (
+                                    <h1 className="text-slate-300 text-xs">*Nama Domain Harus Terisi</h1>
+                                )}
+                            </>
+                        )}
+                        />
+                </div>
+                }
 
                 {fields.map((item, index) => (
                     <div key={item.id} className="flex flex-col mb-3 py-2 px-3 bg-emerald-50 rounded-xl">
@@ -320,6 +477,7 @@ const FormEditKebutuhan = () => {
                                         className="border px-4 py-2 rounded-lg"
                                         id={`jenis_kebutuhan.${index}.kebutuhan`}
                                         type="text"
+                                        placeholder={`Masukkan kebutuhan ${index + 1}`}
                                     />
                                     {errors.jenis_kebutuhan?.[index]?.kebutuhan ? (
                                         <h1 className="text-red-500">{errors.jenis_kebutuhan[index]?.kebutuhan?.message}</h1>

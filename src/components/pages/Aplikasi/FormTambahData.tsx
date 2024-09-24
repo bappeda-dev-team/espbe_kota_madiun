@@ -53,8 +53,12 @@ const FormTambahData = () => {
   const [selectedRaa1, setSelectedRaa1] = useState<OptionType | null>(null);
   const [selectedRaa2, setSelectedRaa2] = useState<OptionType | null>(null);
   const [selectedRaa3, setSelectedRaa3] = useState<OptionType | null>(null);
+  const [selectedStrategic, setSelectedStrategic] = useState<OptionType | null>(null);
+  const [selectedTactitcal, setSelectedTactitcal] = useState<OptionType | null>(null);
+  const [selectedOperatioanl, setSelectedOperatioanl] = useState<OptionType | null>(null);
   const [raa_level_1_4_option, set_raa_level_1_4_option] = useState<OptionType[]>([]);
-  const [raa_level_5_7_option, set_raa_level_5_7_option] = useState<OptionType[]>([]);
+  const [raa_level_5_option, set_raa_level_5_option] = useState<OptionType[]>([]);
+  const [raa_level_6_7_option, set_raa_level_6_7_option] = useState<OptionType[]>([]);
   
   useEffect(() => {
     const fetchUser = getUser();
@@ -139,7 +143,7 @@ const FormTambahData = () => {
     }
   };
 
-  const fetchRaaLevel5_7 = async (jenis_pohon: string) => {
+  const fetchRaaLevel5 = async (level: number) => {
     setIsLoading(true);
     try {
       const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
@@ -149,15 +153,35 @@ const FormTambahData = () => {
       });
       const data = await response.json();
       const filteredData = data.data.filter(
-        (pohon: any) => pohon.jenis_pohon === jenis_pohon,
+        (pohon: any) => pohon.jenis_pohon === level,
       );
       const result = filteredData.map((pohon: any) => ({
         value: pohon.id,
         label: pohon.nama_pohon,
       }));
-      set_raa_level_5_7_option(result);
+      set_raa_level_5_option(result);
     } catch (err) {
-      console.log("gagal memuat data option RAD Level 5 - 7");
+      console.log("gagal memuat data option RAD Level 5");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchRaaLevel6_7 = async (jenis: string, value: number) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/v1/pohonkinerjahirarki/${value}`, {
+        headers: {
+          'Authorization': `${token}`,
+        },
+      });
+      const data = await response.json();
+      const result = data.data[jenis].map((pohon: any) => ({
+        value: pohon.id,
+        label: pohon.nama_pohon,
+      }));
+      set_raa_level_6_7_option(result);
+    } catch (err) {
+      console.log("gagal memuat data option RAD Level 6 - 7");
     } finally {
       setIsLoading(false);
     }
@@ -724,17 +748,24 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Strategic"
-                      options={raa_level_5_7_option}
+                      value={selectedStrategic}
+                      options={raa_level_5_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
                       onMenuOpen={() => {
-                        if (raa_level_5_7_option.length === 0) {
-                          fetchRaaLevel5_7("Strategic");
+                        if (raa_level_5_option.length === 0) {
+                          fetchRaaLevel5(4);
                         }
                       }}
                       onMenuClose={() => {
-                        set_raa_level_5_7_option([]);
+                        set_raa_level_5_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedStrategic(option);
+                        setSelectedTactitcal(null);
+                        setSelectedOperatioanl(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -770,17 +801,24 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Tactical"
-                      options={raa_level_5_7_option}
+                      value={selectedTactitcal}
+                      options={raa_level_6_7_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
+                      isDisabled={!selectedStrategic}
                       onMenuOpen={() => {
-                        if (raa_level_5_7_option.length === 0) {
-                          fetchRaaLevel5_7("Tactical");
+                        if (selectedStrategic?.value) {
+                          fetchRaaLevel6_7("tactical", selectedStrategic.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_raa_level_5_7_option([]);
+                        set_raa_level_6_7_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedTactitcal(option);
+                        setSelectedOperatioanl(null);
                       }}
                       styles={{
                         control: (baseStyles) => ({
@@ -816,17 +854,23 @@ const FormTambahData = () => {
                     <Select
                       {...field}
                       placeholder="Masukkan Operational"
-                      options={raa_level_5_7_option}
+                      value={selectedOperatioanl}
+                      options={raa_level_6_7_option}
                       isLoading={isLoading}
                       isClearable
                       isSearchable
+                      isDisabled={!selectedTactitcal}
                       onMenuOpen={() => {
-                        if (raa_level_5_7_option.length === 0) {
-                          fetchRaaLevel5_7("Operational");
+                        if (selectedTactitcal?.value) {
+                          fetchRaaLevel6_7("operational", selectedTactitcal.value);
                         }
                       }}
                       onMenuClose={() => {
-                        set_raa_level_5_7_option([]);
+                        set_raa_level_6_7_option([]);
+                      }}
+                      onChange={(option) => {
+                        field.onChange(option);
+                        setSelectedOperatioanl(option);
                       }}
                       styles={{
                         control: (baseStyles) => ({

@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { getUser } from "@/app/Login/Auth/Auth";
 import { getToken } from "@/app/Login/Auth/Auth";
 import Loading from "@/components/global/Loading/Loading";
+import { ButtonSc } from "@/components/common/Button/Button";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 export const ASN = () => {
     const [user, setUser] = useState<any>(null);
@@ -15,15 +18,32 @@ export const ASN = () => {
 
     return (
         <>
-            <h1>User : {user?.nama}</h1>
-            <h1>OPD : {user?.kode_opd}</h1>
-            <h1>NIP : {user?.nip}</h1>
-            <h1>Role : {user?.roles}</h1>
+        <div className="overflow-auto w-full rounded-xl text-center py-5 px-2 bg-white shadow-lg border">
+            <h1 className="font-bold uppercase mb-5">Profil User</h1>
+            <div className="flex justify-between mb-5">
+                <div className="overflow-auto w-full rounded-xl text-center py-5 mx-3 px-2 bg-white border hover:bg-gray-100">
+                    <h1>User : {user?.nama}</h1>
+                </div>
+                <div className="overflow-auto w-full rounded-xl text-center py-5 mx-3 px-2 bg-white border hover:bg-gray-100">
+                    <h1>OPD Profil : {user?.kode_opd}</h1>
+                </div>
+            </div>
+            <div className="flex justify-between">
+                <div className="overflow-auto w-full rounded-xl text-center py-5 mx-3 px-2 bg-white border hover:bg-gray-100">
+                    <h1>NIP : {user?.nip}</h1>
+                </div>
+                <div className="overflow-auto w-full rounded-xl text-center py-5 mx-3 px-2 bg-white border hover:bg-gray-100">
+                    <h1>Role : {user?.roles}</h1>
+                </div>
+            </div>
+            <ButtonSc halaman_url="/User/EditPassword" className="mt-5 px-5">Ubah Password</ButtonSc>
+        </div>
         </>
     );
 }
 
 export const AdminOPD = () => {
+    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [user, setUser] = useState<any>(null);
     const [dataNull, setDataNull] = useState<boolean>(false);
     const [dataUser, setDataUser] = useState<any[]>([]);
@@ -40,7 +60,7 @@ export const AdminOPD = () => {
        const API_URL = process.env.NEXT_PUBLIC_API_URL;
        const fetchUser = async () => {
         try{
-            const response = await fetch(`${API_URL}/v1/User?kode_opd=${user?.kode_opd}`,{
+            const response = await fetch(`${API_URL}/v1/user?kode_opd=${SelectedOpd}`,{
                 method: 'GET',
                 headers: {
                     'Authorization': `${token}`,
@@ -65,7 +85,7 @@ export const AdminOPD = () => {
         }
     };
     fetchUser();
-    }, [user, token]);
+    }, [user, SelectedOpd, token]);
 
     if(error){
         return <div className="text-red-500">{error}</div>
@@ -75,16 +95,18 @@ export const AdminOPD = () => {
 
     return (
         <>
-           <h1 className="uppercase font-bold mb-5">Data pohon kinerja badan perencanaan, penelitian dan pengembangan daerah</h1>
-            <div className="overflow-auto">
+           <h1 className="uppercase font-bold my-5">Table Data User</h1>
+            <div className="overflow-auto rounded-t-xl bg-white shadow-lg border">
                 <table className="w-full text-sm text-left">
                 <thead className="text-xs text-gray-700 uppercase border">
                     <tr>
                         <th className="px-6 py-3 border max-w-[20px] sticky bg-white left-[-2px]">No.</th>
-                        <th className="px-6 py-3 border min-w-[200px]">Nama</th>
-                        <th className="px-6 py-3 border min-w-[200px]">NIP</th>
-                        <th className="px-6 py-3 border min-w-[200px]">Kode OPD</th>
-                        <th className="px-6 py-3 border min-w-[200px]">Role</th>
+                        <th className="px-6 py-3 border min-w-[200px] text-center">Nama</th>
+                        <th className="px-6 py-3 border min-w-[200px] text-center">NIP</th>
+                        <th className="px-6 py-3 border min-w-[200px] text-center">Kode OPD</th>
+                        <th className="px-6 py-3 border min-w-[200px] text-center">Jabatan</th>
+                        <th className="px-6 py-3 border min-w-[200px] text-center">Roles</th>
+                        <th className="px-6 py-3 border min-w-[100px] text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,7 +123,15 @@ export const AdminOPD = () => {
                         <td className="px-6 py-4 border">{data.nama}</td>
                         <td className="px-6 py-4 border">{data.nip}</td>
                         <td className="px-6 py-4 border">{data.kode_opd}</td>
-                        <td className="px-6 py-4 border">{data.role}</td>
+                        <td className="px-6 py-4 border">{data.jabatan}</td>
+                        {data.roles.map((item: any) => (
+                            <td className="px-6 py-4 border" key={item.id}>{item.nama}</td>
+                        ))}
+                        <td className="px-6 py-4 border">
+                            <ButtonSc>
+                                Reset Password
+                            </ButtonSc>
+                        </td>
                     </tr>
                     ))
                 )}

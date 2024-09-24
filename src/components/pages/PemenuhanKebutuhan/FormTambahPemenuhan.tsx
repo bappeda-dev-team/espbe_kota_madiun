@@ -30,7 +30,7 @@ interface formValue {
     tahun_pelaksanaan: tahun_pelaksanaan[];
 }
 
-const FormEditPemenuhan = () => {
+const FormTambahPemenuhan = () => {
 
     const {id} = useParams();
     const token = getToken();
@@ -42,15 +42,14 @@ const FormEditPemenuhan = () => {
     const {
         control,
         handleSubmit,
-        reset,
         watch,
         formState: { errors },
       } = useForm<formValue>();
 
     const [SelectedIndikatorPd, setSelectedIndikatorPd] = useState<OptionTypeString | null>(null);
-    const [SelectedIdKebutuhan, setSelectedIdKebutuhan] = useState<number>();
     const [SelectedPD, setSelectedPD] = useState<OptionTypeString | null>(null);
     const [SelectedSasaranKinerja, setSelectedSasaranKinerja] = useState<OptionType | null>(null);
+    // const [selectedKodeOpd, setSelectedKodeOpd] = useState<string | null>(null);
     
     const [get2025, set2025] = useState<boolean | null>(null);
     const [get2026, set2026] = useState<boolean | null>(null);
@@ -73,71 +72,32 @@ const FormEditPemenuhan = () => {
         setUser(fetchUser);
     },[])
 
-    useEffect(() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        
-        const fetchPemenuhan = async () => {
-            try {
-                const response = await fetch(`${API_URL}/v1/rencanaPelaksanaan/${id}`, {
-                    headers: {
-                        'Authorization': `${token}`,
-                    },
-                });
+    // useEffect(() => {
+    //     const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    //     const fetchPemenuhan = async () => {
+    //         try {
+    //             const response = await fetch(`${API_URL}/v1/penanggungjawabkebutuhanspbe/${id}`, {
+    //                 headers: {
+    //                     'Authorization': `${token}`,
+    //                 },
+    //             });
     
-                const data = await response.json();
-                const result = data.data;
+    //             const data = await response.json();
+    //             const result = data.data;
                 
-                if (result) {
-                    if (result.id_kebutuhan) {
-                        setSelectedIdKebutuhan(result.id_kebutuhan);
-                    }
-                    if (result.indikator_pd) {
-                        const indikatorPD = {
-                            value: result.indikator_pd,
-                            label: result.indikator_pd,
-                        };
-                        setSelectedIndikatorPd(indikatorPD);
-                        reset(prev => ({ ...prev, indikator_pd: indikatorPD }));
-                    }
-                    if (result.perangkat_daerah) {
-                        const penanggungJawab = {
-                            value: result.perangkat_daerah.kode_opd,
-                            label: result.perangkat_daerah.nama_opd,
-                        };
-                        setSelectedPD(penanggungJawab);
-                        reset(prev => ({ ...prev, perangkat_daerah: penanggungJawab }));
-                    }
-                    if (result.sasaran_kinerja) {
-                        const sasaranKinerja = {
-                            value: result.sasaran_kinerja.id,
-                            label: result.sasaran_kinerja.sasaran_kinerja,
-                        };
-                        setSelectedSasaranKinerja(sasaranKinerja);
-                        reset(prev => ({ ...prev, id_sasaran_kinerja: sasaranKinerja }));
-                    }
-                    if (result.tahun_pelaksanaan) {
-                        const has2025 = result.tahun_pelaksanaan.some((item: any) => item.tahun === 2025);
-                        const has2026 = result.tahun_pelaksanaan.some((item: any) => item.tahun === 2026);
-                        const has2027 = result.tahun_pelaksanaan.some((item: any) => item.tahun === 2027);
-                        const has2028 = result.tahun_pelaksanaan.some((item: any) => item.tahun === 2028);
-                        const has2029 = result.tahun_pelaksanaan.some((item: any) => item.tahun === 2029);
-                        
-                        set2025(has2025);
-                        set2026(has2026);
-                        set2027(has2027);
-                        set2028(has2028);
-                        set2029(has2029);
-                    }
-                }
-            } catch (err) {
-                console.error('Error fetching data by id:', err);
-            }
-        };
+    //             if (result) {
+    //                 if (result.kode_opd) {
+    //                     setSelectedKodeOpd(result.kode_opd);
+    //                 }
+    //             }
+    //         } catch (err) {
+    //             console.error('Error fetching data by id:', err);
+    //         }
+    //     };
+    //     fetchPemenuhan();
+    //     setIsClient(true);
     
-        fetchPemenuhan();
-        setIsClient(true);
-    
-    }, [id, token, reset]);
+    // }, [id, token]);
 
     const fetchOpd = async() => {
         setLoading(true);
@@ -195,7 +155,6 @@ const FormEditPemenuhan = () => {
       ].filter(Boolean); 
 
       const formData = {
-        id_kebutuhan: SelectedIdKebutuhan,
         indikator_pd : data.indikator_pd?.value,
         perangkat_daerah : data.indikator_pd?.value === "eksternal" ? data.perangkat_daerah?.value : ( user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd),
         id_sasaran_kinerja: data.id_sasaran_kinerja?.value,
@@ -207,8 +166,8 @@ const FormEditPemenuhan = () => {
             } else {
                 // console.log(formData);
                 try {
-                    const response = await fetch(`${API_URL}/v1/updaterencanaPelaksanaan/${id}?kode_opd=${SelectedOpd}`, {
-                        method: "PUT",
+                    const response = await fetch(`${API_URL}/v1/createrencanaPelaksanaan?id_kebutuhan=${id}&kode_opd=${SelectedOpd}`, {
+                        method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             'Authorization': `${token}`,
@@ -229,8 +188,8 @@ const FormEditPemenuhan = () => {
         } else {
             // console.log(formData);
             try {
-                const response = await fetch(`${API_URL}/v1/updaterencanaPelaksanaan/${id}?kode_opd=${user?.kode_opd}`, {
-                    method: "PUT",
+                const response = await fetch(`${API_URL}/v1/createrencanaPelaksanaan?id_kebutuhan=${id}`, {
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         'Authorization': `${token}`,
@@ -265,6 +224,7 @@ const FormEditPemenuhan = () => {
                         <Controller
                             name="indikator_pd"
                             control={control}
+                            rules={{ required : "Perangkat Daerah Harus Terisi"}}
                             render={({ field }) => (
                                 <>
                                     <Select
@@ -286,6 +246,13 @@ const FormEditPemenuhan = () => {
                                             })
                                         }}
                                     />
+                                    {errors.indikator_pd ?
+                                    <h1 className="text-red-500">
+                                        {errors.indikator_pd.message}
+                                    </h1>
+                                    :
+                                    <h1 className="text-slate-300 text-xs">*Perangkat Daerah Harus Terisi</h1>
+                                    }
                                 </>
                             )}
                         />
@@ -295,6 +262,7 @@ const FormEditPemenuhan = () => {
                             <Controller
                                 name="perangkat_daerah"
                                 control={control}
+                                rules={{required: "Pilih OPD jika eksternal"}}
                                 render={({ field }) => (
                                     <>
                                         <Select
@@ -322,7 +290,14 @@ const FormEditPemenuhan = () => {
                                                 })
                                             }}
                                         />
-                                    </>
+                                         {errors.perangkat_daerah ?
+                                        <h1 className="text-red-500">
+                                            {errors.perangkat_daerah.message}
+                                        </h1>
+                                        :
+                                        <h1 className="text-slate-300 text-xs">*pilih OPD jika eksternal</h1>
+                                        }
+                                        </>
                                 )}
                             />
                         </div>
@@ -337,6 +312,7 @@ const FormEditPemenuhan = () => {
                         <Controller
                             name="id_sasaran_kinerja"
                             control={control}
+                            rules={{required: "Sasaran kinerja harus terisi"}}
                             render={({ field }) => (
                                 <>
                                     <Select
@@ -359,6 +335,13 @@ const FormEditPemenuhan = () => {
                                             })
                                         }}
                                     />
+                                    {errors.id_sasaran_kinerja ?
+                                    <h1 className="text-red-500">
+                                        {errors.id_sasaran_kinerja.message}
+                                    </h1>
+                                    :
+                                    <h1 className="text-slate-300 text-xs">*Sasaran Kinerja Harus Terisi</h1>
+                                    }
                                 </>
                             )}
                         />
@@ -366,14 +349,7 @@ const FormEditPemenuhan = () => {
                     <label className="uppercase text-xs font-bold text-gray-700 my-2">Pilih Tahun Pelaksanaan :</label>
                     <div className="flex flex-wrap justify-evenly my-3 gap-3">
                         {get2025 ?
-                        <button type="button" className="mx-1 py-1 min-w-[100px] border bg-emerald-500 text-white rounded-lg" 
-                            onClick={() => {
-                                set2025(false);
-                                set2026(false);
-                                set2027(false);
-                                set2028(false);
-                                set2029(false);
-                            }}>
+                        <button type="button" className="mx-1 py-1 min-w-[100px] border bg-emerald-500 text-white rounded-lg" onClick={() => set2025(false)}>
                             2025
                         </button>
                         :
@@ -382,55 +358,29 @@ const FormEditPemenuhan = () => {
                         </button>
                         }
                         {get2026 ?
-                        <button type="button" className="mx-1 py-1 min-w-[100px] border bg-emerald-500 text-white rounded-lg" 
-                        onClick={() => {
-                            set2026(false);
-                            set2027(false);
-                            set2028(false);
-                            set2029(false);
-                        }}>
+                        <button type="button" className="mx-1 py-1 min-w-[100px] border bg-emerald-500 text-white rounded-lg" onClick={() => set2026(false)}>
                             2026
                         </button>
                         :
-                        <button type="button" className="mx-1 py-1 min-w-[100px] border border-gray-300 hover:bg-gray-400 hover:text-white rounded-lg text-gray-300" 
-                            onClick={() => {
-                                set2026(true);
-                                set2025(true);
-                            }}>
+                        <button type="button" className="mx-1 py-1 min-w-[100px] border border-gray-300 hover:bg-gray-400 hover:text-white rounded-lg text-gray-300" onClick={() => set2026(true)}>
                             2026
                         </button>
                         }
                         {get2027 ?
-                        <button type="button" className="mx-1 py-1 min-w-[100px] border bg-emerald-500 text-white rounded-lg" 
-                            onClick={() => {
-                                set2027(false);
-                                set2029(false);
-                                set2028(false);
-                            }}>
+                        <button type="button" className="mx-1 py-1 min-w-[100px] border bg-emerald-500 text-white rounded-lg" onClick={() => set2027(false)}>
                             2027
                         </button>
                         :
-                        <button type="button" className="mx-1 py-1 min-w-[100px] border border-gray-300 hover:bg-gray-400 hover:text-white rounded-lg text-gray-300" 
-                            onClick={() => {
-                                set2027(true);
-                                set2026(true);
-                                set2025(true);
-                            }}>
+                        <button type="button" className="mx-1 py-1 min-w-[100px] border border-gray-300 hover:bg-gray-400 hover:text-white rounded-lg text-gray-300" onClick={() => set2027(true)}>
                             2027
                         </button>
                         }
                         {get2028 ?
-                        <button type="button" className="mx-1 py-1 min-w-[100px] border bg-emerald-500 text-white rounded-lg" onClick={() => {set2028(false);set2029(false);}}>
+                        <button type="button" className="mx-1 py-1 min-w-[100px] border bg-emerald-500 text-white rounded-lg" onClick={() => set2028(false)}>
                             2028
                         </button>
                         :
-                        <button type="button" className="mx-1 py-1 min-w-[100px] border border-gray-300 hover:bg-gray-400 hover:text-white rounded-lg text-gray-300" 
-                            onClick={() => {
-                                set2028(true);
-                                set2027(true);
-                                set2026(true);
-                                set2025(true);
-                            }}>
+                        <button type="button" className="mx-1 py-1 min-w-[100px] border border-gray-300 hover:bg-gray-400 hover:text-white rounded-lg text-gray-300" onClick={() => set2028(true)}>
                             2028
                         </button>
                         }
@@ -439,24 +389,17 @@ const FormEditPemenuhan = () => {
                             2029
                         </button>
                         :
-                        <button type="button" className="mx-1 py-1 min-w-[100px] border border-gray-300 hover:bg-gray-400 hover:text-white rounded-lg text-gray-300" 
-                            onClick={() => {
-                                set2029(true);
-                                set2028(true);
-                                set2027(true);
-                                set2026(true);
-                                set2025(true);
-                            }}>
+                        <button type="button" className="mx-1 py-1 min-w-[100px] border border-gray-300 hover:bg-gray-400 hover:text-white rounded-lg text-gray-300" onClick={() => set2029(true)}>
                             2029
                         </button>
                         }
                     </div>
-                    <ButtonSc className="w-full my-3" typee="submit">Simpan</ButtonSc>
-                    <ButtonTr className="w-full" halaman_url="/PemenuhanKebutuhan" typee="button">Kembali</ButtonTr>
+                    <ButtonSc className="w-full my-3" typee="submit">simpan</ButtonSc>
+                    <ButtonTr className="w-full" typee="button" halaman_url="/PemenuhanKebutuhan">Kembali</ButtonTr>
                 </form>
             </div>
         </>
     )
 }
 
-export default FormEditPemenuhan;
+export default FormTambahPemenuhan;
