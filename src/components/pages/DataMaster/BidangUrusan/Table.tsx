@@ -5,6 +5,7 @@ import Loading from "@/components/global/Loading/Loading";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface BidangUrusan {
     id : number;
@@ -30,6 +31,7 @@ const Table = () => {
     const [error, setError] = useState<string>();
     const [loading, setLoading] = useState<boolean>(true)
     const [dataNull, setDataNull] = useState<boolean>(false);
+    const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
     const token = getToken();
     const [user, setUser] = useState<any>(null);
 
@@ -68,13 +70,20 @@ const Table = () => {
         };
       
         if (user?.roles == 'admin_kota') {
-          if (SelectedOpd === 'all_opd' || SelectedOpd === "") {
+          if (SelectedOpd === 'all_opd') {
             // Fetch semua OPD
             fetchingData(`${API_URL}/v1/opd-urusan`);
-          } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+            setOpdKosong(false);
+            setLoading(false);
+        } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
             // Fetch OPD yang dipilih
             fetchingData(`${API_URL}/v1/opd-urusan?kode_opd=${SelectedOpd}`);
-          } 
+            setOpdKosong(false);
+            setLoading(false);
+        } else if (SelectedOpd == ''){
+            setOpdKosong(true);
+            setLoading(false);
+          }
         }
       }, [SelectedOpd, token, user]);
 
@@ -82,6 +91,8 @@ const Table = () => {
         return <h1>{error}</h1>
     } else if(loading){
         return <Loading />
+    } else if(opdKosong){
+        return <OpdNull />
     }
 
     return(

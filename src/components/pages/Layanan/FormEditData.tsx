@@ -10,6 +10,7 @@ import { AlertNotification } from "@/components/common/Alert/Alert";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import IdNull from "@/components/common/Alert/IdNull";
 
 interface OptionType {
   value: number;
@@ -51,6 +52,7 @@ const FormEditData = () => {
   const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
+  const [idNotFound, setIdNotFound] = useState<boolean | null>(null);
   const [user, setUser] = useState<any>(null);
 
   const [ral_1_4, set_ral_1_4] = useState<OptionType[]>([]);
@@ -103,110 +105,114 @@ const FormEditData = () => {
           },
         });
         const data = await response.json();
-        const result = data.data;
-        
-        if (result.NamaLayanan) {
-          setNamaLayanan(result.NamaLayanan);
-          reset((prev) => ({...prev, nama_layanan: result.NamaLayanan,}));
-        }
-        if (result.FungsiLayanan) {
-          setSelectedFungsiLayanan(result.FungsiLayanan);
-          reset((prev) => ({...prev, fungsi_layanan: result.FungsiLayanan,}));
-        }
-        if (result.KodeOPD) {
-          set_kode_opd(result.KodeOPD);
-          reset((prev) => ({...prev, kode_opd: result.KodeOPD,}));
-        }
-        if (result.KementrianTerkait) {
-          setSelectedKementrianTerkait(result.KementrianTerkait);
-          reset((prev) => ({ ...prev, kementrian_terkait: result.KementrianTerkait }));
-        }
-        
-        if (result.MetodeLayanan) {
-          const MetodeLayananOption = {
-            value: result.MetodeLayanan,
-            label: result.MetodeLayanan,
-          };
-          setSelectedMetodeLayanan(MetodeLayananOption);
-          reset((prev) => ({ ...prev, metode_layanan: result.MetodeLayanan }));
-        }
-        if (result.TujuanLayananId) {
-          const tujuanLayananOption = {
-            value: result.TujuanLayananId.id,
-            label: result.TujuanLayananId.nama_pohon,
-          };
-          setSelectedTujuanLayanan(tujuanLayananOption);
-          reset((prev) => ({ ...prev, tujuan_layanan_id: tujuanLayananOption }));
-        }
-        if (result.Tahun) {
-          const selectedTahun = {
-            value: result.Tahun,
-            label: result.Tahun,
-          };
-          setSelectedTahun(selectedTahun);
-          reset((prev) => ({ ...prev, tahun: selectedTahun }));
-        }
-        if (result.RalLevel1id) {
-          const ralLevel1Option = {
-            value: result.RalLevel1id.Id,
-            label: `${result.RalLevel1id.kode_referensi} ${result.RalLevel1id.nama_referensi}`,
-            kode: result.RalLevel1id.kode_referensi,
-          };
-          setSelectedRal1(ralLevel1Option);
-          reset((prev) => ({ ...prev, ral_level_1_id: ralLevel1Option }));
-        }
-        if (result.RalLevel2id) {
-          const ralLevel2Option = {
-            value: result.RalLevel2id.Id,
-            label: `${result.RalLevel2id.kode_referensi} ${result.RalLevel2id.nama_referensi}`,
-            kode: result.RalLevel2id.kode_referensi,
-          };
-          setSelectedRal2(ralLevel2Option);
-          reset((prev) => ({ ...prev, ral_level_2_id: ralLevel2Option }));
-        }
-        if (result.RalLevel3id) {
-          const ralLevel3Option = {
-            value: result.RalLevel3id.Id,
-            label: `${result.RalLevel3id.kode_referensi} ${result.RalLevel3id.nama_referensi}`,
-            kode: result.RalLevel3id.kode_referensi,
-          };
-          setSelectedRal3(ralLevel3Option);
-          reset((prev) => ({ ...prev, ral_level_3_id: ralLevel3Option }));
-        }
-        if (result.RalLevel4id) {
-          const ralLevel4Option = {
-            value: result.RalLevel4id.Id,
-            label: `${result.RalLevel4id.kode_referensi} ${result.RalLevel4id.nama_referensi}`,
-            kode: result.RalLevel4id.kode_referensi,
-          };
-          setSelectedRal4(ralLevel4Option);
-          reset((prev) => ({ ...prev, ral_level_4_id: ralLevel4Option }));
-        }
-        if (result.StrategicId) {
-          const strategicOption = {
-            value: result.StrategicId.id,
-            label: result.StrategicId.nama_pohon,
-          };
-          setSelectedStrategic(strategicOption);
-          reset((prev) => ({ ...prev, strategic_id: strategicOption }));
-        }
-        if (result.TacticalId) {
-          const tacticalOption = {
-            value: result.TacticalId.id,
-            label: result.TacticalId.nama_pohon,
-          };
-          setSelectedTactical(tacticalOption);
-          reset((prev) => ({ ...prev, tactical_id: tacticalOption }));
-        }
-        if (result.OperationalId) {
-          const operationalOption = {
-            value: result.OperationalId.id,
-            label: result.OperationalId.nama_pohon,
-          };
-          setSelectedOperational(operationalOption);
-          reset((prev) => ({ ...prev, operational_id: operationalOption }));
-        }
 
+        if(data.code == 500){
+          setIdNotFound(true);
+        } else {
+          const result = data.data;
+          
+          if (result.NamaLayanan) {
+            setNamaLayanan(result.NamaLayanan);
+            reset((prev) => ({...prev, nama_layanan: result.NamaLayanan,}));
+          }
+          if (result.FungsiLayanan) {
+            setSelectedFungsiLayanan(result.FungsiLayanan);
+            reset((prev) => ({...prev, fungsi_layanan: result.FungsiLayanan,}));
+          }
+          if (result.KodeOPD) {
+            set_kode_opd(result.KodeOPD);
+            reset((prev) => ({...prev, kode_opd: result.KodeOPD,}));
+          }
+          if (result.KementrianTerkait) {
+            setSelectedKementrianTerkait(result.KementrianTerkait);
+            reset((prev) => ({ ...prev, kementrian_terkait: result.KementrianTerkait }));
+          }
+          
+          if (result.MetodeLayanan) {
+            const MetodeLayananOption = {
+              value: result.MetodeLayanan,
+              label: result.MetodeLayanan,
+            };
+            setSelectedMetodeLayanan(MetodeLayananOption);
+            reset((prev) => ({ ...prev, metode_layanan: result.MetodeLayanan }));
+          }
+          if (result.TujuanLayananId) {
+            const tujuanLayananOption = {
+              value: result.TujuanLayananId.id,
+              label: result.TujuanLayananId.nama_pohon,
+            };
+            setSelectedTujuanLayanan(tujuanLayananOption);
+            reset((prev) => ({ ...prev, tujuan_layanan_id: tujuanLayananOption }));
+          }
+          if (result.Tahun) {
+            const selectedTahun = {
+              value: result.Tahun,
+              label: result.Tahun,
+            };
+            setSelectedTahun(selectedTahun);
+            reset((prev) => ({ ...prev, tahun: selectedTahun }));
+          }
+          if (result.RalLevel1id) {
+            const ralLevel1Option = {
+              value: result.RalLevel1id.Id,
+              label: `${result.RalLevel1id.kode_referensi} ${result.RalLevel1id.nama_referensi}`,
+              kode: result.RalLevel1id.kode_referensi,
+            };
+            setSelectedRal1(ralLevel1Option);
+            reset((prev) => ({ ...prev, ral_level_1_id: ralLevel1Option }));
+          }
+          if (result.RalLevel2id) {
+            const ralLevel2Option = {
+              value: result.RalLevel2id.Id,
+              label: `${result.RalLevel2id.kode_referensi} ${result.RalLevel2id.nama_referensi}`,
+              kode: result.RalLevel2id.kode_referensi,
+            };
+            setSelectedRal2(ralLevel2Option);
+            reset((prev) => ({ ...prev, ral_level_2_id: ralLevel2Option }));
+          }
+          if (result.RalLevel3id) {
+            const ralLevel3Option = {
+              value: result.RalLevel3id.Id,
+              label: `${result.RalLevel3id.kode_referensi} ${result.RalLevel3id.nama_referensi}`,
+              kode: result.RalLevel3id.kode_referensi,
+            };
+            setSelectedRal3(ralLevel3Option);
+            reset((prev) => ({ ...prev, ral_level_3_id: ralLevel3Option }));
+          }
+          if (result.RalLevel4id) {
+            const ralLevel4Option = {
+              value: result.RalLevel4id.Id,
+              label: `${result.RalLevel4id.kode_referensi} ${result.RalLevel4id.nama_referensi}`,
+              kode: result.RalLevel4id.kode_referensi,
+            };
+            setSelectedRal4(ralLevel4Option);
+            reset((prev) => ({ ...prev, ral_level_4_id: ralLevel4Option }));
+          }
+          if (result.StrategicId) {
+            const strategicOption = {
+              value: result.StrategicId.id,
+              label: result.StrategicId.nama_pohon,
+            };
+            setSelectedStrategic(strategicOption);
+            reset((prev) => ({ ...prev, strategic_id: strategicOption }));
+          }
+          if (result.TacticalId) {
+            const tacticalOption = {
+              value: result.TacticalId.id,
+              label: result.TacticalId.nama_pohon,
+            };
+            setSelectedTactical(tacticalOption);
+            reset((prev) => ({ ...prev, tactical_id: tacticalOption }));
+          }
+          if (result.OperationalId) {
+            const operationalOption = {
+              value: result.OperationalId.id,
+              label: result.OperationalId.nama_pohon,
+            };
+            setSelectedOperational(operationalOption);
+            reset((prev) => ({ ...prev, operational_id: operationalOption }));
+          }
+        }
       } catch (err) {
         console.log("Gagal fetching data by id");
       }
@@ -296,7 +302,7 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const formData = {
       nama_layanan: data.nama_layanan,
-      tujuan_layanan_id: data.tujuan_layanan_id?.value,
+      tujuan_layanan_id: data.tactical_id?.value,
       fungsi_layanan: data.fungsi_layanan,
       tahun: data.tahun?.value,
       kode_opd: user?.roles == 'admin_kota'? SelectedOpd : user?.kode_opd,
@@ -359,6 +365,15 @@ const FormEditData = () => {
 
     }
   };
+
+  if(idNotFound){
+    const url = "/Layanan/LayananSPBE"
+    return(
+      <>
+        <IdNull url={url}/>
+      </>
+    )
+  }
 
   return (
     <div className="border p-5 rounded-xl shadow-xl">
@@ -526,29 +541,15 @@ const FormEditData = () => {
               <Controller
                 name="tujuan_layanan_id"
                 control={control}
-                rules={{required: "Tujuan Layanan Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
                       id="tujuan_layanan_id"
                       value={selectedTujuanLayanan || null}
-                      placeholder="Pilih Tujuan Layanan"
-                      options={ral_5}
+                      placeholder="Tujuan Layanan sama dengan Tactical"
                       isLoading={isLoading}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        setSelectedTujuanLayanan(option);
-                      }}
-                      isClearable={true}
-                      onMenuOpen={() => {
-                        if(ral_5.length === 0){
-                          fetchRal_5("Operational")
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_ral_5([])
-                      }}
+                      isDisabled
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -556,13 +557,6 @@ const FormEditData = () => {
                         })
                       }}
                     />
-                    {errors.tujuan_layanan_id ?
-                      <h1 className="text-red-500">
-                        {errors.tujuan_layanan_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*Tujuan Layanan Harus Terisi</h1>
-                    }
                   </>
                 )}
               />
@@ -672,7 +666,6 @@ const FormEditData = () => {
               <Controller
                 name="ral_level_2_id"
                 control={control}
-                rules={{required:"RAL Level 2 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -705,13 +698,6 @@ const FormEditData = () => {
                         })
                       }}
                     />
-                    {errors.ral_level_2_id ?
-                      <h1 className="text-red-500">
-                        {errors.ral_level_2_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAL Level 2 Harus Terisi</h1>
-                    }
                   </>
                 )}
               />
@@ -726,7 +712,6 @@ const FormEditData = () => {
               <Controller
                 name="ral_level_3_id"
                 control={control}
-                rules={{required:"RAL Level 3 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -758,13 +743,6 @@ const FormEditData = () => {
                         })
                       }}
                     />
-                    {errors.ral_level_3_id ?
-                      <h1 className="text-red-500">
-                        {errors.ral_level_3_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAL Level 3 Harus Terisi</h1>
-                    }
                   </>
                 )}
               />
@@ -779,7 +757,6 @@ const FormEditData = () => {
               <Controller
                 name="ral_level_4_id"
                 control={control}
-                rules={{required:"RAL Level 4 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -810,13 +787,6 @@ const FormEditData = () => {
                         })
                       }}
                     />
-                    {errors.ral_level_4_id ?
-                      <h1 className="text-red-500">
-                        {errors.ral_level_4_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAL Level 4 Harus Terisi</h1>
-                    }
                   </>
                 )}
               />
@@ -899,6 +869,7 @@ const FormEditData = () => {
                         field.onChange(option);
                         setSelectedTactical(option);
                         setSelectedOperational(null);
+                        setSelectedTujuanLayanan(option);
                       }}
                       isClearable={true}
                       onMenuOpen={() => {

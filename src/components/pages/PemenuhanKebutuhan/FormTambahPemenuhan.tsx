@@ -42,12 +42,9 @@ const FormTambahPemenuhan = () => {
     const {
         control,
         handleSubmit,
-        watch,
         formState: { errors },
       } = useForm<formValue>();
 
-    const [SelectedIndikatorPd, setSelectedIndikatorPd] = useState<OptionTypeString | null>(null);
-    const [SelectedPD, setSelectedPD] = useState<OptionTypeString | null>(null);
     const [SelectedSasaranKinerja, setSelectedSasaranKinerja] = useState<OptionType | null>(null);
     // const [selectedKodeOpd, setSelectedKodeOpd] = useState<string | null>(null);
     
@@ -57,15 +54,7 @@ const FormTambahPemenuhan = () => {
     const [get2028, set2028] = useState<boolean | null>(null);
     const [get2029, set2029] = useState<boolean | null>(null);
 
-    const [OptionOpd, setOptionOpd] = useState<OptionTypeString[]>([]);
     const [OptionSasaranKinerja, setOptionSasaranKinerja] = useState<OptionType[]>([]);
-
-    const OptionIndikatorPd: OptionTypeString[] = [
-        {value: "internal", label: "Internal"},
-        {value: "eksternal", label: "Eksternal"}
-    ]
-
-    const indikatorValue = watch("indikator_pd");
 
     useEffect(() => {
         const fetchUser = getUser();
@@ -99,28 +88,6 @@ const FormTambahPemenuhan = () => {
     
     // }, [id, token]);
 
-    const fetchOpd = async() => {
-        setLoading(true);
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        try{
-            const response = await fetch(`${API_URL}/v1/opdeksternal`, {
-                headers: {
-                    'Authorization': `${token}`,
-                    'Content-Type': 'application/json',
-                  },
-            });
-            const data = await response.json();
-            const opd = data.data.map((item: any) => ({
-              value : item.kode_opd,
-              label : item.nama_opd,
-            })); 
-            setOptionOpd(opd);
-        } catch(err) {
-            console.log("gagal fetch data opd", err);
-        } finally {
-            setLoading(false);
-        }
-    } 
     const fetchSasaranKinerja = async() => {
         setLoading(true);
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -155,8 +122,6 @@ const FormTambahPemenuhan = () => {
       ].filter(Boolean); 
 
       const formData = {
-        indikator_pd : data.indikator_pd?.value,
-        perangkat_daerah : data.indikator_pd?.value === "eksternal" ? data.perangkat_daerah?.value : ( user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd),
         id_sasaran_kinerja: data.id_sasaran_kinerja?.value,
         tahun_pelaksanaan: tahunPelaksanaan,
       };
@@ -214,94 +179,6 @@ const FormTambahPemenuhan = () => {
             <div className="border p-5 rounded-xl shadow-xl">
                 <h1 className="uppercase font-bold">Form Edit Pemenuhan</h1>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="flex flex-col py-3">
-                        <label
-                            className="uppercase text-xs font-bold text-gray-700 my-2"
-                            htmlFor="indikator_pd"
-                        >
-                            Perangkat Daerah :
-                        </label>
-                        <Controller
-                            name="indikator_pd"
-                            control={control}
-                            rules={{ required : "Perangkat Daerah Harus Terisi"}}
-                            render={({ field }) => (
-                                <>
-                                    <Select
-                                        {...field}
-                                        id="indikator_pd"
-                                        value={SelectedIndikatorPd || null}
-                                        placeholder="pilih indikator perangkat daerah"
-                                        options={OptionIndikatorPd}
-                                        isClearable={true}
-                                        onChange={(option) => {
-                                            field.onChange(option);
-                                            setSelectedIndikatorPd(option);
-                                            setSelectedPD(null);
-                                          }}
-                                        styles={{
-                                            control: (baseStyles) => ({
-                                            ...baseStyles,
-                                            borderRadius: '8px',
-                                            })
-                                        }}
-                                    />
-                                    {errors.indikator_pd ?
-                                    <h1 className="text-red-500">
-                                        {errors.indikator_pd.message}
-                                    </h1>
-                                    :
-                                    <h1 className="text-slate-300 text-xs">*Perangkat Daerah Harus Terisi</h1>
-                                    }
-                                </>
-                            )}
-                        />
-                    </div>
-                    {indikatorValue?.value === "eksternal" && 
-                        <div className="flex flex-col pt-1 pb-3">
-                            <Controller
-                                name="perangkat_daerah"
-                                control={control}
-                                rules={{required: "Pilih OPD jika eksternal"}}
-                                render={({ field }) => (
-                                    <>
-                                        <Select
-                                            {...field}
-                                            id="perangkat_daerah"
-                                            value={SelectedPD || null}
-                                            placeholder="pilih organisasi perangkat daerah"
-                                            options={OptionOpd}
-                                            isClearable={true}
-                                            isLoading={loading}
-                                            isSearchable
-                                            onMenuOpen={() => {
-                                                if(OptionOpd.length == 0){
-                                                    fetchOpd();
-                                                }
-                                            }}
-                                            onChange={(option) => {
-                                                field.onChange(option);
-                                                setSelectedPD(option);
-                                            }}
-                                            styles={{
-                                                control: (baseStyles) => ({
-                                                ...baseStyles,
-                                                borderRadius: '8px',
-                                                })
-                                            }}
-                                        />
-                                         {errors.perangkat_daerah ?
-                                        <h1 className="text-red-500">
-                                            {errors.perangkat_daerah.message}
-                                        </h1>
-                                        :
-                                        <h1 className="text-slate-300 text-xs">*pilih OPD jika eksternal</h1>
-                                        }
-                                        </>
-                                )}
-                            />
-                        </div>
-                    }
                     <div className="flex flex-col py-3">
                         <label
                             className="uppercase text-xs font-bold text-gray-700 my-2"

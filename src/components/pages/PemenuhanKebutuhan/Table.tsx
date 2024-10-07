@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {ButtonSc, ButtonPr} from "@/components/common/Button/Button";
+import {ButtonSc, ButtonPr, ButtonTr} from "@/components/common/Button/Button";
 import Loading from "@/components/global/Loading/Loading";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
 import { useRouter } from "next/navigation";
-import { AlertNotification } from "@/components/common/Alert/Alert";
+import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface rencana {
@@ -120,16 +120,26 @@ const Table = () => {
                   return item.indikator_pj === "internal"
                 }
               )
-              setRencana(filtered);
-              setDataNull(false);
+              if(filtered.length > 0){
+                setRencana(filtered);
+                setDataNull(false);
+              } else {
+                setRencana([]);
+                setDataNull(true);
+              }
             } else if(Eksternal){
               const filtered = data.data.filter(
                 (item: any) => {
                   return item.indikator_pj === "eksternal"
                 }
               )
-              setRencana(filtered);
-              setDataNull(false);
+              if(filtered.length > 0){
+                setRencana(filtered);
+                setDataNull(false);
+              } else {
+                setRencana([]);
+                setDataNull(true);
+              }
             }
           }
         } catch (err) {
@@ -171,6 +181,26 @@ const Table = () => {
         router.push(`/PemenuhanKebutuhan/EditPemenuhan/${id}`)
       }
     }
+    //hapus data
+    const hapusPemenuhan = async(id: any) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      try{
+          const response = await fetch(`${API_URL}/v1/deleterencanaPelaksanaan/${id}`, {
+              method: "DELETE",
+              headers: {
+                  'Authorization': `${token}`,
+              },
+          })
+          if(!response.ok){
+              alert("cant fetch data")
+          }
+          AlertNotification("Berhasil", "Data Pemenuhan Kebutuhan Berhasil Dihapus", "success", 1000);
+          window.location.reload();
+      } catch(err){
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+      }
+  };
+
 
     if(loading){
       return <Loading />
@@ -232,24 +262,23 @@ const Table = () => {
                           <th rowSpan={2} className="border px-6 py-3 min-w-[150px]">Nama Domain</th>
                           <th rowSpan={2} className="border px-6 py-3 min-w-[200px] text-center">Kebutuhan</th>
                           <th colSpan={3} className="border px-6 py-3 min-w-[200px] text-center">Kondisi Awal</th>
-                          <th colSpan={2} className="border px-6 py-3 min-w-[400px] text-center">Penanggung Jawab</th>
+                          <th colSpan={2} className="border px-6 py-3 min-w-[400px] text-center">Perangkat Daerah</th>
                           <th colSpan={2} className="border px-6 py-3 min-w-[400px] text-center">Sasaran Kinerja</th>
                           <th rowSpan={2} className="border px-6 py-3 min-w-[200px] text-center">Pagu Anggaran</th>
-                          <th rowSpan={2} className="border px-6 py-3 min-w-[200px] text-center">Sub Kegiatan</th>
-                          <th colSpan={2} className="border px-6 py-3 min-w-[400px] text-center">Perangkat Daerah</th>
+                          <th rowSpan={2} className="border px-6 py-3 min-w-[400px] text-center">Sub Kegiatan</th>
                           <th colSpan={5} className="border px-6 py-3 min-w-[200px] text-center">Tahun</th>
-                          <th rowSpan={2} className="border px-6 py-3 min-w-[200px] text-center">Aksi</th>
+                          {(user?.roles == 'admin_kota' || user?.roles == 'admin_opd') && 
+                            <th rowSpan={2} className="border px-6 py-3 min-w-[200px] text-center">Aksi</th>
+                          }
                       </tr>
                       <tr>
                           <th className="border px-6 py-3 min-w-[200px] text-center">2022</th>
                           <th className="border px-6 py-3 min-w-[200px] text-center">2023</th>
                           <th className="border px-6 py-3 min-w-[200px] text-center">2024</th>
-                          <th className="border px-6 py-3 min-w-[100px] text-center">Indikator</th>
+                          <th className="border px-6 py-3 min-w-[100px] text-center">Pelaksana</th>
                           <th className="border px-6 py-3 min-w-[300px] text-center">Nama OPD</th>
-                          <th className="border px-6 py-3 min-w-[100px] text-center">Kode</th>
-                          <th className="border px-6 py-3 min-w-[300px] text-center">Nama Sasaran</th>
-                          <th className="border px-6 py-3 min-w-[100px] text-center">Indikator</th>
-                          <th className="border px-6 py-3 min-w-[300px] text-center">Nama OPD</th>
+                          <th className="border px-6 py-3 min-w-[50px] text-center">Kode</th>
+                          <th className="border px-6 py-3 min-w-[350px] text-center">Nama Sasaran</th>
                           <th className="border px-6 py-3 min-w-[200px] text-center">2025</th>
                           <th className="border px-6 py-3 min-w-[200px] text-center">2026</th>
                           <th className="border px-6 py-3 min-w-[200px] text-center">2027</th>
@@ -359,8 +388,6 @@ const Table = () => {
                                   <td className="border px-6 py-4 min-w-[200px]">N/A</td>
                                   <td className="border px-6 py-4 min-w-[200px]">N/A</td>
                                   <td className="border px-6 py-4 min-w-[200px]">N/A</td>
-                                  <td className="border px-6 py-4 min-w-[200px]">N/A</td>
-                                  <td className="border px-6 py-4 min-w-[200px]">N/A</td>
 
                                   <td className="border px-6 py-4 min-w-[200px] bg-red-500"></td>
                                   <td className="border px-6 py-4 min-w-[200px] bg-red-500"></td>
@@ -368,8 +395,7 @@ const Table = () => {
                                   <td className="border px-6 py-4 min-w-[200px] bg-red-500"></td>
                                   <td className="border px-6 py-4 min-w-[200px] bg-red-500"></td>
                                   <td className="border px-6 py-4 text-center gap-2">
-                                    {data.jenis_kebutuhan.map((item: any) => (
-                                    <ButtonPr key={item.id} className="my-1 px-5 w-full" halaman_url={`/PemenuhanKebutuhan/TambahPemenuhan/${item.kebutuhan_id}`}>
+                                    <ButtonPr key={data.id} className="my-1 px-5 w-full" halaman_url={`/PemenuhanKebutuhan/TambahPemenuhan/${data.id}`}>
                                       <div className="flex items-center justify-center">
                                           <Image
                                               className="mr-1"
@@ -381,7 +407,6 @@ const Table = () => {
                                           Tambah
                                       </div>
                                     </ButtonPr>
-                                    ))}
                                   </td>
                                 </>
                               :
@@ -397,8 +422,6 @@ const Table = () => {
                                       "N/A"
                                     }
                                   </td>
-                                  <td className="border px-6 py-4">{info.indikator_pd ? info.indikator_pd : "N/A"}</td>
-                                  <td className="border px-6 py-4">{info.perangkat_daerah.nama_opd ? info.perangkat_daerah.nama_opd : "N/A"}</td>
                                   {info.tahun_pelaksanaan.find(t => t.tahun === 2025)?.tahun ?
                                     <td className="border px-6 py-4 text-center text-white font-extrabold bg-green-500">V</td>
                                     :
@@ -424,21 +447,44 @@ const Table = () => {
                                     :
                                     <td className="border px-6 py-4 bg-red-500"></td>
                                   }
-                                  <td className="border px-6 py-4 text-center gap-2">
-                                    <ButtonSc className="my-1 px-5 w-full"
-                                    onClick={() => editPemenuhan(info.id)}>
-                                      <div className="flex items-center justify-center">
-                                          <Image
-                                              className="mr-1"
-                                              src="/iconLight/edit.svg"
-                                              alt="edit"
-                                              width={15}
-                                              height={15}
-                                          />
-                                          Edit
-                                      </div>
-                                    </ButtonSc>
-                                  </td>
+                                  {(user?.roles == 'admin_kota' || user?.roles == 'admin_opd') && 
+                                    <td className="flex flex-col px-6 py-4 gap-3">
+                                      <ButtonSc className="px-5 w-full"
+                                      onClick={() => editPemenuhan(info.id)}>
+                                        <div className="flex items-center justify-center">
+                                            <Image
+                                                className="mr-1"
+                                                src="/iconLight/edit.svg"
+                                                alt="edit"
+                                                width={15}
+                                                height={15}
+                                            />
+                                            Edit
+                                        </div>
+                                      </ButtonSc>
+                                      <ButtonTr
+                                            className=""
+                                            onClick={() => {
+                                                AlertQuestion("Hapus?", "Hapus Pemenuhan Kebutuhan", "question", "Hapus", "Batal").then((result) => {
+                                                    if(result.isConfirmed){
+                                                      hapusPemenuhan(info.id);
+                                                    }
+                                                });
+                                            }}
+                                        >
+                                            <div className="flex items-center justify-center w-full">
+                                                <Image 
+                                                className="mr-1"
+                                                src="/iconLight/trash.svg" 
+                                                alt="trash" 
+                                                width={15} 
+                                                height={15} 
+                                                />
+                                                <span>Hapus</span>
+                                            </div>
+                                        </ButtonTr>
+                                    </td>
+                                  }
                                 </>  
                                 ))
                               }

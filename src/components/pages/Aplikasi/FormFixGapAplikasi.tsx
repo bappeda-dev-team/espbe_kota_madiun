@@ -10,6 +10,7 @@ import { AlertNotification } from "@/components/common/Alert/Alert";
 import { getUser, getToken } from "@/app/Login/Auth/Auth";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import IdNull from "@/components/common/Alert/IdNull";
 
 interface OptionType {
   value: number;
@@ -58,6 +59,7 @@ const FormFixGapAplikasi = () => {
   } = useForm<formValue>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
+  const [idNotFound, setIdNotFound] = useState<boolean | null>(null);
 
   const [raa_1_4, set_raa_1_4] = useState<OptionType[]>([]);
   const [raa_5_7, set_raa_5_7] = useState<OptionType[]>([]);
@@ -104,33 +106,36 @@ const FormFixGapAplikasi = () => {
           },
         });
         const data = await response.json();
-        const result = data.data;
-        
-        if (result.rab_level_4) {
-          const strategicOption = {
-            value: result.rab_level_4.id,
-            label: result.rab_level_4.nama_pohon,
-          };
-          setSelectedStrategic(strategicOption);
-          reset((prev) => ({ ...prev, strategic_id: strategicOption }));
+        if(data.code == 500){
+          setIdNotFound(true);
+        } else {
+          const result = data.data;
+          
+          if (result.rab_level_4) {
+            const strategicOption = {
+              value: result.rab_level_4.id,
+              label: result.rab_level_4.nama_pohon,
+            };
+            setSelectedStrategic(strategicOption);
+            reset((prev) => ({ ...prev, strategic_id: strategicOption }));
+          }
+          if (result.rab_level_5) {
+            const tacticalOption = {
+              value: result.rab_level_5.id,
+              label: result.rab_level_5.nama_pohon,
+            };
+            setSelectedTactical(tacticalOption);
+            reset((prev) => ({ ...prev, tactical_id: tacticalOption }));
+          }
+          if (result.rab_level_6) {
+            const operationalOption = {
+              value: result.rab_level_6.id,
+              label: result.rab_level_6.nama_pohon,
+            };
+            setSelectedOperational(operationalOption);
+            reset((prev) => ({ ...prev, operational_id: operationalOption }));
+          }
         }
-        if (result.rab_level_5) {
-          const tacticalOption = {
-            value: result.rab_level_5.id,
-            label: result.rab_level_5.nama_pohon,
-          };
-          setSelectedTactical(tacticalOption);
-          reset((prev) => ({ ...prev, tactical_id: tacticalOption }));
-        }
-        if (result.rab_level_6) {
-          const operationalOption = {
-            value: result.rab_level_6.id,
-            label: result.rab_level_6.nama_pohon,
-          };
-          setSelectedOperational(operationalOption);
-          reset((prev) => ({ ...prev, operational_id: operationalOption }));
-        }
-
       } catch (err) {
         console.log("Gagal fetching data by id");
       }
@@ -276,610 +281,601 @@ const FormFixGapAplikasi = () => {
     }
   };
   
-  return (
-    <>
-      <div className="border p-5 rounded-xl shadow-xl">
-        <h1 className="uppercase font-bold">Form Fix GAP Data Aplikasi :</h1>
-        <form
-          className="flex flex-col mx-5 py-5"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-        <div className="flex flex-col py-3">
-          <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="nama_aplikasi">
-            Nama Aplikasi :
-          </label>
-          <Controller
-            name="nama_aplikasi"
-            control={control}
-            rules={{ required: "Nama Aplikasi Harus Terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded-lg"
-                  {...field}
-                  type="text"
-                  id="nama_aplikasi"
-                  placeholder="masukkan nama aplikasi beserta akronimnya"
-                />
-                {errors.nama_aplikasi ?
-                  <h1 className="text-red-500">
-                    {errors.nama_aplikasi.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Nama Aplikasi Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="fungsi_aplikasi"
+  if(idNotFound){
+    const url="/Aplikasi";
+    return(
+      <IdNull url={url}/>
+    )
+  } else {
+    return (
+      <>
+        <div className="border p-5 rounded-xl shadow-xl">
+          <h1 className="uppercase font-bold">Form Fix GAP Data Aplikasi :</h1>
+          <form
+            className="flex flex-col mx-5 py-5"
+            onSubmit={handleSubmit(onSubmit)}
           >
-            Fungsi Aplikasi :
-          </label>
-          <Controller
-            name="fungsi_aplikasi"
-            control={control}
-            rules={{ required: "Fungsi Aplikasi Harus Terisi" }}
-            render={({ field }) => (
+          <div className="flex flex-col py-3">
+            <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="nama_aplikasi">
+              Nama Aplikasi :
+            </label>
+            <Controller
+              name="nama_aplikasi"
+              control={control}
+              rules={{ required: "Nama Aplikasi Harus Terisi" }}
+              render={({ field }) => (
+                <>
+                  <input
+                    className="border px-4 py-2 rounded-lg"
+                    {...field}
+                    type="text"
+                    id="nama_aplikasi"
+                    placeholder="masukkan nama aplikasi beserta akronimnya"
+                  />
+                  {errors.nama_aplikasi ?
+                    <h1 className="text-red-500">
+                      {errors.nama_aplikasi.message}
+                    </h1>
+                    :
+                    <h1 className="text-slate-300 text-xs">*Nama Aplikasi Harus Terisi</h1>
+                  }
+                </>
+              )}
+            />
+          </div>
+          <div className="flex flex-col py-3">
+            <label
+              className="uppercase text-xs font-bold text-gray-700 my-2"
+              htmlFor="fungsi_aplikasi"
+            >
+              Fungsi Aplikasi :
+            </label>
+            <Controller
+              name="fungsi_aplikasi"
+              control={control}
+              rules={{ required: "Fungsi Aplikasi Harus Terisi" }}
+              render={({ field }) => (
+                <>
+                  <input
+                    className="border px-4 py-2 rounded-lg"
+                    {...field}
+                    type="text"
+                    id="fungsi_aplikasi"
+                    placeholder="masukkan Fungsi Aplikasi"
+                  />
+                  {errors.fungsi_aplikasi ?
+                    <h1 className="text-red-500">
+                      {errors.fungsi_aplikasi.message}
+                    </h1>
+                    :
+                    <h1 className="text-slate-300 text-xs">*Fungsi Aplikasi Harus Terisi</h1>
+                  }
+                </>
+              )}
+            />
+          </div>
+          <div className="flex flex-col py-3">
+            <label
+              className="uppercase text-xs font-bold text-gray-700 my-2"
+              htmlFor="produsen_aplikasi"
+            >
+              Produsen Aplikasi :
+            </label>
+            <Controller
+              name="produsen_aplikasi"
+              control={control}
+              rules={{ required: "Produsen Aplikasi Harus Terisi" }}
+              render={({ field }) => (
+                <>
+                  <input
+                    className="border px-4 py-2 rounded-lg"
+                    {...field}
+                    type="text"
+                    id="produsen_aplikasi"
+                    placeholder="masukkan Produsen Aplikasi"
+                  />
+                  {errors.produsen_aplikasi ?
+                    <h1 className="text-red-500">
+                      {errors.produsen_aplikasi.message}
+                    </h1>
+                    :
+                    <h1 className="text-slate-300 text-xs">*Produsen Aplikasi Harus Terisi</h1>
+                  }
+                </>
+              )}
+            />
+          </div>
+          <div className="flex flex-col py-3">
+            <label
+              className="uppercase text-xs font-bold text-gray-700 my-2"
+              htmlFor="pj_aplikasi"
+            >
+              Penanggung Jawab Aplikasi :
+            </label>
+            <Controller
+              name="pj_aplikasi"
+              control={control}
+              rules={{ required: "Pengngguan Jawab Aplikasi Harus Terisi" }}
+              render={({ field }) => (
+                <>
+                  <input
+                    className="border px-4 py-2 rounded-lg"
+                    {...field}
+                    type="text"
+                    id="pj_aplikasi"
+                    placeholder="masukkan Penanggung Jawab Aplikasi"
+                  />
+                  {errors.pj_aplikasi ?
+                    <h1 className="text-red-500">
+                      {errors.pj_aplikasi.message}
+                    </h1>
+                    :
+                    <h1 className="text-slate-300 text-xs">*Penanggung Jawab Aplikasi Harus Terisi</h1>
+                  }
+                </>
+              )}
+            />
+          </div>
+          <div className="flex flex-col py-3">
+            <label
+              className="uppercase text-xs font-bold text-gray-700 my-2"
+              htmlFor="informasi_terkait_input"
+            >
+              Informasi Terkait Input :
+            </label>
+            <Controller
+              name="informasi_terkait_input"
+              control={control}
+              rules={{ required: "Informasi Terkait Input Harus Terisi" }}
+              render={({ field }) => (
+                <>
+                  <input
+                    className="border px-4 py-2 rounded-lg"
+                    {...field}
+                    type="text"
+                    id="informasi_terkait_input"
+                    placeholder="masukkan Informasi Terkait Input"
+                  />
+                  {errors.informasi_terkait_input ?
+                    <h1 className="text-red-500">
+                      {errors.informasi_terkait_input.message}
+                    </h1>
+                    :
+                    <h1 className="text-slate-300 text-xs">*Informasi Terkait Input Harus Terisi</h1>
+                  }
+                </>
+              )}
+            />
+          </div>
+          <div className="flex flex-col py-3">
+            <label
+              className="uppercase text-xs font-bold text-gray-700 my-2"
+              htmlFor="informasi_terkait_output"
+            >
+              Informasi Terkait Output :
+            </label>
+            <Controller
+              name="informasi_terkait_output"
+              control={control}
+              rules={{ required: "Informasi Terkait Output Harus Terisi" }}
+              render={({ field }) => (
+                <>
+                  <input
+                    className="border px-4 py-2 rounded-lg"
+                    {...field}
+                    type="text"
+                    id="informasi_terkait_output"
+                    placeholder="masukkan Informasi Terkait Output"
+                  />
+                  {errors.informasi_terkait_output ?
+                    <h1 className="text-red-500">
+                      {errors.informasi_terkait_output.message}
+                    </h1>
+                    :
+                    <h1 className="text-slate-300 text-xs">*Informasi Terkait Output Harus Terisi</h1>
+                  }
+                </>
+              )}
+            />
+          </div>
+            {isClient && (
               <>
-                <input
-                  className="border px-4 py-2 rounded-lg"
-                  {...field}
-                  type="text"
-                  id="fungsi_aplikasi"
-                  placeholder="masukkan Fungsi Aplikasi"
-                />
-                {errors.fungsi_aplikasi ?
-                  <h1 className="text-red-500">
-                    {errors.fungsi_aplikasi.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Fungsi Aplikasi Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="produsen_aplikasi"
-          >
-            Produsen Aplikasi :
-          </label>
-          <Controller
-            name="produsen_aplikasi"
-            control={control}
-            rules={{ required: "Produsen Aplikasi Harus Terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded-lg"
-                  {...field}
-                  type="text"
-                  id="produsen_aplikasi"
-                  placeholder="masukkan Produsen Aplikasi"
-                />
-                {errors.produsen_aplikasi ?
-                  <h1 className="text-red-500">
-                    {errors.produsen_aplikasi.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Produsen Aplikasi Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="pj_aplikasi"
-          >
-            Penanggung Jawab Aplikasi :
-          </label>
-          <Controller
-            name="pj_aplikasi"
-            control={control}
-            rules={{ required: "Pengngguan Jawab Aplikasi Harus Terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded-lg"
-                  {...field}
-                  type="text"
-                  id="pj_aplikasi"
-                  placeholder="masukkan Penanggung Jawab Aplikasi"
-                />
-                {errors.pj_aplikasi ?
-                  <h1 className="text-red-500">
-                    {errors.pj_aplikasi.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Penanggung Jawab Aplikasi Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="informasi_terkait_input"
-          >
-            Informasi Terkait Input :
-          </label>
-          <Controller
-            name="informasi_terkait_input"
-            control={control}
-            rules={{ required: "Informasi Terkait Input Harus Terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded-lg"
-                  {...field}
-                  type="text"
-                  id="informasi_terkait_input"
-                  placeholder="masukkan Informasi Terkait Input"
-                />
-                {errors.informasi_terkait_input ?
-                  <h1 className="text-red-500">
-                    {errors.informasi_terkait_input.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Informasi Terkait Input Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-        <div className="flex flex-col py-3">
-          <label
-            className="uppercase text-xs font-bold text-gray-700 my-2"
-            htmlFor="informasi_terkait_output"
-          >
-            Informasi Terkait Output :
-          </label>
-          <Controller
-            name="informasi_terkait_output"
-            control={control}
-            rules={{ required: "Informasi Terkait Output Harus Terisi" }}
-            render={({ field }) => (
-              <>
-                <input
-                  className="border px-4 py-2 rounded-lg"
-                  {...field}
-                  type="text"
-                  id="informasi_terkait_output"
-                  placeholder="masukkan Informasi Terkait Output"
-                />
-                {errors.informasi_terkait_output ?
-                  <h1 className="text-red-500">
-                    {errors.informasi_terkait_output.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Informasi Terkait Output Harus Terisi</h1>
-                }
-              </>
-            )}
-          />
-        </div>
-          {isClient && (
-            <>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="jenis_aplikasi"
-              >
-                Jenis Aplikasi :
-              </label>
-              <Controller
-                name="jenis_aplikasi"
-                control={control}
-                rules={{ required: "jenis aplikasi Harus Terisi" }}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      options={JenisAplikasi}
-                      isSearchable
-                      isClearable
-                      placeholder="Pilih Jenis Aplikasi"
-                      styles={{
-                        control: (baseStyles) => ({
-                          ...baseStyles,
-                          borderRadius: '8px',
-                        })
-                      }}
-                    />
-                    {errors.jenis_aplikasi ?
-                      <h1 className="text-red-500">
-                        {errors.jenis_aplikasi.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*Jenis Aplikasi Harus Terisi</h1>
-                    }
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col py-3">
-              <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tahun:</label>
-              <Controller
-                name="tahun"
-                control={control}
-                rules={{ required: "Tahun Harus Terisi" }}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      options={tahun_option}
-                      isSearchable
-                      isClearable
-                      placeholder="Pilih Tahun"
-                      styles={{
-                        control: (baseStyles) => ({
-                          ...baseStyles,
-                          borderRadius: '8px',
-                        })
-                      }}
-                    />
-                    {errors.tahun ?
-                      <h1 className="text-red-500">
-                        {errors.tahun.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*Tahun Harus Terisi</h1>
-                    }
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="interoprabilitas"
-              >
-                Interoprabilitas :
-              </label>
-              <Controller
-                name="interoprabilitas"
-                control={control}
-                rules={{ required: "interoprabilitas Harus Terisi" }}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      options={interoprabilitas}
-                      isSearchable
-                      isClearable
-                      placeholder="Pilih interoprabilitas"
-                      styles={{
-                        control: (baseStyles) => ({
-                          ...baseStyles,
-                          borderRadius: '8px',
-                        })
-                      }}
-                    />
-                    {errors.interoprabilitas ?
-                      <h1 className="text-red-500">
-                        {errors.interoprabilitas.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*interoprabilitas Harus Terisi</h1>
-                    }
-                  </>
-                )}
-              />
-            </div>
-            {interoprabilitasValue?.value === "Ya" && (
               <div className="flex flex-col py-3">
-                <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="keterangan">
-                  Keterangan :
+                <label
+                  className="uppercase text-xs font-bold text-gray-700 my-2"
+                  htmlFor="jenis_aplikasi"
+                >
+                  Jenis Aplikasi :
                 </label>
                 <Controller
-                  name="keterangan"
+                  name="jenis_aplikasi"
                   control={control}
+                  rules={{ required: "jenis aplikasi Harus Terisi" }}
                   render={({ field }) => (
-                      <input
-                        className="border px-4 py-2 rounded-lg"
+                    <>
+                      <Select
                         {...field}
-                        value={field.value || ""}
-                        type="text"
-                        id="keterangan"
-                        placeholder="Masukkan Keterangan"
+                        options={JenisAplikasi}
+                        isSearchable
+                        isClearable
+                        placeholder="Pilih Jenis Aplikasi"
+                        styles={{
+                          control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderRadius: '8px',
+                          })
+                        }}
                       />
+                      {errors.jenis_aplikasi ?
+                        <h1 className="text-red-500">
+                          {errors.jenis_aplikasi.message}
+                        </h1>
+                        :
+                        <h1 className="text-slate-300 text-xs">*Jenis Aplikasi Harus Terisi</h1>
+                      }
+                    </>
                   )}
                 />
               </div>
+              <div className="flex flex-col py-3">
+                <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="tahun">Tahun:</label>
+                <Controller
+                  name="tahun"
+                  control={control}
+                  rules={{ required: "Tahun Harus Terisi" }}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        {...field}
+                        options={tahun_option}
+                        isSearchable
+                        isClearable
+                        placeholder="Pilih Tahun"
+                        styles={{
+                          control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderRadius: '8px',
+                          })
+                        }}
+                      />
+                      {errors.tahun ?
+                        <h1 className="text-red-500">
+                          {errors.tahun.message}
+                        </h1>
+                        :
+                        <h1 className="text-slate-300 text-xs">*Tahun Harus Terisi</h1>
+                      }
+                    </>
+                  )}
+                />
+              </div>
+              <div className="flex flex-col py-3">
+                <label
+                  className="uppercase text-xs font-bold text-gray-700 my-2"
+                  htmlFor="interoprabilitas"
+                >
+                  Interoprabilitas :
+                </label>
+                <Controller
+                  name="interoprabilitas"
+                  control={control}
+                  rules={{ required: "interoprabilitas Harus Terisi" }}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        {...field}
+                        options={interoprabilitas}
+                        isSearchable
+                        isClearable
+                        placeholder="Pilih interoprabilitas"
+                        styles={{
+                          control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderRadius: '8px',
+                          })
+                        }}
+                      />
+                      {errors.interoprabilitas ?
+                        <h1 className="text-red-500">
+                          {errors.interoprabilitas.message}
+                        </h1>
+                        :
+                        <h1 className="text-slate-300 text-xs">*interoprabilitas Harus Terisi</h1>
+                      }
+                    </>
+                  )}
+                />
+              </div>
+              {interoprabilitasValue?.value === "Ya" && (
+                <div className="flex flex-col py-3">
+                  <label className="uppercase text-xs font-bold text-gray-700 my-2" htmlFor="keterangan">
+                    Keterangan :
+                  </label>
+                  <Controller
+                    name="keterangan"
+                    control={control}
+                    render={({ field }) => (
+                        <input
+                          className="border px-4 py-2 rounded-lg"
+                          {...field}
+                          value={field.value || ""}
+                          type="text"
+                          id="keterangan"
+                          placeholder="Masukkan Keterangan"
+                        />
+                    )}
+                  />
+                </div>
+              )}
+              <div className="flex flex-col py-3">
+                <label
+                  className="uppercase text-xs font-bold text-gray-700 my-2"
+                  htmlFor="raa_level_1_id"
+                >
+                  RAA Level 1:
+                </label>
+                <Controller
+                  name="raa_level_1_id"
+                  control={control}
+                  rules={{required : "RAA Level 1 Harus Terisi"}}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        {...field}
+                        placeholder="Masukkan RAA Level 1"
+                        value={selectedRaa1}
+                        options={raa_1_4}
+                        isLoading={isLoading}
+                        isSearchable
+                        isClearable
+                        onMenuOpen={() => {
+                          if (raa_1_4.length === 0) {
+                            fetchRaaLevel1_4(1);
+                          }
+                        }}
+                        onMenuClose={() => {
+                          set_raa_1_4([]);
+                        }}
+                        onChange={(option) => {
+                          field.onChange(option);
+                          setSelectedRaa1(option);
+                          setSelectedRaa2(null);
+                          setSelectedRaa3(null);
+                        }}
+                        styles={{
+                          control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderRadius: '8px',
+                          })
+                        }}
+                      />
+                      {errors.raa_level_1_id ?
+                        <h1 className="text-red-500">
+                          {errors.raa_level_1_id.message}
+                        </h1>
+                        :
+                        <h1 className="text-slate-300 text-xs">*RAA Level 1 Harus Terisi</h1>
+                      }
+                    </>
+                  )}
+                />
+              </div>
+              <div className="flex flex-col py-3">
+                <label
+                  className="uppercase text-xs font-bold text-gray-700 my-2"
+                  htmlFor="raa_level_2_id"
+                >
+                  RAA Level 2:
+                </label>
+                <Controller
+                  name="raa_level_2_id"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        {...field}
+                        placeholder="Masukkan RAA Level 2"
+                        value={selectedRaa2}
+                        options={raa_1_4}
+                        isLoading={isLoading}
+                        isSearchable
+                        isClearable
+                        isDisabled={!selectedRaa1}
+                        onMenuOpen={() => {
+                          if (selectedRaa1?.kode) {
+                            fetchRaaLevel1_4(2, selectedRaa1.kode);
+                          }
+                        }}
+                        onMenuClose={() => {
+                          set_raa_1_4([]);
+                        }}
+                        onChange={(option) => {
+                          field.onChange(option);
+                          setSelectedRaa2(option);
+                          setSelectedRaa3(null);
+                        }}
+                        styles={{
+                          control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderRadius: '8px',
+                          })
+                        }}
+                      />
+                    </>
+                  )}
+                />
+              </div>
+              <div className="flex flex-col py-3">
+                <label
+                  className="uppercase text-xs font-bold text-gray-700 my-2"
+                  htmlFor="raa_level_3_id"
+                >
+                  RAA Level 3:
+                </label>
+                <Controller
+                  name="raa_level_3_id"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        {...field}
+                        placeholder="Masukkan RAD Level 3"
+                        value={selectedRaa3}
+                        options={raa_1_4}
+                        isLoading={isLoading}
+                        isSearchable
+                        isClearable
+                        isDisabled={!selectedRaa2}
+                        onMenuOpen={() => {
+                          if (selectedRaa2?.kode) {
+                            fetchRaaLevel1_4(3, selectedRaa2.kode);
+                          }
+                        }}
+                        onMenuClose={() => {
+                          set_raa_1_4([]);
+                        }}
+                        onChange={(option) => {
+                          field.onChange(option);
+                          setSelectedRaa3(option);
+                        }}
+                        styles={{
+                          control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderRadius: '8px',
+                          })
+                        }}
+                      />
+                    </>
+                  )}
+                />
+              </div>
+            <div className="flex flex-col py-3">
+                <label
+                  className="uppercase text-xs font-bold text-gray-700 my-2"
+                  htmlFor="strategic_id"
+                >
+                  Strategic :
+                </label>
+                <Controller
+                  name="strategic_id"
+                  control={control}
+                  rules={{required:"Stategic Harus Terisi"}}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        {...field}
+                        id="strategic_id"
+                        value={selectedStrategic || null}
+                        placeholder="Pilih Strategic"
+                        isLoading={isLoading}
+                        isDisabled
+                        styles={{
+                          control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderRadius: '8px',
+                          })
+                        }}
+                      />
+                      {errors.strategic_id ?
+                        <h1 className="text-red-500">
+                          {errors.strategic_id.message}
+                        </h1>
+                        :
+                        <h1 className="text-slate-300 text-xs">*Strategic sesuai GAP</h1>
+                      }
+                    </>
+                  )}
+                />
+              </div>
+              <div className="flex flex-col py-3">
+                <label
+                  className="uppercase text-xs font-bold text-gray-700 my-2"
+                  htmlFor="tactical_id"
+                >
+                  Tactical :
+                </label>
+                <Controller
+                  name="tactical_id"
+                  control={control}
+                  rules={{required:"Tactical Harus Terisi"}}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        {...field}
+                        id="tactical_id"
+                        value={selectedTactical || null}
+                        placeholder="Pilih RAB Level 5"
+                        isLoading={isLoading}
+                        isDisabled
+                        styles={{
+                          control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderRadius: '8px',
+                          })
+                        }}
+                      />
+                      {errors.tactical_id ?
+                        <h1 className="text-red-500">
+                          {errors.tactical_id.message}
+                        </h1>
+                        :
+                        <h1 className="text-slate-300 text-xs">*Tactical sesuai GAP</h1>
+                      }
+                    </>
+                  )}
+                />
+              </div>
+              <div className="flex flex-col py-3">
+                <label
+                  className="uppercase text-xs font-bold text-gray-700 my-2"
+                  htmlFor="operational_id"
+                >
+                  Operational :
+                </label>
+                <Controller
+                  name="operational_id"
+                  control={control}
+                  rules={{required:"Operational Harus Terisi"}}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        {...field}
+                        id="operational_id"
+                        value={selectedOperational || null}
+                        placeholder="Pilih Operational"
+                        isLoading={isLoading}
+                        isDisabled
+                        styles={{
+                          control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderRadius: '8px',
+                          })
+                        }}
+                      />
+                      {errors.operational_id ?
+                        <h1 className="text-red-500">
+                          {errors.operational_id.message}
+                        </h1>
+                        :
+                        <h1 className="text-slate-300 text-xs">*Operational sesuai GAP</h1>
+                      }
+                    </>
+                  )}
+                />
+              </div>
+              </>
             )}
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="raa_level_1_id"
-              >
-                RAA Level 1:
-              </label>
-              <Controller
-                name="raa_level_1_id"
-                control={control}
-                rules={{required : "RAA Level 1 Harus Terisi"}}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      placeholder="Masukkan RAA Level 1"
-                      value={selectedRaa1}
-                      options={raa_1_4}
-                      isLoading={isLoading}
-                      isSearchable
-                      isClearable
-                      onMenuOpen={() => {
-                        if (raa_1_4.length === 0) {
-                          fetchRaaLevel1_4(1);
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_raa_1_4([]);
-                      }}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        setSelectedRaa1(option);
-                        setSelectedRaa2(null);
-                        setSelectedRaa3(null);
-                      }}
-                      styles={{
-                        control: (baseStyles) => ({
-                          ...baseStyles,
-                          borderRadius: '8px',
-                        })
-                      }}
-                    />
-                    {errors.raa_level_1_id ?
-                      <h1 className="text-red-500">
-                        {errors.raa_level_1_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAA Level 1 Harus Terisi</h1>
-                    }
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="raa_level_2_id"
-              >
-                RAA Level 2:
-              </label>
-              <Controller
-                name="raa_level_2_id"
-                control={control}
-                rules={{required: "RAA Level 2 Harus Terisi"}}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      placeholder="Masukkan RAA Level 2"
-                      value={selectedRaa2}
-                      options={raa_1_4}
-                      isLoading={isLoading}
-                      isSearchable
-                      isClearable
-                      isDisabled={!selectedRaa1}
-                      onMenuOpen={() => {
-                        if (selectedRaa1?.kode) {
-                          fetchRaaLevel1_4(2, selectedRaa1.kode);
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_raa_1_4([]);
-                      }}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        setSelectedRaa2(option);
-                        setSelectedRaa3(null);
-                      }}
-                      styles={{
-                        control: (baseStyles) => ({
-                          ...baseStyles,
-                          borderRadius: '8px',
-                        })
-                      }}
-                    />
-                    {errors.raa_level_2_id ?
-                      <h1 className="text-red-500">
-                        {errors.raa_level_2_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAA Level 2 Harus Terisi</h1>
-                    }
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="raa_level_3_id"
-              >
-                RAA Level 3:
-              </label>
-              <Controller
-                name="raa_level_3_id"
-                control={control}
-                rules={{required: "RAA Level 3 Harus Terisi"}}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      placeholder="Masukkan RAD Level 3"
-                      value={selectedRaa3}
-                      options={raa_1_4}
-                      isLoading={isLoading}
-                      isSearchable
-                      isClearable
-                      isDisabled={!selectedRaa2}
-                      onMenuOpen={() => {
-                        if (selectedRaa2?.kode) {
-                          fetchRaaLevel1_4(3, selectedRaa2.kode);
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_raa_1_4([]);
-                      }}
-                      onChange={(option) => {
-                        field.onChange(option);
-                        setSelectedRaa3(option);
-                      }}
-                      styles={{
-                        control: (baseStyles) => ({
-                          ...baseStyles,
-                          borderRadius: '8px',
-                        })
-                      }}
-                    />
-                    {errors.raa_level_3_id ?
-                      <h1 className="text-red-500">
-                        {errors.raa_level_3_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAA Level 3 Harus Terisi</h1>
-                    }
-                  </>
-                )}
-              />
-            </div>
-          <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="strategic_id"
-              >
-                Strategic :
-              </label>
-              <Controller
-                name="strategic_id"
-                control={control}
-                rules={{required:"Stategic Harus Terisi"}}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      id="strategic_id"
-                      value={selectedStrategic || null}
-                      placeholder="Pilih Strategic"
-                      isLoading={isLoading}
-                      isDisabled
-                      styles={{
-                        control: (baseStyles) => ({
-                          ...baseStyles,
-                          borderRadius: '8px',
-                        })
-                      }}
-                    />
-                    {errors.strategic_id ?
-                      <h1 className="text-red-500">
-                        {errors.strategic_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*Strategic sesuai GAP</h1>
-                    }
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="tactical_id"
-              >
-                Tactical :
-              </label>
-              <Controller
-                name="tactical_id"
-                control={control}
-                rules={{required:"Tactical Harus Terisi"}}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      id="tactical_id"
-                      value={selectedTactical || null}
-                      placeholder="Pilih RAB Level 5"
-                      isLoading={isLoading}
-                      isDisabled
-                      styles={{
-                        control: (baseStyles) => ({
-                          ...baseStyles,
-                          borderRadius: '8px',
-                        })
-                      }}
-                    />
-                    {errors.tactical_id ?
-                      <h1 className="text-red-500">
-                        {errors.tactical_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*Tactical sesuai GAP</h1>
-                    }
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col py-3">
-              <label
-                className="uppercase text-xs font-bold text-gray-700 my-2"
-                htmlFor="operational_id"
-              >
-                Operational :
-              </label>
-              <Controller
-                name="operational_id"
-                control={control}
-                rules={{required:"Operational Harus Terisi"}}
-                render={({ field }) => (
-                  <>
-                    <Select
-                      {...field}
-                      id="operational_id"
-                      value={selectedOperational || null}
-                      placeholder="Pilih Operational"
-                      isLoading={isLoading}
-                      isDisabled
-                      styles={{
-                        control: (baseStyles) => ({
-                          ...baseStyles,
-                          borderRadius: '8px',
-                        })
-                      }}
-                    />
-                    {errors.operational_id ?
-                      <h1 className="text-red-500">
-                        {errors.operational_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*Operational sesuai GAP</h1>
-                    }
-                  </>
-                )}
-              />
-            </div>
-            </>
-          )}
-          <ButtonSc typee="submit" className="mt-5">
-            Simpan
-          </ButtonSc>
-          <ButtonTr typee="button" className="mt-5" halaman_url="/GapArsitektur">
-            Batal
-          </ButtonTr>
-        </form>
-      </div>
-    </>
-  );
+            <ButtonSc typee="submit" className="mt-5">
+              Simpan
+            </ButtonSc>
+            <ButtonTr typee="button" className="mt-5" halaman_url="/GapArsitektur">
+              Batal
+            </ButtonTr>
+          </form>
+        </div>
+      </>
+    );
+  }
 };
 
 export default FormFixGapAplikasi;

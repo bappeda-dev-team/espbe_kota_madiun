@@ -54,7 +54,13 @@ const Table = () => {
               throw new Error("cant fetching data");
             }
             const data = await response.json();
-            setReferensiArsitektur(data.data);
+            if(data.data === null){
+              setDataNull(true);
+              setReferensiArsitektur([]);
+            } else {
+              setDataNull(false);
+              setReferensiArsitektur(data.data);
+            }
           } catch (err) {
             setError("gagal mendapatkan data referensi arsitektur, cek koneksi internet atau database server");
           } finally {
@@ -75,7 +81,13 @@ const Table = () => {
               throw new Error("cant fetching data");
             }
             const data = await response.json();
-            setReferensiArsitektur(data.data);
+            if(data.data === null){
+              setDataNull(true);
+              setReferensiArsitektur([]);
+            } else {
+              setDataNull(false);
+              setReferensiArsitektur(data.data);
+            }
           } catch (err) {
             setError("gagal mendapatkan data referensi arsitektur, cek koneksi internet atau database server");
           } finally {
@@ -91,8 +103,9 @@ const Table = () => {
         if(level != null){
           const filteredReferensi = referensiarsitektur.filter((item: any) => {
             return item.jenis_referensi == 'ProsesBisnis' && item.level_referensi == level
+          
           });
-          if(filteredReferensi === null){
+          if(filteredReferensi.length == 0){
             setDataNull(true);
             setFilteredReferensi([]);
           } else {
@@ -103,7 +116,7 @@ const Table = () => {
           const filteredReferensi = referensiarsitektur.filter((item: any) => {
             return item.jenis_referensi == 'ProsesBisnis'
           });
-          if(filteredReferensi === null){
+          if(filteredReferensi.length == 0){
             setDataNull(true);
             setFilteredReferensi([]);
           } else {
@@ -116,7 +129,7 @@ const Table = () => {
           const filteredReferensi = referensiarsitektur.filter((item: any) => {
             return item.jenis_referensi == 'Layanan' && item.level_referensi == level
           });
-          if(filteredReferensi === null){
+          if(filteredReferensi.length == 0){
             setDataNull(true);
             setFilteredReferensi([]);
           } else {
@@ -127,7 +140,7 @@ const Table = () => {
           const filteredReferensi = referensiarsitektur.filter((item: any) => {
             return item.jenis_referensi == 'Layanan'
           });
-          if(filteredReferensi === null){
+          if(filteredReferensi.length == 0){
             setDataNull(true);
             setFilteredReferensi([]);
           } else {
@@ -140,7 +153,7 @@ const Table = () => {
           const filteredReferensi = referensiarsitektur.filter((item: any) => {
             return item.jenis_referensi == 'DataDanInformasi' && item.level_referensi == level
           });
-          if(filteredReferensi === null){
+          if(filteredReferensi.length == 0){
             setDataNull(true);
             setFilteredReferensi([]);
           } else {
@@ -151,7 +164,7 @@ const Table = () => {
           const filteredReferensi = referensiarsitektur.filter((item: any) => {
             return item.jenis_referensi == 'DataDanInformasi'
           });
-          if(filteredReferensi === null){
+          if(filteredReferensi.length == 0){
             setDataNull(true);
             setFilteredReferensi([]);
           } else {
@@ -164,7 +177,7 @@ const Table = () => {
           const filteredReferensi = referensiarsitektur.filter((item: any) => {
             return item.jenis_referensi == 'Aplikasi' && item.level_referensi == level
           });
-          if(filteredReferensi === null){
+          if(filteredReferensi.length == 0){
             setDataNull(true);
             setFilteredReferensi([]);
           } else {
@@ -175,7 +188,7 @@ const Table = () => {
           const filteredReferensi = referensiarsitektur.filter((item: any) => {
             return item.jenis_referensi == 'Aplikasi'
           });
-          if(filteredReferensi === null){
+          if(filteredReferensi.length == 0){
             setDataNull(true);
             setFilteredReferensi([]);
           } else {
@@ -188,7 +201,7 @@ const Table = () => {
           const filteredReferensi = referensiarsitektur.filter((item: any) => {
             return item.level_referensi == level
           });
-          if(filteredReferensi === null){
+          if(filteredReferensi.length == 0){
             setDataNull(true);
             setFilteredReferensi([]);
           } else {

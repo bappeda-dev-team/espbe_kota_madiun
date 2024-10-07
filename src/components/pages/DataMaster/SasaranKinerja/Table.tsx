@@ -75,6 +75,11 @@ const Table = () => {
       }
     }, [tahun, token]);
 
+    const formatRupiah = (value: string | number) => {
+      const number = parseFloat(value.toString()); // Ubah ke angka
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number);
+    };
+
     if(error){
         return <h1>{error}</h1>
     } else if(loading){
@@ -113,7 +118,7 @@ const Table = () => {
                       <td className="px-6 py-4 border">{data.kode_sasaran}</td>
                       <td className="px-6 py-4 border text-center">{data.tahun_sasaran}</td>
                       <td className="px-6 py-4 border">{data.sasaran_kinerja}</td>
-                      <td className="px-6 py-4 border text-center">{data.anggaran_sasaran}</td>
+                      <td className="px-6 py-4 border text-center">{formatRupiah(data.anggaran_sasaran)}</td>
                       <td className="px-6 py-4 border text-center">{data.pelaksana_sasaran}</td>
                       <td className="px-6 py-4 border text-center">{data.kode_subkegiatan_sasaran}</td>
                       <td className="px-6 py-4 border text-center">{data.subkegiatan_sasaran}</td>

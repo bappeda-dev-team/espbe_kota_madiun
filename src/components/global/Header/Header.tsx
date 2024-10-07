@@ -33,7 +33,6 @@ function Header() {
 
   const TahunOptions = [
     { value: 0, label: 'Semua Tahun' },
-    { value: 2019, label: 'Tahun 2019' },
     { value: 2020, label: 'Tahun 2020' },
     { value: 2021, label: 'Tahun 2021' },
     { value: 2022, label: 'Tahun 2022' },

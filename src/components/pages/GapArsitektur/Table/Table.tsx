@@ -18,7 +18,8 @@ interface ProsesBisnis {
   layanans: layanans[];
   data_dan_informasi: data_dan_informaasi[];
   aplikasi: aplikasi[];
-  keterangan: keterangan[];
+  keterangan_gap: keterangan_gap[];
+  keterangan_kebutuhan: keterangan_kebutuhan[];
 }
 interface layanans {
   nama_layanan: string | null;
@@ -29,7 +30,11 @@ interface data_dan_informaasi {
 interface aplikasi {
   nama_aplikasi: string | null;
 }
-interface keterangan {
+interface keterangan_gap {
+  id_keterangan_gap: number;
+  keterangan_gap: string;
+}
+interface keterangan_kebutuhan {
   id_keterangan: number;
   keterangan: string;
 }
@@ -101,15 +106,26 @@ const Table = (data: any) => {
     }
   }, [tahun, SelectedOpd, token, user]);
 
-  const tambahketerangan = async(id: number) => {
+  const tambahketeranganKebutuhan = async(id: number) => {
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+      if(SelectedOpd === 'all_opd' || SelectedOpd !== ''){
         router.push(`/GapArsitektur/TambahKeterangan/${id}`)
       } else {
         AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
       }
     } else {
       router.push(`/GapArsitektur/TambahKeterangan/${id}`)
+    }
+  }
+  const tambahketeranganGap = async(id: number) => {
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd === 'all_opd' || SelectedOpd !== ''){
+        router.push(`/GapArsitektur/TambahKeteranganGap/${id}`)
+      } else {
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+      }
+    } else {
+      router.push(`/GapArsitektur/TambahKeteranganGap/${id}`)
     }
   }
   const editketerangan = async(id: number) => {
@@ -174,11 +190,12 @@ const Table = (data: any) => {
           <thead className="text-xs text-white uppercase bg-emerald-500 rounded-t-xl">
               <tr>
                   <th className="border px-6 py-3 max-w-[20px] sticky bg-emerald-500 left-[-1px]">No.</th>
-                  <th className="border px-6 py-3 min-w-[350px] text-center">Nama Proses Bisnis</th>
+                  <th className="border px-6 py-3 min-w-[300px] text-center">Nama Proses Bisnis</th>
                   <th className="border px-6 py-3 min-w-[200px] text-center">Layanan</th>
                   <th className="border px-6 py-3 min-w-[200px] text-center">Data dan Informasi</th>
                   <th className="border px-6 py-3 min-w-[200px] text-center">Aplikasi</th>
                   <th className="border px-6 py-3 min-w-[300px] text-center">Keterangan GAP</th>
+                  <th className="border px-6 py-3 min-w-[300px] text-center">Keterangan Kebutuhan</th>
               </tr>
           </thead>
           <tbody>
@@ -286,20 +303,126 @@ const Table = (data: any) => {
                           </div>
                         </td>
                       )}
-                      {/* keterangan */}
-                      {data.keterangan.length > 0 && data.keterangan.some(info => info.keterangan !== null) ? (
-                        <td className="border px-6 py-4 text-center">
-                          {data.keterangan.length > 1 ? (
-                            <div className="flex flex-col">
-                              {data.keterangan.map((info, idx) => (
-                                <div key={info.id_keterangan}>
-                                  <div className="flex justify-between items-center">
-                                    <span>{info.keterangan}</span>
-                                    {user?.roles != 'asn' && 
+                      {/* keterangan gap */}
+                      {data.layanans.some(data => data.nama_layanan !== null) && data.data_dan_informasi.some(data => data.nama_data !== null) && data.aplikasi.some(data => data.nama_aplikasi !== null) ? 
+                        <td className="border px-6 py-2 bg-green-500">
+                          <div className="flex flex-col">
+                            <h1 className="text-white font-bold text-center">Lanjut Kebutuhan</h1>
+                          </div>
+                        </td>
+                      :
+                        data.keterangan_gap.length > 0 && data.keterangan_gap.some(info => info.keterangan_gap !== null) ? (
+                          <td className="border px-6 py-4 text-center">
+                            {data.keterangan_gap.length > 1 ? (
+                              <div className="flex flex-col">
+                                {data.keterangan_gap.map((info, idx) => (
+                                  <div key={info.id_keterangan_gap}>
+                                    <div className="flex justify-between items-center">
+                                      <span>{info.keterangan_gap}</span>
+                                      {user?.roles != 'asn' && 
+                                        <div className="flex flex-col">
+                                          <button 
+                                            className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
+                                            onClick={() => {tambahketeranganGap(data.id)}}
+                                          >
+                                            Tambah
+                                          </button>
+                                          <button 
+                                            className="bg-white text-emerald-500 border border-emerald-500 rounded-lg hover:text-white hover:bg-emerald-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
+                                            onClick={() => router.push(`GapArsitektur/EditKeterangan/${info.id_keterangan_gap}`)}
+                                          >
+                                            Edit
+                                          </button>
+                                        </div>
+                                      }
+                                    </div>
+                                    {idx < data.keterangan_gap.length - 1 && <hr className="border-t my-2" />}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <ul>
+                                {data.keterangan_gap.map((info, idx) => (
+                                  <div key={info.id_keterangan_gap} className="flex justify-between items-center">
+                                    <li>{info.keterangan_gap}</li>
+                                    {user?.roles != 'asn' &&
                                       <div className="flex flex-col">
                                         <button 
                                           className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
-                                          onClick={() => {tambahketerangan(data.id)}}
+                                          onClick={() => {tambahketeranganGap(data.id)}}
+                                        >
+                                          Tambah
+                                        </button>
+                                        <button 
+                                          className="bg-white text-emerald-500 border border-emerald-500 rounded-lg hover:text-white hover:bg-emerald-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
+                                          onClick={() => router.push(`GapArsitektur/EditKeteranganGap/${info.id_keterangan_gap}`)}
+                                        >
+                                          Edit
+                                        </button>
+                                      </div>
+                                    }
+                                  </div>
+                                ))}
+                              </ul>
+                            )}
+                          </td>
+                        ) : (
+                          <td className="border px-6 py-4 text-center">
+                            {user?.roles != 'asn' ?
+                              <button className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal" onClick={() => {tambahketeranganGap(data.id)}}>Tambah Keterangan</button>
+                            :
+                              "N/A"
+                            }
+                          </td>
+                        )
+                      }
+                      {/* keterangan kebutuhan */}
+                      {data.layanans.some(data => data.nama_layanan == null) || data.data_dan_informasi.some(data => data.nama_data == null) || data.aplikasi.some(data => data.nama_aplikasi == null) ? 
+                        <td className="border px-6 py-2 bg-yellow-500">
+                          <div className="flex flex-col">
+                            <h1 className="text-white font-bold text-center">Masih ada GAP</h1>
+                          </div>
+                        </td>
+                      :
+                        data.keterangan_kebutuhan.length > 0 && data.keterangan_kebutuhan.some(info => info.keterangan !== null) ? (
+                          <td className="border px-6 py-4 text-center">
+                            {data.keterangan_kebutuhan.length > 1 ? (
+                              <div className="flex flex-col">
+                                {data.keterangan_kebutuhan.map((info, idx) => (
+                                  <div key={info.id_keterangan}>
+                                    <div className="flex justify-between items-center">
+                                      <span>{info.keterangan}</span>
+                                      {user?.roles != 'asn' && 
+                                        <div className="flex flex-col">
+                                          <button 
+                                            className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
+                                            onClick={() => {tambahketeranganKebutuhan(data.id)}}
+                                          >
+                                            Tambah
+                                          </button>
+                                          <button 
+                                            className="bg-white text-emerald-500 border border-emerald-500 rounded-lg hover:text-white hover:bg-emerald-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
+                                            onClick={() => router.push(`GapArsitektur/EditKeterangan/${info.id_keterangan}`)}
+                                          >
+                                            Edit
+                                          </button>
+                                        </div>
+                                      }
+                                    </div>
+                                    {idx < data.keterangan_kebutuhan.length - 1 && <hr className="border-t my-2" />}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <ul>
+                                {data.keterangan_kebutuhan.map((info, idx) => (
+                                  <div key={info.id_keterangan} className="flex justify-between items-center">
+                                    <li>{info.keterangan}</li>
+                                    {user?.roles != 'asn' &&
+                                      <div className="flex flex-col">
+                                        <button 
+                                          className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
+                                          onClick={() => {tambahketeranganKebutuhan(data.id)}}
                                         >
                                           Tambah
                                         </button>
@@ -312,45 +435,21 @@ const Table = (data: any) => {
                                       </div>
                                     }
                                   </div>
-                                  {idx < data.keterangan.length - 1 && <hr className="border-t my-2" />}
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <ul>
-                              {data.keterangan.map((info, idx) => (
-                                <div key={info.id_keterangan} className="flex justify-between items-center">
-                                  <li>{info.keterangan}</li>
-                                  {user?.roles != 'asn' &&
-                                    <div className="flex flex-col">
-                                      <button 
-                                        className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
-                                        onClick={() => {tambahketerangan(data.id)}}
-                                      >
-                                        Tambah
-                                      </button>
-                                      <button 
-                                        className="bg-white text-emerald-500 border border-emerald-500 rounded-lg hover:text-white hover:bg-emerald-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
-                                        onClick={() => router.push(`GapArsitektur/EditKeterangan/${info.id_keterangan}`)}
-                                      >
-                                        Edit
-                                      </button>
-                                    </div>
-                                  }
-                                </div>
-                              ))}
-                            </ul>
-                          )}
-                        </td>
-                      ) : (
-                        <td className="border px-6 py-4 text-center">
-                          {user?.roles != 'asn' ?
-                            <button className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal" onClick={() => {tambahketerangan(data.id)}}>Tambah Keterangan</button>
-                          :
-                            "N/A"
-                          }
-                        </td>
-                      )}
+                                ))}
+                              </ul>
+                            )}
+                          </td>
+                        ) : (
+                          <td className="border px-6 py-4 text-center">
+                            {user?.roles != 'asn' ?
+                              <button className="bg-white text-sky-500 border border-sky-500 rounded-lg hover:text-white hover:bg-sky-500 ml-4 my-1 py-2 px-2 text-xs font-normal" onClick={() => {tambahketeranganKebutuhan(data.id)}}>Tambah Keterangan</button>
+                            :
+                              "N/A"
+                            }
+                          </td>
+                        )
+                      }
+                      {/* <td className="border px-6 py-4 text-center">Keterangan Kebutuhan</td> */}
                   </tr>
                   ))
               )}

@@ -3,30 +3,31 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { getToken, getUser } from "@/app/Login/Auth/Auth";
+import { getToken } from "@/app/Login/Auth/Auth";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { useRouter } from "next/navigation";
 import { ButtonSc, ButtonTr } from "@/components/common/Button/Button";
 import IdNull from "@/components/common/Alert/IdNull";
 import Loading from "@/components/global/Loading/Loading";
+import { getUser } from "@/app/Login/Auth/Auth";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 
 interface KeteranganForm {
-  keterangan: string;
+  keterangan_gap: string;
 }
 
-const FormEditKeterangan = () => {
+const FormEditKeteranganGap = () => {
   const { id } = useParams();
   const token = getToken();
   const router =  useRouter();
   const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
+  const [user, setUser] = useState<any>(null);
   const { control, handleSubmit, reset} = useForm<KeteranganForm>();
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<any>(null);
   const [idNotFound, setIdNotFound] = useState<boolean | null>(null);
-  const [keteranganValue, setKeteranganValue] = useState<string>("")
-  const [prosesBisnis, setProsesBisnis] = useState<number>();
+  const [keteranganValue, setKeteranganValue] = useState<string>("");
+  const [selectedProsesBisnis, setSelectedProsesBisnis] = useState<number>();
 
   useEffect(() => {
     const fetchUser = getUser();
@@ -37,7 +38,7 @@ const FormEditKeterangan = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const fetchingData = async () => {
         try {
-          const response = await fetch(`${API_URL}/v1/kebutuhanspbebyid/${id}`, {
+          const response = await fetch(`${API_URL}/v1/keteranganGap/${id}`, {
               headers: {
                   'Authorization': `${token}`,
                   'Content-Type': 'application/json',
@@ -49,10 +50,9 @@ const FormEditKeterangan = () => {
         const data = await response.json();
         if(data.code == 500){
           setIdNotFound(true);
-        } else if (data.data.keterangan) {
-            setIdNotFound(false);
-            setKeteranganValue( data.data.keterangan);
-            setProsesBisnis(data.data.prosesbisnis.id)
+        } else if (data.status == "OK") {
+          setKeteranganValue(data.data.keterangan_gap);
+          setSelectedProsesBisnis(data.data.id_prosesbisnis);
         }
     } catch (err) {
         console.error(err);
@@ -65,8 +65,8 @@ fetchingData();
 
 const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
     const formData ={
-        id_prosesbisnis : prosesBisnis, 
-        keterangan_kebutuhan : data.keterangan
+        id_prosesbisnis : selectedProsesBisnis,
+        keterangan_gap : data.keterangan_gap
     }
     // console.log(formData);
     if(user?.roles == "admin_kota"){
@@ -75,7 +75,7 @@ const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
       } else {
         try{
           const API_URL = process.env.NEXT_PUBLIC_API_URL;
-          const response = await fetch(`${API_URL}/v1/updateketeranganGapKebutuhan/${id}?kode_opd=${SelectedOpd}`, {
+          const response = await fetch(`${API_URL}/v1/updateketeranganGap/${id}?kode_opd=${SelectedOpd}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -97,7 +97,7 @@ const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
     } else {
       try{
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const response = await fetch(`${API_URL}/v1/updateketeranganGapKebutuhan/${id}`, {
+        const response = await fetch(`${API_URL}/v1/updateketeranganGap/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -127,17 +127,17 @@ const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
     return (
       <>
       <div className="border p-5 rounded-xl shadow-xl">
-        <h1 className="uppercase font-bold">Form Edit Keterangan Kebutuhan</h1>
+        <h1 className="uppercase font-bold">Form Edit Keterangan GAP</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col py-3">
             <label
               className="uppercase text-xs font-bold text-gray-700 my-2"
-              htmlFor="keterangan"
+              htmlFor="keterangan_gap"
             >
               Keterangan :
             </label>
             <Controller
-              name="keterangan"
+              name="keterangan_gap"
               control={control}
               rules={{required: "Informasi Terkait Input Harus Terisi"}}
               render={({ field }) => (
@@ -145,12 +145,12 @@ const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
                   <input
                     {...field}
                     className="border px-4 py-2 rounded-lg"
-                    id="keterangan"
+                    id="keterangan_gap"
                     type="text"
                     value={field.value || keteranganValue}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      setKeteranganValue(e.target.value);
+                    onChange={(text) => {
+                      field.onChange(text);
+                      setKeteranganValue(text.target.value);
                     }}
                   />
                 </>
@@ -168,4 +168,4 @@ const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
   }
 };
 
-export default FormEditKeterangan;
+export default FormEditKeteranganGap;

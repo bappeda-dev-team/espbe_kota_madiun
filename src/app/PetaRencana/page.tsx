@@ -1,12 +1,16 @@
 "use client"
 
-import Perbaikan from "@/components/maintenance/perbaikan";
+import Table from "@/components/pages/PetaRencana/Table";
+import HeaderPetaRencana from "@/components/pages/PetaRencana/HeaderPetaRencana";
 
 const PetaRencana = () => {
 
   return(
     <>
-      <Perbaikan />
+      <div className="flex flex-col mb-4">
+          <HeaderPetaRencana />
+      </div>
+      <Table />
     </>
   )
 }

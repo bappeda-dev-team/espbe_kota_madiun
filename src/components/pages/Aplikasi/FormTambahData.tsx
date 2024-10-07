@@ -153,7 +153,7 @@ const FormTambahData = () => {
       });
       const data = await response.json();
       const filteredData = data.data.filter(
-        (pohon: any) => pohon.jenis_pohon === level,
+        (pohon: any) => pohon.level_pohon === level,
       );
       const result = filteredData.map((pohon: any) => ({
         value: pohon.id,
@@ -637,7 +637,6 @@ const FormTambahData = () => {
               <Controller
                 name="raa_level_2_id"
                 control={control}
-                rules={{required: "RAA Level 2 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -669,13 +668,6 @@ const FormTambahData = () => {
                         })
                       }}
                     />
-                    {errors.raa_level_2_id ?
-                      <h1 className="text-red-500">
-                        {errors.raa_level_2_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAA Level 2 Harus Terisi</h1>
-                    }
                   </>
                 )}
               />
@@ -690,7 +682,6 @@ const FormTambahData = () => {
               <Controller
                 name="raa_level_3_id"
                 control={control}
-                rules={{required: "RAA Level 3 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -721,13 +712,6 @@ const FormTambahData = () => {
                         })
                       }}
                     />
-                    {errors.raa_level_3_id ?
-                      <h1 className="text-red-500">
-                        {errors.raa_level_3_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAA Level 3 Harus Terisi</h1>
-                    }
                   </>
                 )}
               />

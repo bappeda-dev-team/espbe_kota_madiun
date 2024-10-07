@@ -5,6 +5,7 @@ import Loading from "@/components/global/Loading/Loading";
 import { getToken } from "@/app/Login/Auth/Auth";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface PohonKinerja {
     id : 2,
@@ -26,123 +27,50 @@ const Table = () => {
     const tahun = useSelector((state: RootState) => state.Tahun.tahun);
     const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [pohonKinerja, setPohonKinerja] = useState<PohonKinerja[]>([]);
+    const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
     const [error, setError] = useState<string>();
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean | null>(null);
     const [dataNull, setDataNull] = useState<boolean>(false);
     const token = getToken();
 
     useEffect(() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        if(tahun !== 0 && SelectedOpd !== "all_opd"){
-          const fetchingData = async () => {
-            try {
-              const response = await fetch(`${API_URL}/v1/pohonkinerja?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-                headers: {
-                  'Authorization': `${token}`,
-                  'Content-Type': 'application/json',
-                },
-              });
-              if (!response.ok) {
-                throw new Error("cant fetching data");
-              }
-              const data = await response.json();
-              if (data.data === null) {
-                setPohonKinerja([]);
-                setDataNull(true);
-              } else {
-                setPohonKinerja(data.data);
-                setDataNull(false);
-              }
-            } catch (err) {
-              setError("gagal mendapatkan data pohon kinerja, cek koneksi internet atau database server");
-            } finally {
-              setLoading(false);
-            }
-          };
-          fetchingData();
-        } else if(tahun == 0 && SelectedOpd != "all_opd"){
-          const fetchingData = async () => {
-            try {
-              const response = await fetch(`${API_URL}/v1/pohonkinerja?tahun=${tahun}&kode_opd=${SelectedOpd}`, {
-                headers: {
-                  'Authorization': `${token}`,
-                  'Content-Type': 'application/json',
-                },
-              });
-              if (!response.ok) {
-                throw new Error("cant fetching data");
-              }
-              const data = await response.json();
-              if (data.data === null) {
-                setPohonKinerja([]);
-                setDataNull(true);
-              } else {
-                setPohonKinerja(data.data);
-                setDataNull(false);
-              }
-            } catch (err) {
-              setError("gagal mendapatkan data pohon kinerja, cek koneksi internet atau database server");
-            } finally {
-              setLoading(false);
-            }
-          };
-          fetchingData();
-        } else if(tahun != 0 && SelectedOpd == "all_opd"){
-          const fetchingData = async () => {
-            try {
-              const response = await fetch(`${API_URL}/v1/pohonkinerja?tahun=${tahun}`, {
-                headers: {
-                  'Authorization': `${token}`,
-                  'Content-Type': 'application/json',
-                },
-              });
-              if (!response.ok) {
-                throw new Error("cant fetching data");
-              }
-              const data = await response.json();
-              if (data.data === null) {
-                setPohonKinerja([]);
-                setDataNull(true);
-              } else {
-                setPohonKinerja(data.data);
-                setDataNull(false);
-              }
-            } catch (err) {
-              setError("gagal mendapatkan data pohon kinerja, cek koneksi internet atau database server");
-            } finally {
-              setLoading(false);
-            }
-          };
-          fetchingData();
-        } else {
-          const fetchingData = async () => {
-            try {
-              const response = await fetch(`${API_URL}/v1/pohonkinerja`, {
-                headers: {
-                  'Authorization': `${token}`,
-                  'Content-Type': 'application/json',
-                },
-              });
-              if (!response.ok) {
-                throw new Error("cant fetching data");
-              }
-              const data = await response.json();
-              if (data.data === null) {
-                setPohonKinerja([]);
-                setDataNull(true);
-              } else {
-                setPohonKinerja(data.data);
-                setDataNull(false);
-              }
-            } catch (err) {
-              setError("gagal mendapatkan data pohon kinerja, cek koneksi internet atau database server");
-            } finally {
-              setLoading(false);
-            }
-          };
-          fetchingData();
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      const fetchingData = async (url: string) => {
+        try {
+          setLoading(true);
+          const response = await fetch(url, {
+            headers: {
+              Authorization: `${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error('cant fetching data');
+          }
+          const data = await response.json();
+          if (data.data === null) {
+            setPohonKinerja([]);
+            setDataNull(true);
+          } else {
+            setPohonKinerja(data.data);
+            setDataNull(false);
+          }
+        } catch (err) {
+          setError('Gagal memuat data, silakan cek koneksi internet atau database server');
+        } finally {
+          setLoading(false);
         }
-      }, [tahun, SelectedOpd, token]);
+      };
+    
+      if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+        // Fetch OPD yang dipilih
+        fetchingData(`${API_URL}/v1/pohonkinerja?tahun=${tahun}&kode_opd=${SelectedOpd}`);
+        setOpdKosong(false);
+      } else if (SelectedOpd === '' || SelectedOpd === 'all_opd') {
+        // OPD kosong
+        setOpdKosong(true);
+      }
+    }, [tahun, SelectedOpd, token]);
 
       useEffect(() => {
         if(Strategic){
@@ -175,6 +103,8 @@ const Table = () => {
         return <h1>{error}</h1>
     } else if(loading){
         return <Loading />
+    } else if(opdKosong){
+      return <OpdNull />
     }
 
     return(

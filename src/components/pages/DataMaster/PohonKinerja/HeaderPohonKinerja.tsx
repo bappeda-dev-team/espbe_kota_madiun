@@ -7,6 +7,7 @@ import { getUser } from "@/app/Login/Auth/Auth";
 import { getToken } from "@/app/Login/Auth/Auth";
 import Image from "next/image";
 import { ButtonSc } from "@/components/common/Button/Button";
+import { AlertNotification } from "@/components/common/Alert/Alert";
 
 interface opd {
   kode_opd : string,
@@ -48,8 +49,32 @@ const HeaderPohonKinerja = () => {
       };
       fetchOPD();
     }
-  }, [user, token]
-);
+  }, [user, token]);
+
+  const sinkronPokin = async () => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+        try {
+          const response = await fetch(`${API_URL}/pohonkinerjafetch?kode_opd=${SelectedOpd}`, {
+            method: "GET",
+            headers: {
+              'Authorization': `${token}`,
+            },
+          });
+          if (!response.ok) {
+            throw new Error("cant fetch data");
+          }
+          AlertNotification("Berhasil", "Berhasil Sinkron data pohon kinerja", "success", 1000);
+          setTimeout(() => {
+            window.location.reload(); // Refresh halaman
+          }, 1000);
+        } catch (err) {
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
+      } else {
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+      }
+  };
 
   return (
     <>
@@ -63,7 +88,7 @@ const HeaderPohonKinerja = () => {
             }
           </h1>
         </div>
-        <ButtonSc className="py-2">
+        <ButtonSc onClick={() => sinkronPokin()} className="py-2">
           <div className="flex">
             <Image 
               className="mr-1"

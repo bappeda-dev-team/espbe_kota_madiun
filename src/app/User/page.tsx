@@ -1,6 +1,6 @@
 "use client"
 
-import { AdminKota, AdminOPD, ASN } from "@/components/pages/User/UserTable";
+import { AdminOPD, ASN } from "@/components/pages/User/UserTable";
 import { getUser } from "../Login/Auth/Auth";
 import { useEffect, useState } from "react";
 

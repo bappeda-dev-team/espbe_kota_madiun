@@ -739,7 +739,6 @@ const FormTambahData = () => {
               <Controller
                 name="rad_level_2_id"
                 control={control}
-                rules={{required: "RAD Level 2 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -772,13 +771,6 @@ const FormTambahData = () => {
                         })
                       }}
                     />
-                    {errors.rad_level_2_id ?
-                      <h1 className="text-red-500">
-                        {errors.rad_level_2_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAD Level 2 Harus Terisi</h1>
-                    }
                   </>
                 )}
               />
@@ -793,7 +785,6 @@ const FormTambahData = () => {
               <Controller
                 name="rad_level_3_id"
                 control={control}
-                rules={{required: "RAD Level 3 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -825,13 +816,6 @@ const FormTambahData = () => {
                         })
                       }}
                     />
-                    {errors.rad_level_3_id ?
-                      <h1 className="text-red-500">
-                        {errors.rad_level_3_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAD Level 3 Harus Terisi</h1>
-                    }
                   </>
                 )}
               />
@@ -846,7 +830,6 @@ const FormTambahData = () => {
               <Controller
                 name="rad_level_4_id"
                 control={control}
-                rules={{required: "RAD Level 4 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -877,13 +860,6 @@ const FormTambahData = () => {
                         })
                       }}
                     />
-                    {errors.rad_level_4_id ?
-                      <h1 className="text-red-500">
-                        {errors.rad_level_4_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAD Level 4 Harus Terisi</h1>
-                    }
                   </>
                 )}
               />

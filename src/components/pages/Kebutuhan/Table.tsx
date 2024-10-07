@@ -131,7 +131,7 @@ const Table = () => {
     const hapusKebutuhan = async (id: number) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try {
-            const response = await fetch(`${API_URL}/v1/deletekebutuhanspbe/${id}`, {
+            const response = await fetch(`${API_URL}/v1/alldeletekebutuhanspbe/${id}`, {
                 method: "DELETE",
                 headers: {
                     'Authorization': `${token}`,
@@ -188,12 +188,14 @@ const Table = () => {
                   <thead className="text-xs rounded-t-xl text-white bg-sky-600 uppercase">
                       <tr>
                           <th rowSpan={2} className="border px-6 py-3 max-w-[20px] sticky bg-sky-600 left-[-1px]">No.</th>
-                          <th rowSpan={2} className="border px-6 py-3 min-w-[200px]">Keterangan GAP</th>
+                          <th rowSpan={2} className="border px-6 py-3 min-w-[200px]">Keterangan Kebutuhan</th>
                           <th rowSpan={2} className="border px-6 py-3 min-w-[150px]">Nama Domain</th>
                           <th rowSpan={2} className="border px-6 py-3 min-w-[200px]">Kebutuhan</th>
                           <th colSpan={3} className="border px-6 py-3 min-w-[200px] text-center">Kondisi Awal</th>
-                          <th colSpan={2} rowSpan={2} className="border px-6 py-3 min-w-[400px] text-center">Penanggung Jawab</th>
-                          <th rowSpan={2} className="border px-6 py-3 text-center">Aksi</th>
+                          <th colSpan={2} rowSpan={2} className="border px-6 py-3 min-w-[400px] text-center">Perangkat Daerah</th>
+                          {(user?.roles == 'admin_kota' || user?.roles == 'admin_opd') && 
+                            <th rowSpan={2} className="border px-6 py-3 text-center">Aksi</th>
+                          }
                       </tr>
                       <tr>
                           <th className="border px-6 py-3 min-w-[200px] text-center">2022</th>
@@ -306,44 +308,46 @@ const Table = () => {
                                   )}
                                   <td className="border px-6 py-4">{data.indikator_pj ? data.indikator_pj : "N/A"}</td>
                                   <td className="border px-6 py-4">{data.penanggung_jawab ? data.penanggung_jawab : "N/A"}</td>
-                                  <td className="px-6 py-4 flex flex-col gap-2">
-                                      <ButtonSc 
-                                          className="my-1"
-                                          onClick={() => {editKebutuhan(data.id)}}
-                                      >
-                                          <div className="flex items-center justify-center w-full">
-                                              <Image 
-                                              className="mr-1"
-                                              src="/iconLight/edit.svg" 
-                                              alt="edit" 
-                                              width={15} 
-                                              height={15} 
-                                              />
-                                              <span>Edit</span>
-                                          </div>
-                                      </ButtonSc>
-                                      <ButtonTr
-                                          className="my-1"
-                                          onClick={() => {
-                                              AlertQuestion("Hapus?", "Hapus Kebutuhan SPBE yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                                                  if(result.isConfirmed){
-                                                      hapusKebutuhan(data.id);
-                                                  }
-                                              });
-                                          }}
-                                      >
-                                          <div className="flex items-center justify-center w-full">
-                                              <Image 
-                                              className="mr-1"
-                                              src="/iconLight/trash.svg" 
-                                              alt="trash" 
-                                              width={15} 
-                                              height={15} 
-                                              />
-                                              <span>Hapus</span>
-                                          </div>
-                                      </ButtonTr>
-                                  </td>
+                                  {(user?.roles == 'admin_kota' || user?.roles == 'admin_opd') && 
+                                    <td className="px-6 py-4 flex flex-col gap-2">
+                                        <ButtonSc 
+                                            className="my-1"
+                                            onClick={() => {editKebutuhan(data.id)}}
+                                        >
+                                            <div className="flex items-center justify-center w-full">
+                                                <Image 
+                                                className="mr-1"
+                                                src="/iconLight/edit.svg" 
+                                                alt="edit" 
+                                                width={15} 
+                                                height={15} 
+                                                />
+                                                <span>Edit</span>
+                                            </div>
+                                        </ButtonSc>
+                                        <ButtonTr
+                                            className="my-1"
+                                            onClick={() => {
+                                                AlertQuestion("Hapus?", "Hapus Kebutuhan SPBE akan MENGHAPUS JUGA PEMENUHAN KEBUTUHAN?", "question", "Hapus", "Batal").then((result) => {
+                                                    if(result.isConfirmed){
+                                                        hapusKebutuhan(data.id);
+                                                    }
+                                                });
+                                            }}
+                                        >
+                                            <div className="flex items-center justify-center w-full">
+                                                <Image 
+                                                className="mr-1"
+                                                src="/iconLight/trash.svg" 
+                                                alt="trash" 
+                                                width={15} 
+                                                height={15} 
+                                                />
+                                                <span>Hapus</span>
+                                            </div>
+                                        </ButtonTr>
+                                    </td>
+                                  }
                               </tr>
                           ))
                       )}

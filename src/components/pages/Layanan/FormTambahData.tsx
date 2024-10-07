@@ -45,6 +45,7 @@ const FormTambahData = () => {
   const token = getToken();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const [selectedTujuanLayanan, setSelectedTujuanLayanan] = useState<OptionType | null>(null);
   const [selectedRaL1, setSelectedRal1] = useState<OptionType | null>(null);
   const [selectedRaL2, setSelectedRal2] = useState<OptionType | null>(null);
   const [selectedRaL3, setSelectedRal3] = useState<OptionType | null>(null);
@@ -181,7 +182,7 @@ const FormTambahData = () => {
     const formData = {
       //key : value
       nama_layanan: data.nama_layanan,
-      tujuan_layanan_id: data.tujuan_layanan_id?.value,
+      tujuan_layanan_id: data.tactical_id?.value,
       fungsi_layanan: data.fungsi_layanan,
       tahun: data.tahun?.value,
       kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
@@ -290,7 +291,7 @@ const FormTambahData = () => {
           <Controller
             name="fungsi_layanan"
             control={control}
-            rules={{ required: "Fungsi Layanan Harus Terisi" }}
+            rules={{required: "Fungsi Layanan harus tersisi"}}
             render={({ field }) => (
               <>
                 <input
@@ -299,14 +300,14 @@ const FormTambahData = () => {
                   type="text"
                   id="fungsi_layanan"
                   placeholder="masukkan Fungsi Layanan"
-                />
-                {errors.fungsi_layanan? 
-                  <h1 className="text-red-500">
-                    {errors.fungsi_layanan.message}
-                  </h1>
-                  :
-                  <h1 className="text-slate-300 text-xs">*Fungsi Layanan Harus Terisi</h1>
-                }
+                  />
+                  {errors.fungsi_layanan ?
+                    <h1 className="text-red-500">
+                      {errors.fungsi_layanan.message}
+                    </h1>
+                    :
+                    <h1 className="text-slate-300 text-xs">*Fungsi Layanan Harus Terisi</h1>
+                  }
               </>
             )}
           />
@@ -387,23 +388,14 @@ const FormTambahData = () => {
               <Controller
                 name="tujuan_layanan_id"
                 control={control}
-                rules={{required: "Tujuan Layanan Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
                       {...field}
-                      placeholder="Pilih Tujuan Layanan"
+                      placeholder="Tujuan Layanan sama dengan Tactical"
                       options={pokin_option}
-                      isSearchable
-                      isClearable
-                      onMenuOpen={() => {
-                        if(pokin_option.length === 0){
-                          fetchPokinDefault(6);
-                        }
-                      }}
-                      onMenuClose={() => {
-                        set_Pokin_option([]);
-                      }}
+                      value={selectedTujuanLayanan}
+                      isDisabled
                       styles={{
                         control: (baseStyles) => ({
                           ...baseStyles,
@@ -411,13 +403,6 @@ const FormTambahData = () => {
                         })
                       }}
                     />
-                    {errors.tujuan_layanan_id ?
-                      <h1 className="text-red-500">
-                        {errors.tujuan_layanan_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*Tujuan Layanan Harus Terisi</h1>
-                    }
                   </>
                 )}
               />
@@ -518,7 +503,6 @@ const FormTambahData = () => {
               <Controller
                 name="ral_level_2_id"
                 control={control}
-                rules={{required: "RAL Level 2 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -551,13 +535,6 @@ const FormTambahData = () => {
                         })
                       }}
                     />
-                    {errors.ral_level_2_id ?
-                      <h1 className="text-red-500">
-                        {errors.ral_level_2_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAL Level 2 Harus Terisi</h1>
-                    }
                   </>
                 )}
               />
@@ -572,7 +549,6 @@ const FormTambahData = () => {
               <Controller
                 name="ral_level_3_id"
                 control={control}
-                rules={{required: "RAL Level 3 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -604,13 +580,6 @@ const FormTambahData = () => {
                         })
                       }}
                     />
-                    {errors.ral_level_3_id ?
-                      <h1 className="text-red-500">
-                        {errors.ral_level_3_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAL Level 3 Harus Terisi</h1>
-                    }
                   </>
                 )}
               />
@@ -625,7 +594,6 @@ const FormTambahData = () => {
               <Controller
                 name="ral_level_4_id"
                 control={control}
-                rules={{required: "RAL Level 4 Harus Terisi"}}
                 render={({ field }) => (
                   <>
                     <Select
@@ -656,13 +624,6 @@ const FormTambahData = () => {
                         })
                       }}
                     />
-                    {errors.ral_level_4_id ?
-                      <h1 className="text-red-500">
-                        {errors.ral_level_4_id.message}
-                      </h1>
-                      :
-                      <h1 className="text-slate-300 text-xs">*RAL Level 4 Harus Terisi</h1>
-                    }
                   </>
                 )}
               />
@@ -754,6 +715,7 @@ const FormTambahData = () => {
                         field.onChange(option);
                         setSelectedRalTactical(option);
                         setSelectedRalOperational(null);
+                        setSelectedTujuanLayanan(option);
                       }}
                       styles={{
                         control: (baseStyles) => ({
