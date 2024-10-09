@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/global/Loading/Loading";
-import { getToken } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
-import { event } from "jquery";
+import { getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 
 interface ReferensiArsitektur {
     Id : number,
@@ -20,10 +17,6 @@ const Table = () => {
   //level
   const [levelAll, setLevelAll] = useState<boolean | null>(true);
   const [level, setLevel] = useState<number | null>(null);
-  // const [level1, setLevel1] = useState<boolean | null>(null);
-  // const [level2, setLevel2] = useState<boolean | null>(null);
-  // const [level3, setLevel3] = useState<boolean | null>(null);
-  // const [level4, setLevel4] = useState<boolean | null>(null);
   //jenis
   const [jenisAll, setJenisAll] = useState<boolean | null>(true);
   const [rab, setRab] = useState<boolean | null>(null);
@@ -31,7 +24,7 @@ const Table = () => {
   const [rad, setRad] = useState<boolean | null>(null);
   const [raa, setRaa] = useState<boolean | null>(null);
 
-  const tahun = useSelector((state: RootState) => state.Tahun.tahun);
+  const [tahun, setTahun] = useState<any>(null);
   const [referensiarsitektur, setReferensiArsitektur] = useState<ReferensiArsitektur[]>([]);
   const [filteredReferensi, setFilteredReferensi] = useState<ReferensiArsitektur[]>([]);
   const [error, setError] = useState<string>();
@@ -40,11 +33,22 @@ const Table = () => {
   const token = getToken();
 
   useEffect(() => {
+    const data = getOpdTahun();
+    if(data.tahun){
+      const dataTahun = {
+        value: data.tahun.value,
+        label: data.tahun.label
+      }
+      setTahun(dataTahun);
+    }
+  }, []);
+
+  useEffect(() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      if(tahun !== 0){
+      if(tahun?.value != (0 || undefined)){
         const fetchingData = async () => {
           try {
-            const response = await fetch(`${API_URL}/v1/referensiarsitektur?tahun=${tahun}`, {
+            const response = await fetch(`${API_URL}/v1/referensiarsitektur?tahun=${tahun?.value}`, {
               headers: {
                 'Authorization': `${token}`,
                 'Content-Type': 'application/json',
@@ -68,7 +72,7 @@ const Table = () => {
           }
         };
         fetchingData();
-      } else {
+      } else if(tahun?.value == undefined){
         const fetchingData = async () => {
           try {
             const response = await fetch(`${API_URL}/v1/referensiarsitektur`, {

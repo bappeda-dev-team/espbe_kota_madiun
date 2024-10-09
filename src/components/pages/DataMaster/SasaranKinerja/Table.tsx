@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/global/Loading/Loading";
-import { getToken } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
-import { event } from "jquery";
+import { getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
+import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface ReferensiArsitektur {
     id: number;
@@ -21,59 +19,76 @@ interface ReferensiArsitektur {
 
 const Table = () => {
 
-  const tahun = useSelector((state: RootState) => state.Tahun.tahun);
   const [sasaranKinerja, setSasaranKinerja] = useState<ReferensiArsitektur[]>([]);
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true)
   const [dataNull, setDataNull] = useState<boolean>(false);
+  const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
   const token = getToken();
+  const [tahun, setTahun] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
 
   useEffect(() => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      if(tahun !== 0){
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/sasarankinerjapegawai?tahun=${tahun}`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            setSasaranKinerja(data.data);
-          } catch (err) {
-            setError("gagal mendapatkan data referensi arsitektur, cek koneksi internet atau database server");
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchingData();
-      } else {
-        const fetchingData = async () => {
-          try {
-            const response = await fetch(`${API_URL}/v1/sasarankinerjapegawai`, {
-              headers: {
-                'Authorization': `${token}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!response.ok) {
-              throw new Error("cant fetching data");
-            }
-            const data = await response.json();
-            setSasaranKinerja(data.data);
-          } catch (err) {
-            setError("gagal mendapatkan data referensi arsitektur, cek koneksi internet atau database server");
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchingData();
+    const data = getOpdTahun ();
+    if(data.tahun){
+      const dataTahun = {
+        value: data.tahun.value,
+        label: data.tahun.label
       }
-    }, [tahun, token]);
+      setTahun(dataTahun);
+    }
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
+
+  useEffect(() => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const fetchingData = async (url: string) => {
+      try {
+        setLoading(true);
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('cant fetching data');
+        }
+        const data = await response.json();
+        if (data.data === null) {
+          setSasaranKinerja([]);
+          setDataNull(true);
+        } else {
+          setSasaranKinerja(data.data);
+          setDataNull(false);
+        }
+      } catch (err) {
+        setError('Gagal memuat data, silakan cek koneksi internet atau database server');
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    //opd kosong
+    if (SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == 'all_opd') {
+      setOpdKosong(true);
+      setLoading(false);
+    } else {
+      if(tahun?.value == (0 || undefined)){
+        fetchingData(`${API_URL}/v1/sasarankinerjapegawai?kode_opd=${SelectedOpd?.value}`);
+        setOpdKosong(false);
+      } else {
+        fetchingData(`${API_URL}/v1/sasarankinerjapegawai?kode_opd=${SelectedOpd?.value}&tahun=${tahun?.value}`);
+        setOpdKosong(false);
+      }
+    }
+  }, [tahun, SelectedOpd, token]);
 
     const formatRupiah = (value: string | number) => {
       const number = parseFloat(value.toString()); // Ubah ke angka
@@ -84,6 +99,8 @@ const Table = () => {
         return <h1>{error}</h1>
     } else if(loading){
         return <Loading />
+    } else if(opdKosong){
+      return <OpdNull />
     }
 
     return(
@@ -111,7 +128,7 @@ const Table = () => {
                   </td>
               </tr>
               ) : (
-                  sasaranKinerja.map((data, index) => (
+                  sasaranKinerja.map((data: any, index: number) => (
                   <tr key={data.id} className="border rounded-b-lg hover:bg-slate-50">
                       <td className="px-6 py-4 border sticky bg-white text-center left-[-2px]">{index +1}</td>
                       <td className="px-6 py-4 border">{data.kode_opd}</td>

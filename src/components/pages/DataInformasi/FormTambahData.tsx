@@ -6,9 +6,7 @@ import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useRouter } from "next/navigation";
 import { AlertNotification } from "@/components/common/Alert/Alert";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 
 interface OptionType {
   value: number;
@@ -45,13 +43,13 @@ interface FormValues {
 }
 
 const FormTambahData = () => {
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const token = getToken();
   const [user, setUser] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
   
   const [selectedRad1, setSelectedRad1] = useState<OptionType | null>(null);
   const [selectedRad2, setSelectedRad2] = useState<OptionType | null>(null);
@@ -67,9 +65,17 @@ const FormTambahData = () => {
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  },[])
+    const data = getOpdTahun ();
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
 
-  const tahun: OptionType[] = [
+  const tahunOption: OptionType[] = [
     { value: 2024, label: "2024" },
     { value: 2025, label: "2025" },
     { value: 2026, label: "2026" },
@@ -112,7 +118,6 @@ const FormTambahData = () => {
   const {
     control,
     handleSubmit,
-    reset,
     watch,
     formState: { errors },
   } = useForm<FormValues>({
@@ -122,7 +127,7 @@ const FormTambahData = () => {
         jenis_data : null,
         produsen_data : "",
         pj_data : "",
-        kode_opd : user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
+        kode_opd : user?.roles == 'admin_kota' ? SelectedOpd?.value : user?.kode_opd,
         informasi_terkait_input : "",
         informasi_terkait_output : "",
         interoprabilitas : null,
@@ -171,7 +176,7 @@ const FormTambahData = () => {
   const fetchRadLevel5 = async (level: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd}`, {
+      const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd?.value}`, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -224,7 +229,7 @@ const FormTambahData = () => {
         produsen_data : data.produsen_data,
         validitas_data : data.validitas_data?.value,
         pj_data : data.pj_data,
-        kode_opd : user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
+        kode_opd : user?.roles == 'admin_kota' ? SelectedOpd?.value : user?.kode_opd,
         informasi_terkait_input : data.informasi_terkait_input,
         informasi_terkait_output : data.informasi_terkait_output,
         interoprabilitas : data.interoprabilitas?.value,
@@ -239,8 +244,8 @@ const FormTambahData = () => {
         operational_id : data.operational_id?.value,
     };
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
-        AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
+      if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
+        AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000, true);
       } else {
         // console.log(formData);
         try{
@@ -653,7 +658,7 @@ const FormTambahData = () => {
                   <>
                     <Select
                       {...field}
-                      options={tahun}
+                      options={tahunOption}
                       isSearchable
                       isClearable
                       placeholder="Pilih Tahun"

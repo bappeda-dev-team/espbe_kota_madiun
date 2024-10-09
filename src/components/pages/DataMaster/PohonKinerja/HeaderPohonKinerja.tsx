@@ -1,10 +1,7 @@
 "use client";
 
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { useEffect, useState } from "react";
-import { getUser } from "@/app/Login/Auth/Auth";
-import { getToken } from "@/app/Login/Auth/Auth";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import Image from "next/image";
 import { ButtonSc } from "@/components/common/Button/Button";
 import { AlertNotification } from "@/components/common/Alert/Alert";
@@ -16,15 +13,30 @@ interface opd {
 
 const HeaderPohonKinerja = () => {
 
-  const tahun = useSelector((state: RootState) => state.Tahun.tahun);
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.label);
   const [user, setUser] = useState<any>(null);
+  const [tahun, setTahun] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
   const [opd, setOpd] = useState<opd[]>([]);
   const token = getToken();
 
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
+    const data = getOpdTahun ();
+    if(data.tahun){
+      const dataTahun = {
+        value: data.tahun.value,
+        label: data.tahun.label
+      }
+      setTahun(dataTahun);
+    }
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
   }, []);
 
   useEffect(() => {
@@ -53,9 +65,9 @@ const HeaderPohonKinerja = () => {
 
   const sinkronPokin = async () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+    if(SelectedOpd?.value !== 'all_opd' && (SelectedOpd?.value !== undefined || null)){
         try {
-          const response = await fetch(`${API_URL}/pohonkinerjafetch?kode_opd=${SelectedOpd}`, {
+          const response = await fetch(`${API_URL}/pohonkinerjafetch?kode_opd=${SelectedOpd?.value}`, {
             method: "GET",
             headers: {
               'Authorization': `${token}`,
@@ -83,8 +95,8 @@ const HeaderPohonKinerja = () => {
           <h1 className="uppercase font-bold mr-1">
             Pohon Kinerja{" "}
             {user?.roles == 'admin_kota' 
-              ? `${SelectedOpd === '' ? "Semua OPD" : SelectedOpd} ${tahun === 0 ? "Semua Tahun" : tahun}`
-              : `${opd.length > 0 ? opd[0].nama_opd : ''} ${tahun === 0 ? "Semua Tahun" : tahun}`
+              ? `${SelectedOpd?.label == (undefined || null) ? "" : SelectedOpd?.label} ${tahun?.value == (0 || undefined) ? "" : tahun?.label}`
+              : `${opd.length > 0 ? opd[0].nama_opd : ''} ${tahun?.value == ( null || undefined) ? "" : tahun?.label}`
             }
           </h1>
         </div>

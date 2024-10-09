@@ -1,6 +1,6 @@
 "use client"
 
-import { getUser } from "@/app/Login/Auth/Auth";
+import { getUser} from "@/app/Login/Auth/Auth";
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
@@ -10,8 +10,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchUser = getUser();
         setUser(fetchUser);
-    },[]);
-
+      }, []);
 
     return(
         <>

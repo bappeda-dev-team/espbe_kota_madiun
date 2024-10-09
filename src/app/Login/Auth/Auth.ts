@@ -43,10 +43,15 @@ export const login = async (nip: string, password: string): Promise<boolean> => 
 export const logout = () => {
   // Hapus token dari localStorage
   localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  localStorage.removeItem('tahun');
+  localStorage.removeItem('SelectedOpd');
 
   // Hapus semua cookie yang terkait
   document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
   document.cookie = 'user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+  document.cookie = 'tahun=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+  document.cookie = 'SelectedOpd=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
 
   // Redirect ke halaman login
   window.location.href = '/Login';
@@ -78,6 +83,27 @@ export const getToken = () => {
   }
   return null;
 }
+export const getOpdTahun = () => {
+  const get_tahun = getCookie("tahun");
+  const get_opd = getCookie("SelectedOpd");
+
+  if (get_tahun && get_opd) {
+    return {
+      tahun: JSON.parse(get_tahun),
+      opd: JSON.parse(get_opd)
+    };
+  }
+
+  if (get_tahun) {
+    return { tahun: JSON.parse(get_tahun), opd: null };
+  }
+
+  if (get_opd) {
+    return { tahun: null, opd: JSON.parse(get_opd) };
+  }
+
+  return { tahun: null, opd: null };
+};
 
 export const getTokenFromLocalStorage = (): string | null => {
   return localStorage.getItem('token');

@@ -1,9 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import Loading from '@/components/global/Loading/Loading';
 import { useRouter } from 'next/navigation';
 import { AlertNotification } from '@/components/common/Alert/Alert';
@@ -41,8 +39,6 @@ interface keterangan_kebutuhan {
 
 const Table = (data: any) => {
 
-  const tahun = useSelector((state: RootState) => state.Tahun.tahun);
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [gap, setGap] = useState<ProsesBisnis[]>([]);
   const [dataNull, setDataNull] = useState<boolean>(false);
   const [error, setError] = useState<string | null>("");
@@ -51,11 +47,28 @@ const Table = (data: any) => {
   const router = useRouter();
   const token = getToken();
   const [user, setUser] = useState<any>(null);
+  const [tahun, setTahun] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
 
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  },[])
+    const data = getOpdTahun();
+    if(data.tahun){
+      const dataTahun = {
+        value: data.tahun.value,
+        label: data.tahun.label
+      }
+      setTahun(dataTahun);
+    }
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
 
   useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -87,31 +100,36 @@ const Table = (data: any) => {
     };
   
     if (user?.roles == 'admin_kota') {
-      if (SelectedOpd === 'all_opd') {
+      if (SelectedOpd?.value == 'all_opd' && tahun?.value != (undefined || null)) {
         // Fetch semua OPD
-        fetchingData(`${API_URL}/v1/gapspbe/?tahun=${tahun}`);
+        fetchingData(`${API_URL}/v1/gapspbe?tahun=${tahun?.value}`);
         setOpdKosong(false);
-      } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+      } else if (SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null) && tahun?.value != (undefined || null) ) {
         // Fetch OPD yang dipilih
-        fetchingData(`${API_URL}/v1/gapspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`);
+        fetchingData(`${API_URL}/v1/gapspbe?tahun=${tahun?.value}&kode_opd=${SelectedOpd?.value}`);
         setOpdKosong(false);
-      } else if (SelectedOpd === '') {
+      } else if (SelectedOpd?.value == (undefined || null) || tahun?.value == (undefined || null)) {
         // OPD kosong
         setOpdKosong(true);
       }
     } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
       // Bukan admin kota, fetch default
-      fetchingData(`${API_URL}/v1/gapspbe/?tahun=${tahun}`);
-      setOpdKosong(false);
+      if(tahun?.value == (undefined || null)){
+        fetchingData(`${API_URL}/v1/gapspbe`);
+        setOpdKosong(false);
+      } else {
+        fetchingData(`${API_URL}/v1/gapspbe?tahun=${tahun?.value}`);
+        setOpdKosong(false);
+      }
     }
   }, [tahun, SelectedOpd, token, user]);
 
   const tambahketeranganKebutuhan = async(id: number) => {
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd === 'all_opd' || SelectedOpd !== ''){
+      if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined && null)){
         router.push(`/GapArsitektur/TambahKeterangan/${id}`)
       } else {
-        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
       }
     } else {
       router.push(`/GapArsitektur/TambahKeterangan/${id}`)
@@ -119,34 +137,45 @@ const Table = (data: any) => {
   }
   const tambahketeranganGap = async(id: number) => {
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd === 'all_opd' || SelectedOpd !== ''){
+      if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined && null)){
         router.push(`/GapArsitektur/TambahKeteranganGap/${id}`)
       } else {
-        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
       }
     } else {
       router.push(`/GapArsitektur/TambahKeteranganGap/${id}`)
     }
   }
-  const editketerangan = async(id: number) => {
+  const editketeranganKebutuhan = async(id: number) => {
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+      if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined && null)){
         router.push(`/GapArsitektur/EditKeterangan/${id}`)
       } else {
-        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
       }
     } else {
       router.push(`/GapArsitektur/EditKeterangan/${id}`)
+    }
+  }
+  const editketeranganGap = async(id: number) => {
+    if(user?.roles == 'admin_kota'){
+      if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined && null)){
+        router.push(`/GapArsitektur/EditKeteranganGap/${id}`)
+      } else {
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
+      }
+    } else {
+      router.push(`/GapArsitektur/EditKeteranganGap/${id}`)
     }
   }
 
   //handle gap klik
   const fixGapLayanan = (id: Number) => {
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+      if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null)){
         router.push(`/Layanan/LayananSPBE/FixGapLayananSPBE/${id}`);
       } else {
-        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
       }
     } else {
       router.push(`/Layanan/LayananSPBE/FixGapLayananSPBE/${id}`);
@@ -154,10 +183,10 @@ const Table = (data: any) => {
   }
   const fixGapDataInformasi = (id: Number) => {
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+      if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null)){
         router.push(`/DataInformasi/FixGapDataInformasi/${id}`);
       } else {
-        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
       }
     } else {
       router.push(`/DataInformasi/FixGapDataInformasi/${id}`);
@@ -165,10 +194,10 @@ const Table = (data: any) => {
   }
   const fixGapAplikasi = (id: Number) => {
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+      if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null)){
         router.push(`/Aplikasi/FixGapAplikasi/${id}`);
       } else {
-        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
       }
     } else {
       router.push(`/Aplikasi/FixGapAplikasi/${id}`);
@@ -329,7 +358,7 @@ const Table = (data: any) => {
                                           </button>
                                           <button 
                                             className="bg-white text-emerald-500 border border-emerald-500 rounded-lg hover:text-white hover:bg-emerald-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
-                                            onClick={() => router.push(`GapArsitektur/EditKeterangan/${info.id_keterangan_gap}`)}
+                                            onClick={() => editketeranganGap(info.id_keterangan_gap)}
                                           >
                                             Edit
                                           </button>
@@ -355,7 +384,7 @@ const Table = (data: any) => {
                                         </button>
                                         <button 
                                           className="bg-white text-emerald-500 border border-emerald-500 rounded-lg hover:text-white hover:bg-emerald-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
-                                          onClick={() => router.push(`GapArsitektur/EditKeteranganGap/${info.id_keterangan_gap}`)}
+                                          onClick={() => editketeranganGap(info.id_keterangan_gap)}
                                         >
                                           Edit
                                         </button>
@@ -402,7 +431,7 @@ const Table = (data: any) => {
                                           </button>
                                           <button 
                                             className="bg-white text-emerald-500 border border-emerald-500 rounded-lg hover:text-white hover:bg-emerald-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
-                                            onClick={() => router.push(`GapArsitektur/EditKeterangan/${info.id_keterangan}`)}
+                                            onClick={() => editketeranganKebutuhan(info.id_keterangan)}
                                           >
                                             Edit
                                           </button>
@@ -428,7 +457,7 @@ const Table = (data: any) => {
                                         </button>
                                         <button 
                                           className="bg-white text-emerald-500 border border-emerald-500 rounded-lg hover:text-white hover:bg-emerald-500 ml-4 my-1 py-2 px-2 text-xs font-normal"
-                                          onClick={() => router.push(`GapArsitektur/EditKeterangan/${info.id_keterangan}`)}
+                                          onClick={() => editketeranganKebutuhan(info.id_keterangan)}
                                         >
                                           Edit
                                         </button>

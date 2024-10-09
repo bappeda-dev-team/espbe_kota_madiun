@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/global/Loading/Loading";
-import { getToken } from "@/app/Login/Auth/Auth";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface PohonKinerja {
@@ -24,14 +22,34 @@ const Table = () => {
     const [Operational, setOperational] = useState<boolean | null>(null);
     const [filteredPohonKinerja, setFilteredPohonKinerja] = useState<PohonKinerja[]>([])
 
-    const tahun = useSelector((state: RootState) => state.Tahun.tahun);
-    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [pohonKinerja, setPohonKinerja] = useState<PohonKinerja[]>([]);
     const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
     const [error, setError] = useState<string>();
     const [loading, setLoading] = useState<boolean | null>(null);
     const [dataNull, setDataNull] = useState<boolean>(false);
+    const [tahun, setTahun] = useState<any>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const token = getToken();
+
+    useEffect(() => {
+      const data = getOpdTahun();
+      if(data){
+        if(data.tahun){
+          const dataTahun = {
+            value: data.tahun.value,
+            label: data.tahun.label
+          }
+          setTahun(dataTahun);
+        } 
+        if(data.opd){
+          const dataOpd = {
+            value: data.opd.value,
+            label: data.opd.label
+          }
+          setSelectedOpd(dataOpd);
+        }
+      }
+    },[])
 
     useEffect(() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -62,13 +80,18 @@ const Table = () => {
         }
       };
     
-      if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
-        // Fetch OPD yang dipilih
-        fetchingData(`${API_URL}/v1/pohonkinerja?tahun=${tahun}&kode_opd=${SelectedOpd}`);
-        setOpdKosong(false);
-      } else if (SelectedOpd === '' || SelectedOpd === 'all_opd') {
-        // OPD kosong
+      //opd kosong
+      if (SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == 'all_opd') {
         setOpdKosong(true);
+        setLoading(false);
+      } else {
+        if(tahun?.value == (0 || undefined)){
+          fetchingData(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd?.value}`);
+          setOpdKosong(false);
+        } else {
+          fetchingData(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd?.value}&tahun=${tahun?.value}`);
+          setOpdKosong(false);
+        }
       }
     }, [tahun, SelectedOpd, token]);
 

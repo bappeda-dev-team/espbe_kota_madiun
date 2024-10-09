@@ -8,11 +8,11 @@ interface opd {
   nama_opd : string,
 }
 
-const HeaderDataInformasi = () => {
+const HeaderSasaranKinerja = () => {
 
   const [user, setUser] = useState<any>(null);
-  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
   const [tahun, setTahun] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
   const [opd, setOpd] = useState<opd[]>([]);
   const token = getToken();
 
@@ -58,18 +58,17 @@ const HeaderDataInformasi = () => {
       };
       fetchOPD();
     }
-  }, [user, token]
-);
+  }, [user, token]);
 
   return (
     <>
       <div className="flex items-center justify-between">
         <div className="flex">
-          <h1 className="uppercase font-bold">
-            Data Informasi{" "}
+          <h1 className="uppercase font-bold mr-1">
+            Sasaran Kinerja{" "}
             {user?.roles == 'admin_kota' 
-              ? `${SelectedOpd?.value == (undefined || null) ? "" : SelectedOpd?.label} ${tahun?.value == (null || undefined) ? "" : tahun?.label}`
-              : `${opd.length > 0 ? opd[0].nama_opd : ''} ${tahun?.value == 0 ? "Semua Tahun" : tahun?.label}`
+              ? `${SelectedOpd?.label == (undefined || null) ? "" : SelectedOpd?.label} ${tahun?.value == (0 || undefined) ? "" : tahun?.label}`
+              : `${opd.length > 0 ? opd[0].nama_opd : ''} ${tahun?.value === 0 ? "Semua Tahun" : tahun?.label}`
             }
           </h1>
         </div>
@@ -78,4 +77,4 @@ const HeaderDataInformasi = () => {
   );
 };
 
-export default HeaderDataInformasi;
+export default HeaderSasaranKinerja;

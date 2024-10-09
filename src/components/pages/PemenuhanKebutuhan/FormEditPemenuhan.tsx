@@ -3,13 +3,11 @@
 import Select from "react-select";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useParams } from "next/navigation";
-import { getToken, getUser } from "@/app/Login/Auth/Auth";
+import { getToken, getUser, getOpdTahun } from "@/app/Login/Auth/Auth";
 import { useEffect, useState } from "react";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { ButtonSc, ButtonTr } from "@/components/common/Button/Button";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import IdNull from "@/components/common/Alert/IdNull";
 
 interface OptionType {
@@ -37,15 +35,14 @@ const FormEditPemenuhan = () => {
     const token = getToken();
     const router = useRouter();
     const [isClient, setIsClient] = useState<boolean>(false);
-    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [user, setUser] = useState<any>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [idNotFound, setIdNotFound] = useState<boolean | null>(null);
     const {
         control,
         handleSubmit,
         reset,
-        watch,
         formState: { errors },
       } = useForm<formValue>();
 
@@ -63,9 +60,15 @@ const FormEditPemenuhan = () => {
     useEffect(() => {
         const fetchUser = getUser();
         setUser(fetchUser);
-        setIsClient(true);
-    },[])
-
+        const data = getOpdTahun();
+        if(data.opd){
+          const dataOpd = {
+            value: data.opd.value,
+            label: data.opd.label
+          }
+          setSelectedOpd(dataOpd);
+        }
+      }, []);
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         
@@ -157,12 +160,12 @@ const FormEditPemenuhan = () => {
         tahun_pelaksanaan: tahunPelaksanaan,
       };
         if(user?.roles == 'admin_kota'){
-            if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+            if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
             AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
             } else {
                 // console.log(formData);
                 try {
-                    const response = await fetch(`${API_URL}/v1/updaterencanaPelaksanaan/${id}?kode_opd=${SelectedOpd}`, {
+                    const response = await fetch(`${API_URL}/v1/updaterencanaPelaksanaan/${id}?kode_opd=${SelectedOpd?.value}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json",

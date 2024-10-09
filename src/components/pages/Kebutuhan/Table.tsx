@@ -2,12 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Loading from "@/components/global/Loading/Loading";
-import {ButtonPr, ButtonSc, ButtonTr } from "@/components/common/Button/Button";
+import {ButtonSc, ButtonTr } from "@/components/common/Button/Button";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 import Image from "next/image";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import { useRouter } from "next/navigation";
 import OpdNull from "@/components/common/Alert/OpdNull";
 
@@ -38,21 +36,36 @@ interface KondisiAwal {
 }
 
 const Table = () => {
-    const tahun = useSelector((state: RootState) => state.Tahun.tahun);
-    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [dataNull, setDataNull] = useState<boolean>(false);
     const [kebutuhan, setKebutuhan] = useState<KebutuhanSPBE[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
     const [user, setUser] = useState<any>(null);
+    const [tahun, setTahun] = useState<any>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const token = getToken();
     const router = useRouter();
 
     useEffect(() => {
       const fetchUser = getUser();
       setUser(fetchUser);
-    },[])
+      const data = getOpdTahun();
+      if(data.tahun){
+        const dataTahun = {
+          value: data.tahun.value,
+          label: data.tahun.label
+        }
+        setTahun(dataTahun);
+      }
+      if(data.opd){
+        const dataOpd = {
+          value: data.opd.value,
+          label: data.opd.label
+        }
+        setSelectedOpd(dataOpd);
+      }
+    }, []);
 
     useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -84,44 +97,50 @@ const Table = () => {
     };
   
     if (user?.roles == 'admin_kota') {
-      if (SelectedOpd === 'all_opd') {
+      if (SelectedOpd?.value == 'all_opd' && tahun?.value != (undefined || null)) {
         // Fetch semua OPD
-        fetchingData(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}`);
+        fetchingData(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun?.value}`);
         setOpdKosong(false);
-      } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+      } else if (SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null) && tahun?.value != (undefined || null) ) {
         // Fetch OPD yang dipilih
-        fetchingData(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`);
+        fetchingData(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun?.value}&kode_opd=${SelectedOpd?.value}`);
         setOpdKosong(false);
-      } else if (SelectedOpd === '') {
+      } else if (SelectedOpd?.value == (undefined || null) || tahun?.value == (undefined || null)) {
         // OPD kosong
         setOpdKosong(true);
       }
     } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
       // Bukan admin kota, fetch default
-      fetchingData(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun}`);
-      setOpdKosong(false);
+      if(tahun?.value == (undefined || null)){
+        fetchingData(`${API_URL}/v1/kebutuhanspbe`);
+        setOpdKosong(false);
+      } else {
+        fetchingData(`${API_URL}/v1/kebutuhanspbe?tahun=${tahun?.value}`);
+        setOpdKosong(false);
+      }
     }
   }, [tahun, SelectedOpd, token, user]);
 
-    //tambah data
-    const tambahKebutuhan= async() => {
-      if(user?.roles == 'admin_kota'){
-        if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
-          router.push(`/KebutuhanSPBE/TambahKebutuhan`)
-        } else {
-          AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
-        }
-      } else {
-        router.push(`/KebutuhanSPBE/TambahKebutuhan`)
-      }
-    }
+    // //tambah data
+    // const tambahKebutuhan= async() => {
+    //   if(user?.roles == 'admin_kota'){
+    //     if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+    //       router.push(`/KebutuhanSPBE/TambahKebutuhan`)
+    //     } else {
+    //       AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+    //     }
+    //   } else {
+    //     router.push(`/KebutuhanSPBE/TambahKebutuhan`)
+    //   }
+    // }
+    
     //edit data
     const editKebutuhan = async(id: number) => {
       if(user?.roles == 'admin_kota'){
-        if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+        if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null)){
           router.push(`/KebutuhanSPBE/EditKebutuhan/${id}`)
         } else {
-          AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+          AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
         }
       } else {
         router.push(`/KebutuhanSPBE/EditKebutuhan/${id}`)
@@ -157,32 +176,6 @@ const Table = () => {
 
     return (
         <>
-          <div className="flex justify-between mb-5">
-              <ButtonSc typee="button">
-                <div className="flex">
-                    <Image 
-                      className="mr-1"
-                      src="/iconLight/cetak.svg" 
-                      alt="add" 
-                      width={20} 
-                      height={20} 
-                    />
-                    Cetak
-                </div>
-              </ButtonSc>
-              {/* <ButtonPr typee="button" onClick={() => tambahKebutuhan()}>
-                <div className="flex">
-                    <Image 
-                      className="mr-1"
-                      src="/iconLight/add.svg" 
-                      alt="add" 
-                      width={20} 
-                      height={20} 
-                    />
-                    Tambah Data
-                </div>
-              </ButtonPr> */}
-          </div>
           <div className="overflow-auto rounded-t-xl bg-white shadow-lg border">
               <table className="w-full text-sm text-left">
                   <thead className="text-xs rounded-t-xl text-white bg-sky-600 uppercase">

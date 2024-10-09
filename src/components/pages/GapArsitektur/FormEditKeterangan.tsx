@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { getToken, getUser } from "@/app/Login/Auth/Auth";
+import { getToken, getUser, getOpdTahun } from "@/app/Login/Auth/Auth";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { useRouter } from "next/navigation";
 import { ButtonSc, ButtonTr } from "@/components/common/Button/Button";
 import IdNull from "@/components/common/Alert/IdNull";
 import Loading from "@/components/global/Loading/Loading";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 
 interface KeteranganForm {
   keterangan: string;
@@ -20,10 +18,10 @@ const FormEditKeterangan = () => {
   const { id } = useParams();
   const token = getToken();
   const router =  useRouter();
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const { control, handleSubmit, reset} = useForm<KeteranganForm>();
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
   const [idNotFound, setIdNotFound] = useState<boolean | null>(null);
   const [keteranganValue, setKeteranganValue] = useState<string>("")
   const [prosesBisnis, setProsesBisnis] = useState<number>();
@@ -70,12 +68,12 @@ const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
     }
     // console.log(formData);
     if(user?.roles == "admin_kota"){
-      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+      if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
         AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
         try{
           const API_URL = process.env.NEXT_PUBLIC_API_URL;
-          const response = await fetch(`${API_URL}/v1/updateketeranganGapKebutuhan/${id}?kode_opd=${SelectedOpd}`, {
+          const response = await fetch(`${API_URL}/v1/updateketeranganGapKebutuhan/${id}?kode_opd=${SelectedOpd?.value}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",

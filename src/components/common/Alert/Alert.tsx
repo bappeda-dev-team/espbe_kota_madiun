@@ -4,13 +4,14 @@ export const AlertNotification = (
     title: string, 
     text: string,
     icon: "success" | "error" | "warning" | "info" | "question", 
-    timer?: number
+    timer?: number,
+    confirm?: true | false
 ) => {
     Swal.fire({
       icon: icon,
       title: title,
       text: text,
-      showConfirmButton: true,
+      showConfirmButton: confirm,
       timer: timer,
       customClass: {
         confirmButton: "bg-gradient-to-r from-[#007F73] to-[#40DA97] hover:from-[#4AAF9B] hover:to-[#64B07B] text-white font-bold"

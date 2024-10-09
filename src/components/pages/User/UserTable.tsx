@@ -1,15 +1,11 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { getUser } from "@/app/Login/Auth/Auth";
-import { getToken } from "@/app/Login/Auth/Auth";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import Loading from "@/components/global/Loading/Loading";
 import { ButtonPr, ButtonSc } from "@/components/common/Button/Button";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 import Image from "next/image";
 import { AlertNotification } from "@/components/common/Alert/Alert";
-import {useRouter} from "next/navigation";
 import OpdNull from "@/components/common/Alert/OpdNull";
 
 export const ASN = () => {
@@ -47,30 +43,47 @@ export const ASN = () => {
 }
 
 export const AdminOPD = () => {
-    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [user, setUser] = useState<any>(null);
+    const [valueOpd, setValueOpd] = useState<any>(null);
+    const [valueTahun, setValueTahun] = useState<any>(null);
     const [dataNull, setDataNull] = useState<boolean>(false);
     const [dataUser, setDataUser] = useState<any[]>([]);
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean | null>(null);
     const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
     const token = getToken();
-    const router = useRouter();
 
     const [roles, setRoles] = useState<number>(0);
 
     useEffect(() => {
         const fetchUser = getUser();
         setUser(fetchUser);
+        const data = getOpdTahun();
+        if(data){
+          if(data.tahun){
+            const tahun_value = {
+              value: data.tahun.value,
+              label: data.tahun.label
+            }
+            setValueTahun(tahun_value);
+          }
+          if(data.opd){
+            const opd_value = {
+              value: data.opd.value,
+              label: data.opd.label
+            }
+            setValueOpd(opd_value);
+          }
+        }
       }, []);
 
     useEffect(() => {
        const API_URL = process.env.NEXT_PUBLIC_API_URL;
        const fetchUser = async () => {
-        if(SelectedOpd == ""){
+        if(valueOpd?.value == undefined || null){
             setOpdKosong(true);
             setLoading(false);
-        } else if(SelectedOpd == "all_opd"){
+        } else if(valueOpd?.value == "all_opd"){
             try{
                 setLoading(true);
                 const response = await fetch(`${API_URL}/v1/user?roles_id=${roles}`,{
@@ -100,7 +113,7 @@ export const AdminOPD = () => {
         } else {
             try{
                 setLoading(true);
-                const response = await fetch(`${API_URL}/v1/user?roles_id=${roles}&kode_opd=${SelectedOpd}`,{
+                const response = await fetch(`${API_URL}/v1/user?roles_id=${roles}&kode_opd=${valueOpd?.value}`,{
                     method: 'GET',
                     headers: {
                         'Authorization': `${token}`,
@@ -127,13 +140,13 @@ export const AdminOPD = () => {
         }
     };
     fetchUser();
-    }, [SelectedOpd, roles, token]);
+    }, [valueOpd, roles, token]);
 
     const sinkronUser = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+        if(valueOpd?.value !== 'all_opd' && valueOpd?.value !== undefined){
             try {
-              const response = await fetch(`${API_URL}/userapifetch?kode_opd=${SelectedOpd}`, {
+              const response = await fetch(`${API_URL}/userapifetch?kode_opd=${valueOpd?.value}`, {
                 method: "GET",
                 headers: {
                   'Authorization': `${token}`,

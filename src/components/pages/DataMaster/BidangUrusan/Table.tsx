@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/global/Loading/Loading";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface BidangUrusan {
@@ -26,7 +24,6 @@ interface bidang_urusan_opd {
 
 const Table = () => {
 
-    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [opdUrusan, setOpdUrusan] = useState<BidangUrusan[]>([]);
     const [error, setError] = useState<string>();
     const [loading, setLoading] = useState<boolean>(true)
@@ -34,11 +31,21 @@ const Table = () => {
     const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
     const token = getToken();
     const [user, setUser] = useState<any>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
 
     useEffect(() => {
         const fetchUser = getUser();
         setUser(fetchUser);
-    },[])
+
+        const data = getOpdTahun ();
+        if(data.opd){
+          const dataOpd = {
+            value: data.opd.value,
+            label: data.opd.label
+          }
+          setSelectedOpd(dataOpd);
+        }
+      }, []);
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -70,17 +77,17 @@ const Table = () => {
         };
       
         if (user?.roles == 'admin_kota') {
-          if (SelectedOpd === 'all_opd') {
+          if (SelectedOpd?.value === 'all_opd') {
             // Fetch semua OPD
             fetchingData(`${API_URL}/v1/opd-urusan`);
             setOpdKosong(false);
             setLoading(false);
-        } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+        } else if (SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null)) {
             // Fetch OPD yang dipilih
-            fetchingData(`${API_URL}/v1/opd-urusan?kode_opd=${SelectedOpd}`);
+            fetchingData(`${API_URL}/v1/opd-urusan?kode_opd=${SelectedOpd?.value}`);
             setOpdKosong(false);
             setLoading(false);
-        } else if (SelectedOpd == ''){
+        } else if (SelectedOpd?.value == (undefined || null)){
             setOpdKosong(true);
             setLoading(false);
           }
@@ -97,83 +104,80 @@ const Table = () => {
 
     return(
         <>
-            <div className="overflow-auto shadow-xl rounded-xl">
+        <div className="overflow-auto shadow-xl rounded-xl">
             <table className="w-full text-sm text-left border-collapse">
-    <thead className="text-xs text-white uppercase bg-amber-500">
-        <tr>
-            <th className="px-6 py-3 border text-center">No</th>
-            <th className="px-6 py-3 border">Nama OPD</th>
-            <th className="px-6 py-3 border text-center">Kode OPD</th>
-            <th className="px-6 py-3 border text-center">Urusan</th>
-            <th className="px-6 py-3 border">Bidang Urusan</th>
-        </tr>
-    </thead>
-    <tbody>
-        {dataNull ? (
-            <tr>
-                <td className="px-6 py-3" colSpan={6}>
-                    Data Kosong / Belum Ditambahkan
-                </td>
-            </tr>
-        ) : (
-            opdUrusan.map((data, index) => (
-                // Setiap data OPD bisa memiliki banyak urusan_opd
-                data.urusan_opd.map((urusanItem: any, urusanIdx: number) => (
-                    <tr key={urusanIdx} className="border hover:bg-slate-50">
-                        {/* Kolom No, Nama OPD, dan Kode OPD hanya muncul di baris pertama (urusanIdx === 0) */}
-                        {urusanIdx === 0 && (
-                            <>
-                                <td
-                                    className="px-6 py-4 border text-center"
-                                    rowSpan={data.urusan_opd.length}
-                                >
-                                    {index + 1}
-                                </td>
-                                <td
-                                    className="px-6 py-4 border"
-                                    rowSpan={data.urusan_opd.length}
-                                >
-                                    {data.nama_opd}
-                                </td>
-                                <td
-                                    className="px-6 py-4 border text-center"
-                                    rowSpan={data.urusan_opd.length}
-                                >
-                                    {data.kode_opd}
-                                </td>
-                            </>
-                        )}
-                        {/* Data Kode Urusan dan Urusan */}
-                        <td className="px-6 py-4 border">{urusanItem.kode_urusan} .  {urusanItem.urusan}</td>
-
-                        {/* Bidang Urusan */}
-                        <td className="px-6 py-4 border">
-                            {urusanItem.bidang_urusan &&
-                            Array.isArray(urusanItem.bidang_urusan) &&
-                            urusanItem.bidang_urusan.length > 0 ? (
-                                urusanItem.bidang_urusan.map(
-                                    (bidang: any, bidangIdx: number) => (
-                                        <div key={bidangIdx}>
-                                            <span className="w-full">
-                                                {bidang.kode_bidang_urusan} - {bidang.bidang_urusan}
-                                            </span>
-                                        </div>
-                                    )
-                                )
-                            ) : (
-                                <div>Tidak ada Bidang Urusan</div>
-                            )}
-                        </td>
+                <thead className="text-xs text-white uppercase bg-amber-500">
+                    <tr>
+                        <th className="px-6 py-3 border text-center">No</th>
+                        <th className="px-6 py-3 border">Nama OPD</th>
+                        <th className="px-6 py-3 border text-center">Kode OPD</th>
+                        <th className="px-6 py-3 border text-center">Urusan</th>
+                        <th className="px-6 py-3 border">Bidang Urusan</th>
                     </tr>
-                ))
-            ))
-        )}
-    </tbody>
-</table>
+                </thead>
+                <tbody>
+                    {dataNull ? (
+                        <tr>
+                            <td className="px-6 py-3" colSpan={6}>
+                                Data Kosong / Belum Ditambahkan
+                            </td>
+                        </tr>
+                    ) : (
+                        opdUrusan.map((data, index) => (
+                            // Setiap data OPD bisa memiliki banyak urusan_opd
+                            data.urusan_opd.map((urusanItem: any, urusanIdx: number) => (
+                                <tr key={urusanIdx} className="border hover:bg-slate-50">
+                                    {/* Kolom No, Nama OPD, dan Kode OPD hanya muncul di baris pertama (urusanIdx === 0) */}
+                                    {urusanIdx === 0 && (
+                                        <>
+                                            <td
+                                                className="px-6 py-4 border text-center"
+                                                rowSpan={data.urusan_opd.length}
+                                            >
+                                                {index + 1}
+                                            </td>
+                                            <td
+                                                className="px-6 py-4 border"
+                                                rowSpan={data.urusan_opd.length}
+                                            >
+                                                {data.nama_opd}
+                                            </td>
+                                            <td
+                                                className="px-6 py-4 border text-center"
+                                                rowSpan={data.urusan_opd.length}
+                                            >
+                                                {data.kode_opd}
+                                            </td>
+                                        </>
+                                    )}
+                                    {/* Data Kode Urusan dan Urusan */}
+                                    <td className="px-6 py-4 border">{urusanItem.kode_urusan} .  {urusanItem.urusan}</td>
 
-
-
-            </div>
+                                    {/* Bidang Urusan */}
+                                    <td className="px-6 py-4 border">
+                                        {urusanItem.bidang_urusan &&
+                                        Array.isArray(urusanItem.bidang_urusan) &&
+                                        urusanItem.bidang_urusan.length > 0 ? (
+                                            urusanItem.bidang_urusan.map(
+                                                (bidang: any, bidangIdx: number) => (
+                                                    <div key={bidangIdx}>
+                                                        <span className="w-full">
+                                                            {bidang.kode_bidang_urusan} - {bidang.bidang_urusan}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            )
+                                        ) : (
+                                            <div>Tidak ada Bidang Urusan</div>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))
+                        ))
+                    )}
+                </tbody>
+            </table>
+        </div>
         </>
     )
 }

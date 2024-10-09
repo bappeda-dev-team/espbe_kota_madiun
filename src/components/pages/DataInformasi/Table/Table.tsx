@@ -6,9 +6,7 @@ import Loading from "@/components/global/Loading/Loading";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface dataInformasi {
@@ -49,8 +47,6 @@ interface rad_level_5_7 {
 
 const Table = () => {
     //state fetch data informasi
-    const tahun = useSelector((state: RootState) => state.Tahun.tahun);
-    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [datainformasi, setDatainformasi] = useState<dataInformasi[]>([]);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [error, setError] = useState<string | null>(null)
@@ -58,12 +54,29 @@ const Table = () => {
     const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
     const router = useRouter();
     const [user, setUser] = useState<any>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
+    const [tahun, setTahun] = useState<any>(null);
     const token = getToken();
 
     useEffect(() => {
       const fetchUser = getUser();
       setUser(fetchUser);
-    },[])
+      const data = getOpdTahun ();
+      if(data.tahun){
+        const dataTahun = {
+          value: data.tahun.value,
+          label: data.tahun.label
+        }
+        setTahun(dataTahun);
+      }
+      if(data.opd){
+        const dataOpd = {
+          value: data.opd.value,
+          label: data.opd.label
+        }
+        setSelectedOpd(dataOpd);
+      }
+    }, []);
 
     useEffect(() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -95,32 +108,37 @@ const Table = () => {
       };
     
       if (user?.roles == 'admin_kota') {
-        if (SelectedOpd === 'all_opd') {
+        if (SelectedOpd?.value == 'all_opd' && tahun?.value != (undefined || null)) {
           // Fetch semua OPD
-          fetchingData(`${API_URL}/v1/datainformasi?tahun=${tahun}`);
+          fetchingData(`${API_URL}/v1/datainformasi?tahun=${tahun?.value}`);
           setOpdKosong(false);
-        } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+        } else if (SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null) && tahun?.value != (undefined || null) ) {
           // Fetch OPD yang dipilih
-          fetchingData(`${API_URL}/v1/datainformasi?tahun=${tahun}&kode_opd=${SelectedOpd}`);
+          fetchingData(`${API_URL}/v1/datainformasi?tahun=${tahun?.value}&kode_opd=${SelectedOpd?.value}`);
           setOpdKosong(false);
-        } else if (SelectedOpd === '') {
+        } else if (SelectedOpd?.value == (undefined || null) || tahun?.value == (undefined || null)) {
           // OPD kosong
           setOpdKosong(true);
         }
       } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
         // Bukan admin kota, fetch default
-        fetchingData(`${API_URL}/v1/datainformasi?tahun=${tahun}`);
-        setOpdKosong(false);
+        if(tahun?.value == (undefined || null)){
+          fetchingData(`${API_URL}/v1/datainformasi`);
+          setOpdKosong(false);
+        } else {
+          fetchingData(`${API_URL}/v1/datainformasi?tahun=${tahun?.value}`);
+          setOpdKosong(false);
+        }
       }
     }, [tahun, SelectedOpd, token, user]);
 
     //tambah data
     const tambahData= async() => {
       if(user?.roles == 'admin_kota'){
-        if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+        if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null)){
           router.push(`/DataInformasi/TambahData`)
         } else {
-          AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+          AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
         }
       } else {
         router.push(`/DataInformasi/TambahData`)
@@ -129,10 +147,10 @@ const Table = () => {
     //edit data
     const editData = async(id: number) => {
       if(user?.roles == 'admin_kota'){
-        if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+        if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null)){
           router.push(`/DataInformasi/EditData/${id}`)
         } else {
-          AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+          AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
         }
       } else {
         router.push(`/DataInformasi/EditData/${id}`)
@@ -178,7 +196,7 @@ const Table = () => {
         // Membuat elemen link untuk mengunduh file
         const a = document.createElement('a');
         a.href = url;
-        a.download = `data_dan_informasi_${SelectedOpd}_tahun_${tahun}.xlsx`; // Nama file yang diunduh
+        a.download = `data_dan_informasi_${SelectedOpd?.value}_tahun_${tahun?.value}.xlsx`; // Nama file yang diunduh
         document.body.appendChild(a);
         a.click();
   
@@ -201,7 +219,7 @@ const Table = () => {
     return(
         <>
           <div className="flex justify-between mb-5">
-              <ButtonSc typee="button" onClick={() => {cetakDataInformasi()}}>
+              {/* <ButtonSc typee="button" onClick={() => {cetakDataInformasi()}}>
               <div className="flex">
                   <Image 
                   className="mr-1"
@@ -212,7 +230,7 @@ const Table = () => {
                   />
                   Cetak
               </div>
-              </ButtonSc>
+              </ButtonSc> */}
               <ButtonPr typee="button" onClick={() => tambahData()}>
               <div className="flex">
                   <Image 

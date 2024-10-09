@@ -1,18 +1,29 @@
 "use client";
 
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import Image from "next/image";
 import { ButtonSc } from "@/components/common/Button/Button";
+import { getOpdTahun } from "@/app/Login/Auth/Auth";
+import { useState, useEffect } from "react";
 
 const HeaderSasaranKota = () => {
 
-  const tahun = useSelector((state: RootState) => state.Tahun.tahun);
+  const [tahun, setTahun] = useState<any>(null);
+
+  useEffect(() => {
+    const data = getOpdTahun ();
+    if(data.tahun){
+      const dataTahun = {
+        value: data.tahun.value,
+        label: data.tahun.label
+      }
+      setTahun(dataTahun);
+    }
+  }, []);
 
   return (
     <>
       <div className="flex items-center justify-between">
-        <h1 className="uppercase font-bold mr-1">Sasaran kota Madiun {tahun === 0 ? "Semua Tahun" : tahun}</h1>
+        <h1 className="uppercase font-bold mr-1">Sasaran kota Madiun {tahun?.value === (0 || undefined) ? "Semua Tahun" : tahun?.label}</h1>
         <ButtonSc className="py-2">
           <div className="flex">
             <Image 

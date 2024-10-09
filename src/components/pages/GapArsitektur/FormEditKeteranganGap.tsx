@@ -3,15 +3,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { getToken } from "@/app/Login/Auth/Auth";
+import { getToken, getUser, getOpdTahun } from "@/app/Login/Auth/Auth";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { useRouter } from "next/navigation";
 import { ButtonSc, ButtonTr } from "@/components/common/Button/Button";
 import IdNull from "@/components/common/Alert/IdNull";
 import Loading from "@/components/global/Loading/Loading";
-import { getUser } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 
 interface KeteranganForm {
   keterangan_gap: string;
@@ -21,8 +18,8 @@ const FormEditKeteranganGap = () => {
   const { id } = useParams();
   const token = getToken();
   const router =  useRouter();
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [user, setUser] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
   const { control, handleSubmit, reset} = useForm<KeteranganForm>();
   const [loading, setLoading] = useState<boolean>(true);
   const [idNotFound, setIdNotFound] = useState<boolean | null>(null);
@@ -32,7 +29,15 @@ const FormEditKeteranganGap = () => {
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  },[])
+    const data = getOpdTahun();
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
 
   useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -70,12 +75,12 @@ const onSubmit: SubmitHandler<KeteranganForm> = async(data) =>  {
     }
     // console.log(formData);
     if(user?.roles == "admin_kota"){
-      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+      if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
         AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
         try{
           const API_URL = process.env.NEXT_PUBLIC_API_URL;
-          const response = await fetch(`${API_URL}/v1/updateketeranganGap/${id}?kode_opd=${SelectedOpd}`, {
+          const response = await fetch(`${API_URL}/v1/updateketeranganGap/${id}?kode_opd=${SelectedOpd?.value}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",

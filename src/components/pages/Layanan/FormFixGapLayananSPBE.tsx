@@ -7,9 +7,7 @@ import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import IdNull from "@/components/common/Alert/IdNull";
 
 interface OptionType {
@@ -50,11 +48,11 @@ const FormFixGapLayananSPBE = () => {
     reset,
     formState: { errors },
   } = useForm<formValue>();
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const [idNotFound, setIdNotFound] = useState<boolean | null>(null);
   const [user, setUser] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
 
   const [ral_level_1_4_option, set_ral_level_1_4_option] = useState<OptionType[]>([]);
   const [ral_5_7, set_ral_5_7] = useState<OptionType[]>([]);
@@ -73,7 +71,15 @@ const FormFixGapLayananSPBE = () => {
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  },[])
+    const data = getOpdTahun ();
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
 
   const tahun_option: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -170,7 +176,7 @@ const FormFixGapLayananSPBE = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd}`, {
+      const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd?.value}`, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -210,7 +216,7 @@ const FormFixGapLayananSPBE = () => {
       tujuan_layanan_id: data.tactical_id?.value,
       fungsi_layanan: data.fungsi_layanan,
       tahun: data.tahun?.value,
-      kode_opd: user?.roles == 'admin_kota'? SelectedOpd : user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota'? SelectedOpd?.value : user?.kode_opd,
       kementrian_terkait: data.kementrian_terkait,
       metode_layanan: data.metode_layanan?.value,
       ral_level_1_id: data.ral_level_1_id?.value,
@@ -222,7 +228,7 @@ const FormFixGapLayananSPBE = () => {
       operational_id: data.operational_id?.value,
     };
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+      if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
         AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
         // console.log(formData);

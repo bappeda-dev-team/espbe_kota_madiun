@@ -1,11 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { getToken, getUser } from "@/app/Login/Auth/Auth";
+import { getToken, getUser, getOpdTahun } from "@/app/Login/Auth/Auth";
 import Loading from "@/components/global/Loading/Loading";
 import OpdNull from "@/components/common/Alert/OpdNull";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 
 interface PetaRencana {
     generated_id : string,
@@ -88,11 +86,10 @@ interface tahun_pelaksanaan {
 const Table = () => {
 
     const token = getToken();
-    const tahun = useSelector((state: RootState) => state.Tahun.tahun);
-    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
-    const SelectedOpdNama = useSelector((state: RootState) => state.Opd.label);
     const [error, setError] = useState<string>("");
     const [user, setUser] = useState<any>(null);
+    const [tahun, setTahun] = useState<any>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [rencana, setRencana] = useState<PetaRencana[]>([]);
@@ -101,7 +98,22 @@ const Table = () => {
     useEffect(() => {
         const fetchUser = getUser();
         setUser(fetchUser);
-    },[])
+        const data = getOpdTahun();
+        if(data.tahun){
+          const dataTahun = {
+            value: data.tahun.value,
+            label: data.tahun.label
+          }
+          setTahun(dataTahun);
+        }
+        if(data.opd){
+          const dataOpd = {
+            value: data.opd.value,
+            label: data.opd.label
+          }
+          setSelectedOpd(dataOpd);
+        }
+      }, []);
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -132,25 +144,29 @@ const Table = () => {
                 setLoading(false)
             }
         }
-
         if (user?.roles == 'admin_kota') {
-            if (SelectedOpd === 'all_opd') {
-              // Fetch semua OPD
-              fetchPetaRencana(`${API_URL}/v1/petarencanaspbe?tahun=${tahun}`);
-              setOpdKosong(false);
-            } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
-              // Fetch OPD yang dipilih
-              fetchPetaRencana(`${API_URL}/v1/petarencanaspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`);
-              setOpdKosong(false);
-            } else if (SelectedOpd === '') {
-              // OPD kosong
-              setOpdKosong(true);
-            }
-          } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
-            // Bukan admin kota, fetch default
-            fetchPetaRencana(`${API_URL}/v1/petarencanaspbe?tahun=${tahun}`);
+          if (SelectedOpd?.value == 'all_opd' && tahun?.value != (undefined || null)) {
+            // Fetch semua OPD
+            fetchPetaRencana(`${API_URL}/v1/petarencanaspbe?tahun=${tahun?.value}`);
+            setOpdKosong(false);
+          } else if (SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null) && tahun?.value != (undefined || null) ) {
+            // Fetch OPD yang dipilih
+            fetchPetaRencana(`${API_URL}/v1/petarencanaspbe?tahun=${tahun?.value}&kode_opd=${SelectedOpd?.value}`);
+            setOpdKosong(false);
+          } else if (SelectedOpd?.value == (undefined || null) || tahun?.value == (undefined || null)) {
+            // OPD kosong
+            setOpdKosong(true);
+          }
+        } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
+          // Bukan admin kota, fetch default
+          if(tahun?.value == (undefined || null)){
+            fetchPetaRencana(`${API_URL}/v1/petarencanaspbe`);
+            setOpdKosong(false);
+          } else {
+            fetchPetaRencana(`${API_URL}/v1/petarencanaspbe?tahun=${tahun?.value}`);
             setOpdKosong(false);
           }
+        }
     },[token, tahun, SelectedOpd, user]);
 
     const formatRupiah = (value: string | number) => {
@@ -161,7 +177,7 @@ const Table = () => {
     if(loading){
         return <Loading />
     } else if(rencanaNull){
-        return <h1>Belum ada data peta rencana yang ditambahkan di {SelectedOpdNama} di tahun {tahun}</h1>
+        return <h1>Belum ada data peta rencana yang ditambahkan di {SelectedOpd?.label} di {tahun?.label}</h1>
     } else if(error){
         return <h1 className="text-red-500">{error}</h1>
     } else if(opdKosong) {
@@ -172,9 +188,9 @@ const Table = () => {
                 {rencana.map((data: any) => (
                     <>
                     <div key={data.id} className="border border-emerald-500 w-full py-2 px-3 mt-3 rounded-t-xl bg-emerald-500 text-white">
-                        <div className="flex flex-wrap justify-between">
+                        <div className="flex flex-wrap items-center">
+                            <h1 className="uppercase">Proses Bisnis :</h1>
                             <h1 className="uppercase">{data.nama_proses_bisnis ? data.nama_proses_bisnis : "kosong"}</h1>
-                            <h1 className="uppercase">{data.kode_proses_bisnis ? data.kode_proses_bisnis : "kosong"}</h1>
                         </div>
                     </div>
                     <div className="overflow-auto">

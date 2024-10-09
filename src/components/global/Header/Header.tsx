@@ -3,22 +3,31 @@
 import { usePathname, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setTahun } from "@/store/TahunSlicer";
 import { setOpd } from "@/store/OpdSlicer";
-import { getToken, getUser } from "@/app/Login/Auth/Auth";
+import { getToken, getUser, getOpdTahun } from "@/app/Login/Auth/Auth";
 import Select from "react-select"
 import { ButtonHeader } from "@/components/common/Button/Button";
+import { AlertNotification } from "@/components/common/Alert/Alert";
 
 interface OptionTypeString {
   value: string;
   label: string;
 }
+interface OptionType {
+  value: number;
+  label: string;
+}
+// Fungsi untuk menyimpan nilai ke cookies
+const setCookie = (name: string, value: any) => {
+  document.cookie = `${name}=${value}; path=/;`;
+};
 
 function Header() {
   const { id, Id } = useParams();
   const [textPath, setTextPath] = useState<string>();
   const url = usePathname();
-  const [valueTahun, setValueTahun] = useState<number | string>("");
+  const [valueTahun, setValueTahun] = useState<OptionType | null>(null);
+  const [valueOpd, setValueOpd] = useState<OptionTypeString | null>(null);
   const [selectedOpd, setSelectedOpd] = useState<OptionTypeString | null>(null);
   const [opdOption, setOpdOption] = useState<OptionTypeString[]>([]);
   const dispatch = useDispatch();
@@ -29,6 +38,23 @@ function Header() {
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
+    const data = getOpdTahun();
+    if(data){
+      if(data.tahun){
+        const tahun_value = {
+          value: data.tahun.value,
+          label: data.tahun.label
+        }
+        setValueTahun(tahun_value);
+      }
+      if(data.opd){
+        const opd_value = {
+          value: data.opd.value,
+          label: data.opd.label
+        }
+        setValueOpd(opd_value);
+      }
+    }
   }, []);
 
   const TahunOptions = [
@@ -107,6 +133,8 @@ function Header() {
       url === "/GapArsitektur" ||
       url === `/GapArsitektur/TambahKeterangan/${id}` ||
       url === `/GapArsitektur/EditKeterangan/${id}` ||
+      url === `/GapArsitektur/EditKeteranganGap/${id}` ||
+      url === `/GapArsitektur/TambahKeteranganGap/${id}` ||
       url === "/Arsitektur" ||
       url === "/KebutuhanSPBE" ||
       url === "/KebutuhanSPBE/TambahKebutuhan" ||
@@ -123,11 +151,25 @@ function Header() {
     }
   }, [url, id, Id]);
 
-  const handlerTahun = (selectedOption: { value: number | string }) => {
-    const tahun = selectedOption.value === "" ? "" : Number(selectedOption.value);
-    setValueTahun(tahun);
-    if (tahun !== "") {
-      dispatch(setTahun(tahun));
+  // Fungsi untuk menangani perubahan dropdown
+  const handleYearChange = (selectedOption: { value: number, label: string } | null) => {
+    if (selectedOption) {
+      const year = {label : selectedOption.label, value: selectedOption.value};
+      setCookie('tahun', JSON.stringify(year)); // Simpan value dan label ke cookies
+      AlertNotification("Tahun Berhasil Diubah", "", "success", 1000, false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); //reload halaman dengan delay 1 detik
+    }
+  };
+  const handleSelectedOpd = (selectedOption: { value: string, label: string } | null) => {
+    if (selectedOption) {
+      const Opd = {label : selectedOption.label, value: selectedOption.value};
+      setCookie('SelectedOpd', JSON.stringify(Opd)); // Simpan value dan label ke cookies
+      AlertNotification("Opd Berhasil Diubah", "", "success", 1000, false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); //reload halaman dengan delay 1 detik
     }
   };
 
@@ -161,10 +203,10 @@ function Header() {
                   })
                 }}
                 placeholder="Pilih OPD"
+                value={valueOpd}
                 options={opdOption}
-                onChange={(selectedOption) => handlerOpd(selectedOption)}
+                onChange={(selectedOption) => handleSelectedOpd(selectedOption)}
                 isLoading={isLoading}
-                isClearable
                 // defaultValue={semuaOPD}
                 isSearchable
                 onMenuOpen={() => {fetchOPD()}}
@@ -172,6 +214,7 @@ function Header() {
               />
             }
             <Select
+              id="tahun"
               styles={{
                 control: (baseStyles) => ({
                   ...baseStyles,
@@ -183,8 +226,9 @@ function Header() {
                 })
               }}
               options={TahunOptions}
-              onChange={(selectedOption) => handlerTahun(selectedOption as { value: number | string })}
-              defaultValue={TahunOptions[0]}
+              onChange={(option) => handleYearChange(option)}
+              value={valueTahun}
+              placeholder="Pilih Tahun"
               classNamePrefix="select"
             />
             <ButtonHeader className="rounded-lg px-3 py-2 border ml-1 border-emerald-500 text-emerald-500 font-bold text-sm hover:bg-emerald-500 hover:text-white">

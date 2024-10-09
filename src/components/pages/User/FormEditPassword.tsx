@@ -1,8 +1,6 @@
 "use client"
 
-import Select from "react-select";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { useParams } from "next/navigation";
 import { getToken, getUser, logout } from "@/app/Login/Auth/Auth";
 import { useEffect, useState } from "react";
 import { AlertNotification } from "@/components/common/Alert/Alert";

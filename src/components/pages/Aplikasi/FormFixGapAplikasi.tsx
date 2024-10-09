@@ -7,9 +7,7 @@ import Select from "react-select";
 import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import IdNull from "@/components/common/Alert/IdNull";
 
 interface OptionType {
@@ -45,11 +43,11 @@ interface formValue {
 
 const FormFixGapAplikasi = () => {
 
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const { id } = useParams();
   const router = useRouter();
   const token = getToken();
   const [user, setUser] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
   const {
     control,
     handleSubmit,
@@ -74,7 +72,15 @@ const FormFixGapAplikasi = () => {
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  },[])
+    const data = getOpdTahun ();
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
 
   const tahun_option: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -170,31 +176,6 @@ const FormFixGapAplikasi = () => {
       setIsLoading(false);
     }
   };
-  //fetching data RAL 5 - 7
-  const fetchRaa_5_7 = async (pohon_kinerja: any) => {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd}`, {
-        headers: {
-          'Authorization': `${token}`,
-        },
-      });
-      const data = await response.json();
-      const filteredData = data.data.filter(
-        (pohon: any) => pohon.jenis_pohon === pohon_kinerja,
-      );
-      const result = filteredData.map((item: any) => ({
-        value: item.id,
-        label: item.nama_pohon,
-      }));
-      set_raa_5_7(result);
-    } catch (err) {
-      console.log("Gagal memuat data Option RAA Level 5 - 7", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const interoprabilitasValue = watch("interoprabilitas");
 
@@ -217,7 +198,7 @@ const FormFixGapAplikasi = () => {
       jenis_aplikasi: data.jenis_aplikasi?.value,
       produsen_aplikasi: data.produsen_aplikasi,
       pj_aplikasi: data.pj_aplikasi,
-      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd?.value : user?.kode_opd,
       informasi_terkait_input: data.informasi_terkait_input,
       informasi_terkait_output: data.informasi_terkait_output,
       interoprabilitas: data.interoprabilitas?.value,
@@ -231,8 +212,8 @@ const FormFixGapAplikasi = () => {
       operational_id: data.operational_id?.value,
     };
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
-        AlertNotification("Pilih OPD", "OPD harus terpilih di header", "warning", 2000);
+      if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
+        AlertNotification("Pilih OPD", "OPD harus terpilih di header", "warning", 2000, true);
       } else {
         // console.log(formData);
         try {

@@ -7,9 +7,7 @@ import Select from "react-select";
 import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import IdNull from "@/components/common/Alert/IdNull";
 
 interface OptionType {
@@ -45,8 +43,8 @@ const FormEditData = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
   const [IdNotFound, setIdNotFound] = useState<boolean | null>(null);
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
 
   //state untuk fetch data option
   const [sasaran_kota_option, set_sasaran_kota_option] = useState<OptionType[]>([],);
@@ -69,7 +67,15 @@ const FormEditData = () => {
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  }, [])
+    const data = getOpdTahun ();
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
 
   const tahun_option: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -206,7 +212,7 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/bidangurusanopd?kode_opd=${SelectedOpd}`, {
+      const response = await fetch(`${API_URL}/v1/bidangurusanopd?kode_opd=${SelectedOpd?.value}`, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -255,7 +261,7 @@ const FormEditData = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd}`, {
+      const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd?.value}`, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -300,7 +306,7 @@ const FormEditData = () => {
   const onSubmit: SubmitHandler<formValue> = async (data) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const formData = {
-      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd?.value : user?.kode_opd,
       sasaran_kota_id: data.sasaran_kota_id?.value,
       bidang_urusan_id: data.bidang_urusan_id?.value,
       rab_level_1_id: data.rab_level_1_id?.value,
@@ -312,7 +318,7 @@ const FormEditData = () => {
       tahun: data.tahun?.value,
     };
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+      if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
         AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
         // console.log(formData);

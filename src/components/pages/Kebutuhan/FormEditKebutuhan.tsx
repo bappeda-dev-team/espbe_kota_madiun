@@ -6,9 +6,7 @@ import {ButtonPr, ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useForm, Controller, SubmitHandler, useFieldArray } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import IdNull from "@/components/common/Alert/IdNull";
 
 interface OptionType {
@@ -43,11 +41,11 @@ interface FormValues {
 }
 
 const FormEditKebutuhan = () => {
-    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const { id } = useParams();
     const router = useRouter();
     const token = getToken();
     const [user, setUser] = useState<any>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [idNotFound, setIdNotFound] = useState<boolean | null>(null);
     const [selectedNamaProsesBisnis, setSelectedNamaProsesBisnis] = useState<OptionType | null>(null);
@@ -62,7 +60,15 @@ const FormEditKebutuhan = () => {
     useEffect(() => {
         const fetchUser = getUser();
         setUser(fetchUser);
-    },[])
+        const data = getOpdTahun();
+        if(data.opd){
+          const dataOpd = {
+            value: data.opd.value,
+            label: data.opd.label
+          }
+          setSelectedOpd(dataOpd);
+        }
+      }, []);
 
     const { control, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
         defaultValues: {
@@ -228,11 +234,11 @@ const FormEditKebutuhan = () => {
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
-            kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
+            kode_opd: user?.roles == 'admin_kota' ? SelectedOpd?.value : user?.kode_opd,
             tahun: data.tahun,
             nama_domain: data.nama_domain?.value,
             indikator_pj: data.indikator_pj?.value,
-            penanggung_jawab: data.indikator_pj?.value == "eksternal" ? data.penanggung_jawab?.value : ( user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd),
+            penanggung_jawab: data.indikator_pj?.value == "eksternal" ? data.penanggung_jawab?.value : ( user?.roles == 'admin_kota' ? SelectedOpd?.value : user?.kode_opd),
             id_prosesbisnis: selectedNamaProsesBisnis?.value,
             jenis_kebutuhan: data.jenis_kebutuhan?.map((kebutuhan) => ({
                 kebutuhan: kebutuhan.kebutuhan,
@@ -243,12 +249,12 @@ const FormEditKebutuhan = () => {
             })),
         };
         if(user?.roles == 'admin_kota'){
-            if(SelectedOpd == "" || SelectedOpd == "all_opd"){
-              AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
+            if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
+              AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000, true);
             } else {
                 console.log(formData);
                 try {
-                    const response = await fetch(`${API_URL}/v1/updatekebutuhanspbe/${id}?kode_opd=${SelectedOpd}`, {
+                    const response = await fetch(`${API_URL}/v1/updatekebutuhanspbe/${id}?kode_opd=${SelectedOpd?.value}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json",

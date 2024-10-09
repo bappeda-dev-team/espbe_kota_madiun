@@ -1,10 +1,7 @@
 "use client";
 
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { useEffect, useState } from "react";
-import { getUser } from "@/app/Login/Auth/Auth";
-import { getToken } from "@/app/Login/Auth/Auth";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 
 interface opd {
   kode_opd : string,
@@ -13,17 +10,31 @@ interface opd {
 
 const HeaderLayanan = () => {
 
-  const tahun = useSelector((state: RootState) => state.Tahun.tahun)
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.label)
   const [user, setUser] = useState<any>(null);
+  const [tahun, setTahun] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
   const [opd, setOpd] = useState<opd[]>([]);
   const token = getToken();
 
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
+    const data = getOpdTahun();
+    if(data.tahun){
+      const dataTahun = {
+        value: data.tahun.value,
+        label: data.tahun.label
+      }
+      setTahun(dataTahun);
+    }
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
   }, []);
-
   useEffect(() => {
     if (user?.role !== "admin_kota") {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -54,10 +65,10 @@ const HeaderLayanan = () => {
       <div className="flex items-center justify-between">
         <div className="flex">
           <h1 className="uppercase font-bold">
-            Layanan{" "}
+            Layanan SPBE{" "}
             {user?.roles == 'admin_kota' 
-              ? `${SelectedOpd === '' ? "" : SelectedOpd} ${tahun === 0 ? "Semua Tahun" : tahun}`
-              : `${opd.length > 0 ? opd[0].nama_opd : ''} ${tahun === 0 ? "Semua Tahun" : tahun}`
+              ? `${SelectedOpd?.value == (undefined || null) ? "" : SelectedOpd?.label} ${tahun?.value == (undefined || 0 || null) ? "" : tahun?.label}`
+              : `${opd.length > 0 ? opd[0].nama_opd : ''} ${tahun == (0 || undefined) ? "Semua Tahun" : tahun?.label}`
             }
           </h1>
         </div>

@@ -3,11 +3,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import { AlertNotification } from "@/components/common/Alert/Alert";
 import { useRouter } from "next/navigation";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 import { ButtonSc, ButtonTr } from "@/components/common/Button/Button";
 import IdNull from "@/components/common/Alert/IdNull";
 
@@ -20,14 +18,22 @@ const FormTambahKeterangan = () => {
   const token = getToken();
   const router =  useRouter();
   const { control, handleSubmit, reset} = useForm<KeteranganForm>();
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [idKosong, setIdKosong] = useState<boolean | null>(null);
   const [user, setUser] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
 
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  },[])
+    const data = getOpdTahun();
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
 
   useEffect(() => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -58,12 +64,12 @@ const FormTambahKeterangan = () => {
     }
     // console.log(formData);
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+      if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
         AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
         try{
           const API_URL = process.env.NEXT_PUBLIC_API_URL;
-          const response = await fetch(`${API_URL}/v1/createkebutuhanspbe?kode_opd=${SelectedOpd}&id_prosesbisnis=${id}`, {
+          const response = await fetch(`${API_URL}/v1/createkebutuhanspbe?kode_opd=${SelectedOpd?.value}&id_prosesbisnis=${id}`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

@@ -4,12 +4,11 @@ import { useState, useEffect } from "react";
 import {ButtonSc, ButtonPr, ButtonTr} from "@/components/common/Button/Button";
 import Loading from "@/components/global/Loading/Loading";
 import Image from "next/image";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import { useRouter } from "next/navigation";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 import OpdNull from "@/components/common/Alert/OpdNull";
+import TambahPemenuhan from "@/app/PemenuhanKebutuhan/TambahPemenuhan/[id]/page";
 
 interface rencana {
   id: number;
@@ -76,9 +75,9 @@ interface RencanaPelaksanaan {
 
 
 const Table = () => {
-    const tahun = useSelector((state: RootState) => state.Tahun.tahun);
-    const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
     const [user, setUser] = useState<any>(null);
+    const [tahun, setTahun] = useState<any>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [dataNull, setDataNull] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
@@ -93,7 +92,22 @@ const Table = () => {
     useEffect(() => {
       const fetchUser = getUser();
       setUser(fetchUser);
-    },[])
+      const data = getOpdTahun();
+      if(data.tahun){
+        const dataTahun = {
+          value: data.tahun.value,
+          label: data.tahun.label
+        }
+        setTahun(dataTahun);
+      }
+      if(data.opd){
+        const dataOpd = {
+          value: data.opd.value,
+          label: data.opd.label
+        }
+        setSelectedOpd(dataOpd);
+      }
+    }, []);
 
     useEffect(() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -150,35 +164,52 @@ const Table = () => {
       };
     
       if (user?.roles == 'admin_kota') {
-        if (SelectedOpd === 'all_opd') {
+        if (SelectedOpd?.value == 'all_opd' && tahun?.value != (undefined || null)) {
           // Fetch semua OPD
-          fetchingData(`${API_URL}/v1/penanggungjawabkebutuhanspbe?tahun=${tahun}`);
+          fetchingData(`${API_URL}/v1/penanggungjawabkebutuhanspbe?tahun=${tahun?.value}`);
           setOpdKosong(false);
-        } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+        } else if (SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null) && tahun?.value != (undefined || null) ) {
           // Fetch OPD yang dipilih
-          fetchingData(`${API_URL}/v1/penanggungjawabkebutuhanspbe?tahun=${tahun}&kode_opd=${SelectedOpd}`);
+          fetchingData(`${API_URL}/v1/penanggungjawabkebutuhanspbe?tahun=${tahun?.value}&kode_opd=${SelectedOpd?.value}`);
           setOpdKosong(false);
-        } else if (SelectedOpd === '') {
+        } else if (SelectedOpd?.value == (undefined || null) || tahun?.value == (undefined || null)) {
           // OPD kosong
           setOpdKosong(true);
         }
       } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
         // Bukan admin kota, fetch default
-        fetchingData(`${API_URL}/v1/penanggungjawabkebutuhanspbe?tahun=${tahun}`);
-        setOpdKosong(false);
+        if(tahun?.value == (undefined || null)){
+          fetchingData(`${API_URL}/v1/penanggungjawabkebutuhanspbe`);
+          setOpdKosong(false);
+        } else {
+          fetchingData(`${API_URL}/v1/penanggungjawabkebutuhanspbe?tahun=${tahun?.value}`);
+          setOpdKosong(false);
+        }
       }
     }, [tahun, SelectedOpd, token, user, Internal, Eksternal]);
 
     //edit data
     const editPemenuhan = async(id: number) => {
       if(user?.roles == 'admin_kota'){
-        if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+        if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null)){
           router.push(`/PemenuhanKebutuhan/EditPemenuhan/${id}`)
         } else {
-          AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+          AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
         }
       } else {
         router.push(`/PemenuhanKebutuhan/EditPemenuhan/${id}`)
+      }
+    }
+    //tambah data
+    const tambahPemenuhan = async(id: number) => {
+      if(user?.roles == 'admin_kota'){
+        if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null)){
+          router.push(`/PemenuhanKebutuhan/TambahPemenuhan/${id}`)
+        } else {
+          AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
+        }
+      } else {
+        router.push(`/PemenuhanKebutuhan/TambahPemenuhan/${id}`)
       }
     }
     //hapus data
@@ -212,13 +243,12 @@ const Table = () => {
 
     return (
         <>
-          <div className="flex justify-between mb-3">
-              <div className="flex flex-wrap">
+          <div className="flex flex-wrap mb-3">
                 {Internal ? 
-                  <button className="rounded-lg mx-1 py-1 min-w-[100px] bg-sky-600 text-white">Internal</button>
+                  <button className="rounded-lg mx-1 my-1 py-1 min-w-[100px] bg-sky-600 text-white">Internal</button>
                 :
                   <button 
-                    className="border rounded-lg mx-1 py-1 min-w-[100px] border-sky-600 text-sky-600 hover:bg-sky-600 hover:text-white"
+                    className="border rounded-lg mx-1 my-1 py-1 min-w-[100px] border-sky-600 text-sky-600 hover:bg-sky-600 hover:text-white"
                     onClick={() => {
                       setInternal(true);
                       setEksternal(false);
@@ -228,10 +258,10 @@ const Table = () => {
                   </button>
                 }
                 {Eksternal ? 
-                  <button className="rounded-lg mx-1 py-1 min-w-[100px] text-white bg-green-600">Eksternal</button>
+                  <button className="rounded-lg mx-1 my-1 py-1 min-w-[100px] text-white bg-green-600">Eksternal</button>
                   :
                   <button 
-                  className="border rounded-lg mx-1 py-1 min-w-[100px] border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
+                  className="border rounded-lg mx-1 my-1 py-1 min-w-[100px] border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
                   onClick={() => {  
                     setInternal(false);
                     setEksternal(true);
@@ -240,19 +270,6 @@ const Table = () => {
                     Eksternal
                   </button>
                 }
-              </div>
-              <ButtonSc typee="button">
-                <div className="flex">
-                    <Image 
-                      className="mr-1"
-                      src="/iconLight/cetak.svg" 
-                      alt="add" 
-                      width={20}
-                      height={20}
-                    />
-                    Cetak
-                </div>
-              </ButtonSc>
           </div>
           <div className="overflow-auto rounded-t-xl bg-white shadow-lg border">
               <table className="w-full text-sm text-left">
@@ -395,7 +412,7 @@ const Table = () => {
                                   <td className="border px-6 py-4 min-w-[200px] bg-red-500"></td>
                                   <td className="border px-6 py-4 min-w-[200px] bg-red-500"></td>
                                   <td className="border px-6 py-4 text-center gap-2">
-                                    <ButtonPr key={data.id} className="my-1 px-5 w-full" halaman_url={`/PemenuhanKebutuhan/TambahPemenuhan/${data.id}`}>
+                                    <ButtonPr key={data.id} className="my-1 px-5 w-full" onClick={() => tambahPemenuhan(data.id)}>
                                       <div className="flex items-center justify-center">
                                           <Image
                                               className="mr-1"

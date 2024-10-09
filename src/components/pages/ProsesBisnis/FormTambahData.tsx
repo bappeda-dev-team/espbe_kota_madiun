@@ -6,9 +6,7 @@ import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useRouter } from "next/navigation";
 import { AlertNotification } from "@/components/common/Alert/Alert";
-import { getToken, getUser } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { getToken, getUser, getOpdTahun } from "@/app/Login/Auth/Auth";
 
 interface OptionType {
   value: number;
@@ -30,8 +28,6 @@ interface FormValues {
 }
 
 const FormTambahData = () => {
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
-
   const [rab_level_1_3_option, set_rab_level_1_3_option] = useState<OptionType[]>([]);
   const [rab_level_4_option, set_rab_level_4_option] = useState<OptionType[]>([]);
   const [rab_level_5_6_option, set_rab_level_5_6_option] = useState<OptionType[]>([]);
@@ -51,14 +47,24 @@ const FormTambahData = () => {
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const token = getToken();
+
   const [user, setUser] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
 
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  },[])
+    const data = getOpdTahun ();
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
 
-  const tahun: OptionType[] = [
+  const tahunOption: OptionType[] = [
     { value: 2024, label: "2024" },
     { value: 2025, label: "2025" },
     { value: 2026, label: "2026" },
@@ -71,11 +77,10 @@ const FormTambahData = () => {
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd?.value : user?.kode_opd,
       bidang_urusan_id: null,
       tahun: null,
       sasaran_kota_id: null,
@@ -121,7 +126,7 @@ const FormTambahData = () => {
   const fetchRabLevel4 = async () => {
     setIsLoading(true);
     try {
-      const url = `${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd}`
+      const url = `${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd?.value}`
       const response = await fetch(url, {
         headers: {
           'Authorization': `${token}`,
@@ -188,7 +193,7 @@ const FormTambahData = () => {
   const fetchBidangUrusan = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/bidangurusanopd?kode_opd=${SelectedOpd}`, {
+      const response = await fetch(`${API_URL}/v1/bidangurusanopd?kode_opd=${SelectedOpd?.value}`, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -209,7 +214,7 @@ const FormTambahData = () => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const formData = {
       //key : value
-      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
+      kode_opd: user?.roles == 'admin_kota' ? SelectedOpd?.value : user?.kode_opd,
       bidang_urusan_id: data.bidang_urusan_id?.value,
       tahun: data.tahun?.value,
       sasaran_kota_id: data.sasaran_kota_id?.value,
@@ -221,7 +226,7 @@ const FormTambahData = () => {
       rab_level_6_id: data.rab_level_6_id?.value,
     };
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+      if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
         AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
         // console.log(formData);
@@ -287,7 +292,7 @@ const FormTambahData = () => {
                   <>
                     <Select
                       {...field}
-                      options={tahun}
+                      options={tahunOption}
                       isSearchable
                       isClearable
                       placeholder="Pilih Tahun"

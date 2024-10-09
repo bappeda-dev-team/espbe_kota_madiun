@@ -4,12 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loading from "../../../global/Loading/Loading";
 import {ButtonPr, ButtonSc, ButtonTr} from "@/components/common/Button/Button";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { AlertNotification, AlertQuestion } from "@/components/common/Alert/Alert";
 import Image from "next/image";
-import { getToken } from "@/app/Login/Auth/Auth";
-import { getUser } from "@/app/Login/Auth/Auth";
+import { getToken, getUser, getOpdTahun } from "@/app/Login/Auth/Auth";
 import OpdNull from "@/components/common/Alert/OpdNull";
 
 interface rabLevel1_3 {
@@ -58,21 +55,37 @@ interface typeProsesBisnis {
 
 function Table() {
   //state fetch data proses bisnis
-  const tahun = useSelector((state: RootState) => state.Tahun.tahun) //tahunProsesBisnis diambil dari store.ts, tahun diambil dari ProsesBisnisSlicer.ts -> interface TahunState{ tahun: number }
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [dataProsesBisnis, setDataProsesBisnis] = useState<typeProsesBisnis[]>([]);
   const [loading, setLoading] = useState<boolean | null>(null);
   const [dataNull, setDataNull] = useState<boolean>(false);
   const [opdKosong, setOpdKosong] = useState<boolean | null>(null);
+  const [TahunKosong, setTahunKosong] = useState<string>("");
   const [error, setError] = useState<string | null>();
   const token = getToken();
   const [user, setUser] = useState<any>(null);
+  const [tahun, setTahun] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  },[])
+    const data = getOpdTahun();
+    if(data.tahun){
+      const dataTahun = {
+        value: data.tahun.value,
+        label: data.tahun.label
+      }
+      setTahun(dataTahun);
+    }
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
 
   //fetch data proses bisnis
   useEffect(() => {
@@ -105,33 +118,37 @@ function Table() {
     };
   
     if (user?.roles == 'admin_kota') {
-      if (SelectedOpd === 'all_opd') {
+      if (SelectedOpd?.value == 'all_opd' && tahun?.value != (undefined || null)) {
         // Fetch semua OPD
-        fetchingData(`${API_URL}/v1/prosesbisnis?tahun=${tahun}`);
+        fetchingData(`${API_URL}/v1/prosesbisnis?tahun=${tahun?.value}`);
         setOpdKosong(false);
-      } else if (SelectedOpd !== 'all_opd' && SelectedOpd !== '') {
+      } else if (SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null) && tahun?.value != (undefined || null) ) {
         // Fetch OPD yang dipilih
-        fetchingData(`${API_URL}/v1/prosesbisnis?tahun=${tahun}&kode_opd=${SelectedOpd}`);
+        fetchingData(`${API_URL}/v1/prosesbisnis?tahun=${tahun?.value}&kode_opd=${SelectedOpd?.value}`);
         setOpdKosong(false);
-      } else if (SelectedOpd === '') {
+      } else if (SelectedOpd?.value == (undefined || null) || tahun?.value == (undefined || null)) {
         // OPD kosong
         setOpdKosong(true);
       }
     } else if(user?.roles != "admin_kota" && user?.roles != undefined) {
       // Bukan admin kota, fetch default
-      fetchingData(`${API_URL}/v1/prosesbisnis?tahun=${tahun}`);
-      setOpdKosong(false);
+      if(tahun?.value == (undefined || null)){
+        fetchingData(`${API_URL}/v1/prosesbisnis`);
+        setOpdKosong(false);
+      } else {
+        fetchingData(`${API_URL}/v1/prosesbisnis?tahun=${tahun?.value}`);
+        setOpdKosong(false);
+      }
     }
   }, [tahun, SelectedOpd, token, user]);
-  
 
   //tambah data
   const tambahData= async() => {
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+      if(SelectedOpd?.value != 'all_opd' && SelectedOpd?.value != (undefined || null)){
         router.push(`/ProsesBisnis/TambahData`)
       } else {
-        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
       }
     } else {
       router.push(`/ProsesBisnis/TambahData`)
@@ -140,10 +157,10 @@ function Table() {
   //edit data
   const editData = async(id: number) => {
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd !== 'all_opd' && SelectedOpd !== ''){
+      if(SelectedOpd?.value !== 'all_opd' && SelectedOpd?.value !== (undefined || null)){
         router.push(`/ProsesBisnis/EditData/${id}`)
       } else {
-        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000);
+        AlertNotification("Pilih OPD", "pilih opd terlebih dahulu", "warning", 3000, true);
       }
     } else {
       router.push(`/ProsesBisnis/EditData/${id}`)
@@ -171,33 +188,72 @@ function Table() {
   //cetak data
   const cetakProsesBisnis = async () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    try {
-      const response = await fetch(`${API_URL}/exportexcelprosesbisnis`, {
-        method: "GET",
-        headers: {
-          'Authorization': `${token}`,
-          // 'Content-Type': `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjQxNDQ3ODcsImtvZGVfb3BkIjoiMS4wMS4wLjAwLjAuMDAuMDEuMDAyMyIsIm5hbWEiOiJhZ25hciIsIm5pcCI6InRlc3QiLCJyb2xlcyI6WyJhc24iXSwidXNlcl9pZCI6Mn0.xdcqLXbE8eNBlTbDI4qNSgdRJ8BnUSFa7bLi9Vn7t2E`,
-        },
-      });
-      if(!response.ok){
-        throw new Error('terdapat kesalahan di server atau database')
+    if(user?.roles == "admin_kota"){
+      if(SelectedOpd?.value == (undefined || "all_opd") || tahun?.value == (0 || undefined)){
+        AlertNotification("Pilih Tahun dan OPD di header", "", "warning", 2000, true);
+      } else {
+        try {
+          const response = await fetch(`${API_URL}/exportexcelprosesbisnis`, {
+            method: "GET",
+            headers: {
+              'Authorization': `${token}`,
+              // 'Content-Type': `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjQxNDQ3ODcsImtvZGVfb3BkIjoiMS4wMS4wLjAwLjAuMDAuMDEuMDAyMyIsIm5hbWEiOiJhZ25hciIsIm5pcCI6InRlc3QiLCJyb2xlcyI6WyJhc24iXSwidXNlcl9pZCI6Mn0.xdcqLXbE8eNBlTbDI4qNSgdRJ8BnUSFa7bLi9Vn7t2E`,
+            },
+          });
+          if(!response.ok){
+            throw new Error('terdapat kesalahan di server atau database')
+          }
+          // Mengonversi respons ke Blob untuk diunduh
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+    
+          // Membuat elemen link untuk mengunduh file
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `data_proses_bisnis_${SelectedOpd?.value}_tahun_${tahun?.value}.xlsx`; // Nama file yang diunduh
+          document.body.appendChild(a);
+          a.click();
+    
+          // Membersihkan elemen setelah unduhan
+          a.remove();
+          window.URL.revokeObjectURL(url);
+        } catch (err) {
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
       }
-      // Mengonversi respons ke Blob untuk diunduh
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      // Membuat elemen link untuk mengunduh file
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `data_proses_bisnis_${SelectedOpd}_tahun_${tahun}.xlsx`; // Nama file yang diunduh
-      document.body.appendChild(a);
-      a.click();
-
-      // Membersihkan elemen setelah unduhan
-      a.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+    } else {
+      if(tahun?.value == (undefined || 0)){
+        AlertNotification("Pilih Tahun di header", "", "warning", 2000, true);
+      } else {
+        try {
+          const response = await fetch(`${API_URL}/exportexcelprosesbisnis`, {
+            method: "GET",
+            headers: {
+              'Authorization': `${token}`,
+              // 'Content-Type': `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjQxNDQ3ODcsImtvZGVfb3BkIjoiMS4wMS4wLjAwLjAuMDAuMDEuMDAyMyIsIm5hbWEiOiJhZ25hciIsIm5pcCI6InRlc3QiLCJyb2xlcyI6WyJhc24iXSwidXNlcl9pZCI6Mn0.xdcqLXbE8eNBlTbDI4qNSgdRJ8BnUSFa7bLi9Vn7t2E`,
+            },
+          });
+          if(!response.ok){
+            throw new Error('terdapat kesalahan di server atau database')
+          }
+          // Mengonversi respons ke Blob untuk diunduh
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+    
+          // Membuat elemen link untuk mengunduh file
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `data_proses_bisnis_${user?.roles}_tahun_${tahun?.value}.xlsx`; // Nama file yang diunduh
+          document.body.appendChild(a);
+          a.click();
+    
+          // Membersihkan elemen setelah unduhan
+          a.remove();
+          window.URL.revokeObjectURL(url);
+        } catch (err) {
+          AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
+      }
     }
   };
 
@@ -212,7 +268,7 @@ function Table() {
   return (
     <>
       <div className="flex justify-between mb-5">
-        <ButtonSc typee="button" onClick={() => cetakProsesBisnis()}>
+        {/* <ButtonSc typee="button" onClick={() => cetakProsesBisnis()}>
           <div className="flex">
             <Image 
               className="mr-1"
@@ -223,7 +279,7 @@ function Table() {
             />
             Cetak
           </div>
-        </ButtonSc>
+        </ButtonSc> */}
         <ButtonPr typee="button" onClick={() => tambahData()}>
           <div className="flex">
             <Image 

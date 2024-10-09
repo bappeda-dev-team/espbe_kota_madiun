@@ -7,9 +7,7 @@ import Select from "react-select";
 import { useParams } from "next/navigation";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AlertNotification } from "@/components/common/Alert/Alert";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 import IdNull from "@/components/common/Alert/IdNull";
 
 interface OptionType {
@@ -47,7 +45,6 @@ interface formValue {
 
 const FormFixGapDataInformasi = () => {
 
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const { id } = useParams();
   const router = useRouter();
   const token = getToken();
@@ -62,9 +59,9 @@ const FormFixGapDataInformasi = () => {
   const [isClient, setIsClient] = useState<boolean>(false);
   const [idNotFound, setIdNotFound] = useState<boolean | null>(null);
   const [user, setUser] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
 
   const [rad_1_4, set_rad_1_4] = useState<OptionType[]>([]);
-  const [rad_5_7, set_rad_5_7] = useState<OptionType[]>([]);
 
   const [selectedRad1, setSelectedRad1] = useState<OptionType | null>(null);
   const [selectedRad2, setSelectedRad2] = useState<OptionType | null>(null);
@@ -78,7 +75,15 @@ const FormFixGapDataInformasi = () => {
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  },[])
+    const data = getOpdTahun ();
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
 
   const tahun_option: OptionType[] = [
     { value: 2024, label: "2024" },
@@ -194,41 +199,6 @@ const FormFixGapDataInformasi = () => {
         }
       };
     
-      const fetchRadLevel5_7 = async (jenis_pohon: string) => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        setIsLoading(true);
-        try {
-          const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd}`, {
-            headers: {
-              'Authorization': `${token}`,
-            },
-          });
-          const data = await response.json();
-          const filteredData = data.data.filter(
-            (pohon: any) => pohon.jenis_pohon === jenis_pohon,
-          );
-          const result = filteredData.map((pohon: any) => ({
-            value: pohon.id,
-            label: pohon.nama_pohon,
-          }));
-          set_rad_5_7(result);
-        } catch (err) {
-          console.log("gagal memuat data option RAD Level 5 - 7");
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      const handleChange = (option: any, actionMeta: any) => {
-        if (actionMeta.name === "strategic_id") {
-          setSelectedStrategic(option);
-        } else if (actionMeta.name === "tactical_id") {
-          setSelectedTactical(option);
-        } else if (actionMeta.name === "operational_id") {
-          setSelectedOperational(option);
-        }
-      };
-    
       const interoprabilitasValue = watch("interoprabilitas");
     
       const onSubmit: SubmitHandler<formValue> = async (data) => {
@@ -242,7 +212,7 @@ const FormFixGapDataInformasi = () => {
             produsen_data : data.produsen_data,
             validitas_data : data.validitas_data?.value,
             pj_data : data.pj_data,
-            kode_opd : user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
+            kode_opd : user?.roles == 'admin_kota' ? SelectedOpd?.value : user?.kode_opd,
             informasi_terkait_input : data.informasi_terkait_input,
             informasi_terkait_output : data.informasi_terkait_output,
             interoprabilitas : data.interoprabilitas?.value,
@@ -257,8 +227,8 @@ const FormFixGapDataInformasi = () => {
             operational_id : data.operational_id?.value,
         };
         if(user?.roles == 'admin_kota'){
-          if(SelectedOpd == "" || SelectedOpd == "all_opd"){
-            AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
+          if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
+            AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000, true);
           } else {
             // console.log(formData);
             try{

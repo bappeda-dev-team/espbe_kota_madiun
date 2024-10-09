@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/global/Loading/Loading";
-import { getToken } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 
 interface SasaranKota {
     ID : number,
@@ -16,7 +14,7 @@ interface SasaranKota {
 
 const Table = () => {
 
-    const tahun = useSelector((state: RootState) => state.Tahun.tahun);
+    const [tahun, setTahun] = useState<any>(null);
     const [SasaranKota, setSasaranKota] = useState<SasaranKota[]>([]);
     const [error, setError] = useState<string>();
     const [loading, setLoading] = useState<boolean>(true)
@@ -24,64 +22,49 @@ const Table = () => {
     const token = getToken();
 
     useEffect(() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        if(tahun != 0){
-            const fetchPohonKinerja = async() => {
-                try{
-                    const response = await fetch(`${API_URL}/v1/sasarankota?tahun=${tahun}`, {
-                        headers: {
-                            'Authorization': `${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                    });
-                    if(!response.ok){
-                        throw new Error("cant fetch data Sasaran Kota");
-                    }
-                    const result = await response.json();
-                    if(result.data === null){
-                        setSasaranKota([]);
-                        setDataNull(true);
-                    } else {
-                        setSasaranKota(result.data);
-                        setDataNull(false);
-                    }
-                } catch(err){
-                    setError("Gagal fetching data Sasaran Kota, cek koneksi internet atau database server")
-                } finally{
-                    setLoading(false);
-                }
+        const data = getOpdTahun();
+        if(data){
+            const dataTahun = {
+                value: data.tahun?.value,
+                label: data.tahun?.label
             }
-            fetchPohonKinerja();
-        } else {
-            const fetchPohonKinerja = async() => {
-                try{
-                    const response = await fetch(`${API_URL}/v1/sasarankota`, {
-                        headers: {
-                            'Authorization': `${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                    });
-                    if(!response.ok){
-                        throw new Error("cant fetch data Sasaran Kota");
-                    }
-                    const result = await response.json();
-                    if(result.data === null){
-                        setSasaranKota([]);
-                        setDataNull(true);
-                    } else {
-                        setSasaranKota(result.data);
-                        setDataNull(false);
-                    }
-                } catch(err){
-                    setError("Gagal fetching data Sasaran Kota, cek koneksi internet atau database server")
-                } finally{
-                    setLoading(false);
-                }
-            }
-            fetchPohonKinerja();
-
+            setTahun(dataTahun);
         }
-    },[token, tahun])
+      }, []);
+
+    useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const fetchSasaranKota = async(url: string) => {
+            try{
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if(!response.ok){
+                    throw new Error("cant fetch data Sasaran Kota");
+                }
+                const result = await response.json();
+                if(result.data === null){
+                    setSasaranKota([]);
+                    setDataNull(true);
+                } else {
+                    setSasaranKota(result.data);
+                    setDataNull(false);
+                }
+            } catch(err){
+                setError("Gagal fetching data Sasaran Kota, cek koneksi internet atau database server")
+            } finally{
+                setLoading(false);
+            }
+        }
+        if(tahun?.value == (0 || undefined)){
+            fetchSasaranKota(`${API_URL}/v1/sasarankota`);
+        } else {
+            fetchSasaranKota(`${API_URL}/v1/sasarankota?tahun=${tahun?.value}`);
+        }
+    },[tahun, token])
 
     if(error){
         return <h1>{error}</h1>

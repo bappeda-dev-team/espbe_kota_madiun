@@ -6,9 +6,7 @@ import {ButtonSc, ButtonTr} from "@/components/common/Button/Button";
 import Select from "react-select";
 import { useRouter } from "next/navigation";
 import { AlertNotification } from "@/components/common/Alert/Alert";
-import { getUser, getToken } from "@/app/Login/Auth/Auth";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { getUser, getToken, getOpdTahun } from "@/app/Login/Auth/Auth";
 
 interface OptionType {
   value: number;
@@ -42,13 +40,13 @@ interface FormValues {
 }
 
 const FormTambahData = () => {
-  const SelectedOpd = useSelector((state: RootState) => state.Opd.value);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter()
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const token = getToken();
   const [user, setUser] = useState<any>(null);
+  const [SelectedOpd, setSelectedOpd] = useState<any>(null);
   
   const [selectedRaa1, setSelectedRaa1] = useState<OptionType | null>(null);
   const [selectedRaa2, setSelectedRaa2] = useState<OptionType | null>(null);
@@ -63,9 +61,17 @@ const FormTambahData = () => {
   useEffect(() => {
     const fetchUser = getUser();
     setUser(fetchUser);
-  },[])
+    const data = getOpdTahun ();
+    if(data.opd){
+      const dataOpd = {
+        value: data.opd.value,
+        label: data.opd.label
+      }
+      setSelectedOpd(dataOpd);
+    }
+  }, []);
 
-  const tahun: OptionType[] = [
+  const tahunOption: OptionType[] = [
     { value: 2024, label: "2024" },
     { value: 2025, label: "2025" },
     { value: 2026, label: "2026" },
@@ -98,7 +104,7 @@ const FormTambahData = () => {
         jenis_aplikasi : null,
         produsen_aplikasi : "",
         pj_aplikasi : "",
-        kode_opd : user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
+        kode_opd : user?.roles == 'admin_kota' ? SelectedOpd?.value : user?.kode_opd,
         informasi_terkait_input : "",
         informasi_terkait_output : "",
         interoprabilitas : null,
@@ -146,7 +152,7 @@ const FormTambahData = () => {
   const fetchRaaLevel5 = async (level: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd}`, {
+      const response = await fetch(`${API_URL}/v1/pohonkinerja?kode_opd=${SelectedOpd?.value}`, {
         headers: {
           'Authorization': `${token}`,
         },
@@ -197,7 +203,7 @@ const FormTambahData = () => {
         jenis_aplikasi : data.jenis_aplikasi?.value,
         produsen_aplikasi : data.produsen_aplikasi,
         pj_aplikasi : data.pj_aplikasi,
-        kode_opd : user?.roles == 'admin_kota' ? SelectedOpd : user?.kode_opd,
+        kode_opd : user?.roles == 'admin_kota' ? SelectedOpd?.value : user?.kode_opd,
         informasi_terkait_input : data.informasi_terkait_input,
         informasi_terkait_output : data.informasi_terkait_output,
         interoprabilitas : data.interoprabilitas?.value,
@@ -211,7 +217,7 @@ const FormTambahData = () => {
         operational_id : data.operational_id?.value,
     };
     if(user?.roles == 'admin_kota'){
-      if(SelectedOpd == "" || SelectedOpd == "all_opd"){
+      if(SelectedOpd?.value == (undefined || null) || SelectedOpd?.value == "all_opd"){
         AlertNotification("Pilih OPD", "OPD harus dipilih di header", "warning", 2000);
       } else {
         // console.log(formData);
@@ -494,7 +500,7 @@ const FormTambahData = () => {
                   <>
                     <Select
                       {...field}
-                      options={tahun}
+                      options={tahunOption}
                       isSearchable
                       isClearable
                       placeholder="Pilih Tahun"
