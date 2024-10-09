@@ -187,8 +187,8 @@ const Table = () => {
             <>
                 {rencana.map((data: any) => (
                     <>
-                    <div key={data.id} className="border border-emerald-500 w-full py-2 px-3 mt-3 rounded-t-xl bg-emerald-500 text-white">
-                        <div className="flex flex-wrap items-center">
+                    <div key={data.id} className="w-full py-2 px-3 mt-3 rounded-t-xl bg-gradient-to-r to-[#007F73] from-[#35BC81] text-white">
+                        <div className="flex flex-wrap items-center font-extrabold">
                             <h1 className="uppercase">Proses Bisnis :</h1>
                             <h1 className="uppercase">{data.nama_proses_bisnis ? data.nama_proses_bisnis : "kosong"}</h1>
                         </div>
@@ -286,22 +286,22 @@ const Table = () => {
                             <>
                             <div key={kebutuhan.id} className="border-x-2 border-b-2 border-emerald-500 bg-emerald-500 text-white w-full py-1 px-2">
                                 <div className="flex flex-wrap justify-between">
-                                    <h1>{kebutuhan.keterangan ? kebutuhan.keterangan : "kosong"}</h1>
-                                    <h1>Domain : {kebutuhan.nama_domain ? kebutuhan.nama_domain : "kosong"}</h1>
+                                    <h1 className="font-semibold">Ket.Kebutuhan : {kebutuhan.keterangan ? kebutuhan.keterangan : "kosong"}</h1>
                                 </div>
                             </div>
                             <div className="border-x-2 border-b-2 border-emerald-500 w-full py-2 px-3">
-                                    <div className="overflow-auto">
+                                    <div className="overflow-auto rounded-xl border-2 border-emerald-500">
                                         <table className="w-full text-sm">
-                                            <thead>
+                                            <thead className="">
                                                 <tr>
-                                                    <th rowSpan={2} className="border-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">Kebutuhan</th>
-                                                    <th colSpan={3} className="border-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">Kondisi Awal</th>
-                                                    <th colSpan={2} className="border-2 border-emerald-500 px-6 py-3 min-w-[400px] text-center">Perangkat Daerah</th>
-                                                    <th colSpan={2} className="border-2 border-emerald-500 px-6 py-3 min-w-[400px] text-center">Sasaran Kinerja</th>
-                                                    <th rowSpan={2} className="border-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">Pagu Anggaran</th>
-                                                    <th rowSpan={2} className="border-2 border-emerald-500 px-6 py-3 min-w-[400px] text-center">Sub Kegiatan</th>
-                                                    <th colSpan={5} className="border-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">Tahun</th>
+                                                    <th rowSpan={2} className="border-r-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">Kebutuhan SPBE</th>
+                                                    <th rowSpan={2} className="border-r-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">Domain</th>
+                                                    <th colSpan={3} className="border-r-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">Kondisi Awal</th>
+                                                    <th colSpan={2} className="border-r-2 border-emerald-500 px-6 py-3 min-w-[400px] text-center">Perangkat Daerah</th>
+                                                    <th colSpan={2} className="border-r-2 border-emerald-500 px-6 py-3 min-w-[400px] text-center">Sasaran Kinerja</th>
+                                                    <th rowSpan={2} className="border-r-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">Pagu Anggaran</th>
+                                                    <th rowSpan={2} className="border-r-2 border-emerald-500 px-6 py-3 min-w-[400px] text-center">Sub Kegiatan</th>
+                                                    <th colSpan={5} className="px-6 py-3 min-w-[200px] text-center">Tahun</th>
                                                 </tr>
                                                 <tr>
                                                     <th className="border-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">2022</th>
@@ -315,13 +315,14 @@ const Table = () => {
                                                     <th className="border-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">2026</th>
                                                     <th className="border-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">2027</th>
                                                     <th className="border-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">2028</th>
-                                                    <th className="border-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">2029</th>
+                                                    <th className="border-y-2 border-emerald-500 px-6 py-3 min-w-[200px] text-center">2029</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {kebutuhan.jenis_kebutuhan.map((jk: any) => (
                                                 <tr key={data.id} className="border rounded-b-lg hover:bg-slate-50">
-                                                    <td className="border-2 border-emerald-500 px-6 py-4">{jk.kebutuhan ? jk.kebutuhan : "kosong"}</td>
+                                                    <td className="border-r-2 border-y-2 border-emerald-500 px-6 py-4">{jk.kebutuhan ? jk.kebutuhan : "kosong"}</td>
+                                                    <td className="border-2 border-emerald-500 px-6 py-4">{kebutuhan.nama_domain ? kebutuhan.nama_domain : "kosong"}</td>
                                                     <td className="border-2 border-emerald-500 px-6 py-4">{jk.kondisi_awal.find((ka: any) => ka.tahun == 2022)?.keterangan || "Kosong"}</td>
                                                     <td className="border-2 border-emerald-500 px-6 py-4">{jk.kondisi_awal.find((ka: any) => ka.tahun == 2023)?.keterangan || "Kosong"}</td>
                                                     <td className="border-2 border-emerald-500 px-6 py-4">{jk.kondisi_awal.find((ka: any) => ka.tahun == 2024)?.keterangan || "Kosong"}</td>

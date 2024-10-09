@@ -484,7 +484,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
 
        
         <div className="p-5 border-b border-stone-300">
-          <div className="flex flex-col items-center text-center">
+          <div className="flex flex-col font-bold items-center text-center">
             <Image
               className="pr-2 transition-all duration-300 ease-in-out"
               src="/logo.png"
@@ -492,7 +492,7 @@ function Sidebar({ isCollapse, toggleCollapse }: SidebarProps) {
               width={!isCollapse ? 80 : 40}
               height={!isCollapse ? 80 : 40}
             />
-            {!isCollapse ? <h1>E-SPBE-Kota Madiun</h1> : <></>}
+            {!isCollapse ? <h1>E-SPBE Kota Madiun</h1> : <></>}
           </div>
         </div>
 
